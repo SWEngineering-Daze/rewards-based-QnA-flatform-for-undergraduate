@@ -106,9 +106,12 @@ const data = [
 
       <div v-for="college in data" :key="college.name" class="mb-4 last:mb-0">
         <ClientOnly>
-          <Disclosure>
-            <DisclosureButton class="inline-flex items-center text-xl font-bold mb-3">
-              <img class="w-6" src="@/assets/img/dropdown.svg" />
+          <Disclosure v-slot="{ open }">
+            <DisclosureButton
+              class="inline-flex items-center text-xl text-black font-bold mb-3 transition-all"
+              :class="{ 'text-opacity-75 hover:text-opacity-100': !open }"
+            >
+              <img class="w-6 transtiion-all" :class="{ 'rotate-180': open }" src="@/assets/img/dropdown.svg" />
               {{ college.name }}
             </DisclosureButton>
             <transition
@@ -121,8 +124,10 @@ const data = [
             >
               <DisclosurePanel class="pl-12">
                 <div v-for="department in college.childs" :key="department.name" class="relative mb-2 last:mb-0">
-                  <Popover class="inline-block relative">
-                    <PopoverButton class="text-lg focus:outline-none pr-5">{{ department.name }}</PopoverButton>
+                  <Popover v-slot="{ open }" class="inline-block relative">
+                    <PopoverButton class="text-black transition-all outline-none pr-5" :class="{ 'text-opacity-75 hover:text-opacity-100': !open }">
+                      {{ department.name }}
+                    </PopoverButton>
                     <transition
                       enter-active-class="transition duration-100 ease-out"
                       enter-from-class="transform scale-95 opacity-0"
@@ -134,7 +139,12 @@ const data = [
                       <PopoverPanel
                         class="absolute top-0 right-0 translate-x-full bg-white rounded border shadow p-3 whitespace-nowrap max-w-xs max-h-60 overflow-y-scroll z-10"
                       >
-                        <NuxtLink v-for="course in department.childs" :key="course.name" class="block mb-2 last:mb-0 text-sm" :to="course.href">
+                        <NuxtLink
+                          v-for="course in department.childs"
+                          :key="course.name"
+                          class="block mb-2 last:mb-0 text-sm text-black transition-all text-opacity-75 hover:text-opacity-100"
+                          :to="course.href"
+                        >
                           {{ course.name }}
                         </NuxtLink>
                       </PopoverPanel>
