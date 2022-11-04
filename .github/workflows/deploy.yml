@@ -1,0 +1,27 @@
+name: deploy to gce
+on:
+  push:
+    branches:
+      - client
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: executing remote ssh commands using key file
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: 22
+          script_stop: true
+          script: |
+            cd /var/www/app
+            git clean -fdx
+            git checkout client
+            git pull
+            npm install
+            ls -al
+            cd ./client
+            pm2 restart ecosystem.config.js
