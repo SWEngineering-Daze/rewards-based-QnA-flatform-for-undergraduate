@@ -2,8 +2,10 @@
   <div class="min-h-screen flex flex-col">
     <TheHeader />
     <div class="flex-1 flex">
-      <nav class="sidebar"></nav>
-      <slot></slot>
+      <nav class="sidebar hidden lg:block"></nav>
+      <div class="flex-1">
+        <slot></slot>
+      </div>
     </div>
     <TheFooter />
   </div>
