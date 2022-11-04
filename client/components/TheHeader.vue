@@ -1,0 +1,87 @@
+<script lang="ts" setup>
+import { Menu, MenuButton, MenuItems } from '@headlessui/vue';
+
+const user = {
+  email: 'example@dgu.ac.kr',
+};
+</script>
+
+<template>
+  <header class="flex items-center shadow bg-white py-2 px-4">
+    <div class="inline-flex items-center">
+      <img src="@/assets/img/logo.svg" alt="얼렁뚱땅" />
+      <span class="text-sm font-medium ml-2">얼렁뚱땅</span>
+    </div>
+    <div class="flex items-center ml-auto">
+      <nav class="flex items-center">
+        <NuxtLink class="header-link" to="/store">
+          <span class="hidden sm:inline-block">포인트 상점</span>
+          <img class="inline-block sm:hidden w-6" src="@/assets/img/store.svg" />
+        </NuxtLink>
+      </nav>
+      <span class="divider"></span>
+
+      <!-- dropdown -->
+      <ClientOnly>
+        <Menu as="div" class="relative">
+          <MenuButton class="inline-flex items-center">
+            <span class="hidden sm:inline text-sm font-medium">{{ user.email }}</span>
+            <img class="inline sm:hidden w-6" src="@/assets/img/user.svg" />
+            <img class="w-6" src="@/assets/img/dropdown.svg" />
+          </MenuButton>
+          <transition
+            enter-active-class="transition duration-100 ease-out"
+            enter-from-class="transform scale-95 opacity-0"
+            enter-to-class="transform scale-100 opacity-100"
+            leave-active-class="transition duration-75 ease-in"
+            leave-from-class="transform scale-100 opacity-100"
+            leave-to-class="transform scale-95 opacity-0"
+          >
+            <MenuItems
+              class="absolute right-0 mt-2 w-36 origin-top-right divide-y tracking-wider text-sm divide-gray-200 rounded-md bg-white shadow ring-1 ring-black ring-opacity-10 focus:outline-none"
+            >
+              <div class="p-3">
+                <div class="flex item-center mb-2">
+                  <span>Lv.13</span>
+                  <span class="ml-auto">45%</span>
+                </div>
+                <div class="flex items-center text-cyan-500">
+                  <img class="w-6" src="@/assets/img/point.svg" />
+                  <span class="ml-auto">1,550P</span>
+                </div>
+              </div>
+              <div class="p-3">
+                <button class="text-red-500">로그아웃</button>
+              </div>
+            </MenuItems>
+          </transition>
+        </Menu>
+      </ClientOnly>
+
+      <NuxtLink class="btn btn-indigo ml-6 hidden sm:inline-block">내정보</NuxtLink>
+    </div>
+  </header>
+</template>
+
+<style lang="postcss" scoped>
+header {
+  min-height: 52px;
+}
+
+.header-link {
+  @apply inline-flex items-center text-sm font-medium text-gray-500;
+}
+.divider {
+  @apply bg-gray-200 mx-5 sm:mx-9;
+  width: 1px;
+  height: 28px;
+}
+
+.btn {
+  @apply rounded-full py-2 px-8 text-sm;
+}
+
+.btn-indigo {
+  @apply bg-indigo-500 text-white;
+}
+</style>
