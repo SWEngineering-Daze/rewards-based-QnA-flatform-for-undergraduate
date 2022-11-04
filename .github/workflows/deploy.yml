@@ -18,7 +18,7 @@ jobs:
           script_stop: true
           script: |
             cd /var/www/app
-            git clean -fdx
+            git clean -fd
             git pull
             cd ./client
             pm2 stop ecosystem.config.js
