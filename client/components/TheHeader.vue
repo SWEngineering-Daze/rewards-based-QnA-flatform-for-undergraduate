@@ -8,10 +8,10 @@ const user = {
 
 <template>
   <header class="flex items-center shadow bg-white py-2 px-4">
-    <div class="inline-flex items-center">
+    <NuxtLink to="/" class="inline-flex items-center">
       <img src="@/assets/img/logo.svg" alt="얼렁뚱땅" />
       <span class="text-sm font-medium ml-2">얼렁뚱땅</span>
-    </div>
+    </NuxtLink>
     <div class="flex items-center ml-auto">
       <nav class="flex items-center">
         <NuxtLink class="header-link" to="/store">
