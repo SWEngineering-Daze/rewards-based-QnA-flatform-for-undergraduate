@@ -4,6 +4,6 @@
 
 ## Client
 
-[README.md](/client/README)
+[README.md](/client/README.md)
 
 ## Server
