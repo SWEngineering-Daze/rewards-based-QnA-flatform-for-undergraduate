@@ -111,20 +111,38 @@ const data = [
               <img class="w-6" src="@/assets/img/dropdown.svg" />
               {{ college.name }}
             </DisclosureButton>
-            <DisclosurePanel class="pl-12">
-              <div v-for="department in college.childs" :key="department.name" class="relative mb-2 last:mb-0">
-                <Popover class="inline-block relative">
-                  <PopoverButton class="text-lg focus:outline-none pr-5">{{ department.name }}</PopoverButton>
-                  <PopoverPanel
-                    class="absolute top-0 right-0 translate-x-full bg-white rounded border shadow p-3 whitespace-nowrap max-w-xs max-h-60 overflow-y-scroll z-10"
-                  >
-                    <NuxtLink v-for="course in department.childs" :key="course.name" class="block mb-2 last:mb-0 text-sm" :to="course.href">
-                      {{ course.name }}
-                    </NuxtLink>
-                  </PopoverPanel>
-                </Popover>
-              </div>
-            </DisclosurePanel>
+            <transition
+              enter-active-class="transition duration-100 ease-out"
+              enter-from-class="transform scale-95 opacity-0"
+              enter-to-class="transform scale-100 opacity-100"
+              leave-active-class="transition duration-75 ease-out"
+              leave-from-class="transform scale-100 opacity-100"
+              leave-to-class="transform scale-95 opacity-0"
+            >
+              <DisclosurePanel class="pl-12">
+                <div v-for="department in college.childs" :key="department.name" class="relative mb-2 last:mb-0">
+                  <Popover class="inline-block relative">
+                    <PopoverButton class="text-lg focus:outline-none pr-5">{{ department.name }}</PopoverButton>
+                    <transition
+                      enter-active-class="transition duration-100 ease-out"
+                      enter-from-class="transform scale-95 opacity-0"
+                      enter-to-class="transform scale-100 opacity-100"
+                      leave-active-class="transition duration-75 ease-in"
+                      leave-from-class="transform scale-100 opacity-100"
+                      leave-to-class="transform scale-95 opacity-0"
+                    >
+                      <PopoverPanel
+                        class="absolute top-0 right-0 translate-x-full bg-white rounded border shadow p-3 whitespace-nowrap max-w-xs max-h-60 overflow-y-scroll z-10"
+                      >
+                        <NuxtLink v-for="course in department.childs" :key="course.name" class="block mb-2 last:mb-0 text-sm" :to="course.href">
+                          {{ course.name }}
+                        </NuxtLink>
+                      </PopoverPanel>
+                    </transition>
+                  </Popover>
+                </div>
+              </DisclosurePanel>
+            </transition>
           </Disclosure>
         </ClientOnly>
       </div>
