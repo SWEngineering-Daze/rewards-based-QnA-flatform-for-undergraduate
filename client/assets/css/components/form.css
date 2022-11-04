@@ -1,0 +1,15 @@
+input[type='text'],
+input[type='email'],
+input[type='password'] {
+  @apply block w-full py-2 px-4 text-sm rounded bg-gray-100 border;
+  @apply transition-all outline-none focus:ring focus:ring-indigo-500 focus:ring-opacity-50;
+}
+
+select {
+  @apply block py-2 px-4 text-sm;
+  @apply outline-none;
+}
+
+.group {
+  @apply mb-3;
+}
