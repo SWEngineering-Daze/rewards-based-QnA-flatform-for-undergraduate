@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 const { $axios } = useNuxtApp();
+const router = useRouter();
 
 const email = ref('');
 const emailSuffix = ref('@dongguk.edu');
@@ -19,7 +20,8 @@ async function submit() {
 
     const { data } = await $axios.post('/auth/signup', credentials);
 
-    console.log(data, credentials);
+    alert('인증 링크가 이메일로 전송되었습니다!');
+    router.replace('/auth/login');
   } catch (e) {
     console.log(e, e.response);
   } finally {
