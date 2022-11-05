@@ -12,6 +12,7 @@
   "devDependencies": {
     "@nuxtjs/eslint-config-typescript": "^11.0.0",
     "@nuxtjs/tailwindcss": "^6.1.2",
+    "@tailwindcss/line-clamp": "^0.4.2",
     "eslint": "^8.26.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -19,6 +20,7 @@
     "prettier": "^2.7.1"
   },
   "dependencies": {
-    "@headlessui/vue": "^0.0.0-insiders.f66f492"
+    "@headlessui/vue": "^0.0.0-insiders.f66f492",
+    "dayjs": "^1.11.6"
   }
 }
