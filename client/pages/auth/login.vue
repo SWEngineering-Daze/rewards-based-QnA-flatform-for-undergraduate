@@ -1,10 +1,31 @@
 <script lang="ts" setup>
+const { $axios } = useNuxtApp();
+
 const email = ref('');
 const emailSuffix = ref('@dongguk.edu');
 const password = ref('');
 
-function submit() {
-  alert(`submit with '${email.value + emailSuffix.value}' and '${password.value}'`);
+const loading = ref(false);
+
+async function submit() {
+  const credentials = {
+    email: email.value + emailSuffix.value,
+    password: password.value,
+  };
+
+  try {
+    loading.value = true;
+
+    const { data } = await $axios.post('/auth/login', credentials);
+
+    alert(`token: ${data.token}`);
+  } catch (e) {
+    alert('에러!');
+
+    console.log(e, e.response);
+  } finally {
+    loading.value = false;
+  }
 }
 </script>
 
