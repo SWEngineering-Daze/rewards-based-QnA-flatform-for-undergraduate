@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { Popover, PopoverButton, PopoverPanel, Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
+import { departments, courses } from '@/fakeBackend';
 
 const isOpened = ref(false);
 
@@ -14,87 +15,47 @@ function close() {
 // function toggle() {
 //   isOpened.value = !isOpened.value;
 // }
+interface CourseMenu {
+  name: string;
+  href: string;
+}
 
-const data = [
-  {
-    name: '공과대학',
-    childs: [
-      {
-        name: '컴퓨터공학과',
-        childs: [
-          {
-            name: '소프트웨어공학개론',
-            href: '/courses/1',
-          },
-          {
-            name: '웹프로그래밍',
-            href: '/courses/2',
-          },
-          {
-            name: '시스템소프트웨어및실습',
-            href: '/courses/3',
-          },
-          {
-            name: '객체지향프로그래밍',
-            href: '/courses/4',
-          },
-        ],
-      },
-      {
-        name: '정보통신공학과',
-        childs: [
-          {
-            name: '컴퓨터네트워크',
-            href: '/courses/5',
-          },
-          {
-            name: '데이터통신입문',
-            href: '/courses/6',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    name: '예술대학',
-    childs: [
-      {
-        name: '조소학과',
-        childs: [
-          {
-            name: '조소학개론',
-            href: '/courses/1',
-          },
-          {
-            name: '조소와실습1',
-            href: '/courses/2',
-          },
-          {
-            name: '조소와실습2',
-            href: '/courses/3',
-          },
-          {
-            name: '조소와실습4',
-            href: '/courses/4',
-          },
-        ],
-      },
-      {
-        name: '서양화과',
-        childs: [
-          {
-            name: '오우라후나트파1',
-            href: '/courses/5',
-          },
-          {
-            name: '오우라후나트파2',
-            href: '/courses/6',
-          },
-        ],
-      },
-    ],
-  },
-];
+interface DepartmentMenu {
+  name: string;
+  href: string;
+  childs: CourseMenu[];
+}
+
+interface CollegeMenu {
+  name: string;
+  childs: DepartmentMenu[];
+}
+
+const menu: CollegeMenu[] = [];
+for (const department of departments) {
+  // college
+  let college = menu.find(m => m.name === department.parent.name);
+  if (!college) {
+    menu.push({
+      name: department.parent.name,
+      childs: [],
+    });
+    college = menu.find(m => m.name === department.parent.name);
+  }
+  // department
+  college.childs.push({
+    name: department.name,
+    href: `/qna/department/${department.id}`,
+    childs: [],
+  });
+}
+for (const course of courses) {
+  const department = menu.find(m => m.childs.findIndex(d => d.name === course.parent.name) !== -1)?.childs.find(d => d.name === course.parent.name);
+  department.childs.push({
+    name: course.name,
+    href: `/qna/course/${course.id}`,
+  });
+}
 </script>
 
 <template>
@@ -104,7 +65,7 @@ const data = [
         <img class="w-6" src="@/assets/img/close.svg" />
       </button>
 
-      <div v-for="college in data" :key="college.name" class="mb-4 last:mb-0">
+      <div v-for="college in menu" :key="college.name" class="mb-4 last:mb-0">
         <ClientOnly>
           <Disclosure v-slot="{ open }">
             <DisclosureButton
@@ -162,7 +123,7 @@ const data = [
 
 <style lang="postcss" scoped>
 .sidebar {
-  @apply bg-gray-200 h-full transition-transform;
+  @apply bg-gray-100 h-full transition-transform;
   min-width: 300px;
 }
 
