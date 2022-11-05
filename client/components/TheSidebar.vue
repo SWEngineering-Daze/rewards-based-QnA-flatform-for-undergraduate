@@ -33,6 +33,7 @@ interface CollegeMenu {
 }
 
 const { data: departments } = await $axios.get('/departments');
+const { data: courses } = await $axios.get('/courses');
 
 const menu: CollegeMenu[] = [];
 for (const department of departments) {
@@ -52,13 +53,13 @@ for (const department of departments) {
     childs: [],
   });
 }
-// for (const course of courses) {
-//   const department = menu.find(m => m.childs.findIndex(d => d.name === course.parent.name) !== -1)?.childs.find(d => d.name === course.parent.name);
-//   department.childs.push({
-//     name: course.name,
-//     href: `/qna/course/${course.id}`,
-//   });
-// }
+for (const course of courses) {
+  const department = menu.find(m => m.childs.findIndex(d => d.name === course.parent.name) !== -1)?.childs.find(d => d.name === course.parent.name);
+  department.childs.push({
+    name: course.name,
+    href: `/qna/course/${course.id}`,
+  });
+}
 </script>
 
 <template>
