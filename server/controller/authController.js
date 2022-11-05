@@ -44,8 +44,7 @@ export const signup = async (req, res) => {
       from: config.SOTREE_EMAIL,
       to: email,
       subject: '[대학생을 위한 리워드 기반 Q&A 플랫폼] 회원가입 승인 메일입니다.',
-      html:
-        '회원가입을 완료하기 위해 아래의 URL로 이동해주세요. <br>' + `http://localhost:${config}/verify/${tokenValue}`, // 프론트 URL
+      html: '회원가입을 완료하기 위해 아래의 URL로 이동해주세요. <br>' + `https://sw.bisue.shop/verify/${tokenValue}`, // 프론트 URL
     });
 
     res.status(200).json({
