@@ -45,7 +45,7 @@ export const signup = async (req, res) => {
       subject: '[대학생을 위한 리워드 기반 Q&A 플랫폼] 회원가입 승인 이메일입니다.',
       html:
         '회원가입을 완료하기 위해 아래의 URL로 이동해주세요. <br>' +
-        `http://sw.bisue.shop/auth/veifry?token=${tokenValue}`, // 프론트 URL
+        `http://sw.bisue.shop/auth/verify?token=${tokenValue}`, // 프론트 URL
     });
 
     res.status(200).json({
