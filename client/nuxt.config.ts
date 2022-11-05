@@ -12,5 +12,6 @@ export default defineNuxtConfig({
       },
       meta: [{ name: 'description', content: '팀 얼렁뚱땅' }],
     },
+    pageTransition: { name: 'page', mode: 'out-in' },
   },
 });
