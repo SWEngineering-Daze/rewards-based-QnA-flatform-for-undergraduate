@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/auth', authRouter);
 
-app.post('/test', async (req, res) => {
+app.get('/deparements', async (req, res) => {
   //   const depts = [
   //     {
   //       parent: {
@@ -97,14 +97,13 @@ app.post('/test', async (req, res) => {
   //     })();
   //   }
 
-  const depts = (await Department.find().exec()).sort({ 'parent.id': 1 });
-  depts.sort((a, b) => {
-    return a.parent.id < b.parent.id;
-  });
+  const depts = await Department.find()
+    .sort({
+      'parent.id': 1,
+    })
+    .exec();
 
   console.log(depts);
-
-  res.json(depts);
 });
 
 app.use('/', (req, res) => {
