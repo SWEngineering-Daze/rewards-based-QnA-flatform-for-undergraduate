@@ -21,7 +21,9 @@ async function requestVerify() {
   }
 }
 
-requestVerify();
+onMounted(() => {
+  requestVerify();
+});
 </script>
 
 <template>
