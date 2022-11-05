@@ -18,7 +18,7 @@ async function submit() {
   try {
     loading.value = true;
 
-    const { data } = await $axios.post('/auth/signup', credentials);
+    await $axios.post('/auth/signup', credentials);
 
     alert('인증 링크가 이메일로 전송되었습니다!');
     router.replace('/auth/login');
