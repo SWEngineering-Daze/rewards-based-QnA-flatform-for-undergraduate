@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import { config } from './config.js';
 import authRouter from './router/auth.js';
-import { Department } from './database/mongodb.js';
+import { Course, Department } from './database/mongodb.js';
 
 const app = express();
 
@@ -23,6 +23,12 @@ app.get('/departments', async (req, res) => {
     .exec();
 
   res.json(departments);
+});
+
+app.get('/courses', async (req, res) => {
+  const courses = await Course.find().exec();
+
+  res.json(courses);
 });
 
 app.get('/', (req, res) => {

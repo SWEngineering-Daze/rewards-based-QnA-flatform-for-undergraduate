@@ -1,5 +1,5 @@
 import { ServerApiVersion } from 'mongodb';
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { config } from '../config.js';
 
 const uri = `mongodb+srv://${config.DB_USER}:${config.DB_PASSWORD}@cluster0.qq1ux.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
@@ -30,6 +30,15 @@ const departmentSchema = mongoose.Schema({
   name: String,
 });
 
+const courseSchema = mongoose.Schema({
+  parent: {
+    type: Schema.Types.ObjectId,
+    ref: 'departments',
+  },
+  name: String,
+});
+
 export const User = mongoose.model('users', UserSchema);
 export const SignupToken = mongoose.model('signupTokens', SignupTokenSchema);
 export const Department = mongoose.model('departments', departmentSchema);
+export const Course = mongoose.model('courses', courseSchema);
