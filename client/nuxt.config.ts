@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   root: true,
   modules: ['@nuxtjs/tailwindcss'],
-  css: ['@/assets/css/fonts.css'],
+  css: ['@/assets/css/fonts.css', '@/assets/css/main.css'],
 
   app: {
     head: {
@@ -12,5 +12,6 @@ export default defineNuxtConfig({
       },
       meta: [{ name: 'description', content: '팀 얼렁뚱땅' }],
     },
+    pageTransition: { name: 'page', mode: 'out-in' },
   },
 });
