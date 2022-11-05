@@ -7,7 +7,7 @@ const user = {
 </script>
 
 <template>
-  <header class="flex items-center shadow bg-white py-2 px-4">
+  <header class="flex items-center shadow bg-white py-2 px-4 z-20">
     <NuxtLink to="/" class="inline-flex items-center">
       <img src="@/assets/img/logo.svg" alt="얼렁뚱땅" />
       <span class="text-sm font-medium ml-2">얼렁뚱땅</span>
