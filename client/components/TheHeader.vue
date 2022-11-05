@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { Menu, MenuButton, MenuItems } from '@headlessui/vue';
 
-const user = {
-  email: 'example@dgu.ac.kr',
+const auth = {
+  loggedIn: false,
+  user: null,
 };
 </script>
 
@@ -22,43 +23,49 @@ const user = {
       <span class="divider"></span>
 
       <!-- dropdown -->
-      <ClientOnly>
-        <Menu as="div" class="relative">
-          <MenuButton class="inline-flex items-center">
-            <span class="hidden sm:inline text-sm font-medium">{{ user.email }}</span>
-            <img class="inline sm:hidden w-6" src="@/assets/img/user.svg" />
-            <img class="w-6" src="@/assets/img/dropdown.svg" />
-          </MenuButton>
-          <transition
-            enter-active-class="transition duration-100 ease-out"
-            enter-from-class="transform scale-95 opacity-0"
-            enter-to-class="transform scale-100 opacity-100"
-            leave-active-class="transition duration-75 ease-in"
-            leave-from-class="transform scale-100 opacity-100"
-            leave-to-class="transform scale-95 opacity-0"
-          >
-            <MenuItems
-              class="absolute right-0 mt-2 w-36 origin-top-right divide-y tracking-wider text-sm divide-gray-200 rounded-md bg-white shadow ring-1 ring-black ring-opacity-10 focus:outline-none"
+      <template v-if="auth.loggedIn">
+        <ClientOnly>
+          <Menu as="div" class="relative">
+            <MenuButton class="inline-flex items-center">
+              <span class="hidden sm:inline text-sm font-medium">{{ auth.user.email }}</span>
+              <img class="inline sm:hidden w-6" src="@/assets/img/user.svg" />
+              <img class="w-6" src="@/assets/img/dropdown.svg" />
+            </MenuButton>
+            <transition
+              enter-active-class="transition duration-100 ease-out"
+              enter-from-class="transform scale-95 opacity-0"
+              enter-to-class="transform scale-100 opacity-100"
+              leave-active-class="transition duration-75 ease-in"
+              leave-from-class="transform scale-100 opacity-100"
+              leave-to-class="transform scale-95 opacity-0"
             >
-              <div class="p-3">
-                <div class="flex item-center mb-2">
-                  <span>Lv.13</span>
-                  <span class="ml-auto">45%</span>
+              <MenuItems
+                class="absolute right-0 mt-2 w-36 origin-top-right divide-y tracking-wider text-sm divide-gray-200 rounded-md bg-white shadow ring-1 ring-black ring-opacity-10 focus:outline-none"
+              >
+                <div class="p-3">
+                  <div class="flex item-center mb-2">
+                    <span>Lv.13</span>
+                    <span class="ml-auto">45%</span>
+                  </div>
+                  <div class="flex items-center text-cyan-500">
+                    <img class="w-6" src="@/assets/img/point.svg" />
+                    <span class="ml-auto">1,550P</span>
+                  </div>
                 </div>
-                <div class="flex items-center text-cyan-500">
-                  <img class="w-6" src="@/assets/img/point.svg" />
-                  <span class="ml-auto">1,550P</span>
+                <div class="p-3">
+                  <button class="text-red-500">로그아웃</button>
                 </div>
-              </div>
-              <div class="p-3">
-                <button class="text-red-500">로그아웃</button>
-              </div>
-            </MenuItems>
-          </transition>
-        </Menu>
-      </ClientOnly>
+              </MenuItems>
+            </transition>
+          </Menu>
+        </ClientOnly>
 
-      <NuxtLink class="btn btn-indigo ml-6 hidden sm:inline-block">내정보</NuxtLink>
+        <NuxtLink class="btn btn-indigo ml-6 hidden sm:inline-block" to="/profile">내정보</NuxtLink>
+      </template>
+      <template v-else>
+        <NuxtLink class="btn btn-link hidden sm:inline-block" to="/auth/register">회원가입</NuxtLink>
+        <NuxtLink class="btn btn-indigo hidden sm:inline-block" to="/auth/login">로그인</NuxtLink>
+      </template>
     </div>
   </header>
 </template>
