@@ -14,7 +14,6 @@ mongoose.connect(uri, {
 const UserSchema = mongoose.Schema({
   email: String,
   password: String,
-  name: String,
 });
 
 const SignupTokenSchema = mongoose.Schema({
@@ -33,3 +32,4 @@ const departmentSchema = mongoose.Schema({
 
 export const User = mongoose.model('users', UserSchema);
 export const SignupToken = mongoose.model('signupTokens', SignupTokenSchema);
+export const Department = mongoose.model('departments', departmentSchema);
