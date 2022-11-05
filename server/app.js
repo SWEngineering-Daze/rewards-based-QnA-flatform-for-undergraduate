@@ -13,6 +13,11 @@ app.use(morgan('tiny'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+app.use('/', (req, res) => {
+  res.json({
+    message: '프론트의 신 변찬혁..',
+  });
+});
 app.use('/auth', authRouter);
 
 app.listen(config.SERVER_PORT, () => {
