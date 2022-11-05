@@ -1,11 +1,30 @@
 <script lang="ts" setup>
+const { $axios } = useNuxtApp();
+
 const email = ref('');
 const emailSuffix = ref('@dongguk.edu');
 const password = ref('');
 const passwordConfirmation = ref('');
 
-function submit() {
-  alert(`submit with '${email.value + emailSuffix.value}' and '${password.value}' and '${passwordConfirmation.value}'`);
+const loading = ref(false);
+
+async function submit() {
+  const credentials = {
+    email: email.value + emailSuffix.value,
+    password: password.value,
+  };
+
+  try {
+    loading.value = true;
+
+    const { data } = await $axios.post('/auth/signup', credentials);
+
+    console.log(data, credentials);
+  } catch (e) {
+    console.log(e, e.response);
+  } finally {
+    loading.value = false;
+  }
 }
 </script>
 
@@ -34,7 +53,7 @@ function submit() {
       </div>
       <div class="flex">
         <NuxtLink class="btn btn-link flex-1" to="/auth/login">로그인</NuxtLink>
-        <button class="btn btn-primary flex-1" type="submit">회원가입</button>
+        <button class="btn btn-primary flex-1" type="submit" :disabled="loading">{{ loading ? '로딩중..' : '회원가입' }}</button>
       </div>
     </form>
   </div>
