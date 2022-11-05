@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { Popover, PopoverButton, PopoverPanel, Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
-import { departments, courses } from '@/fakeBackend';
+
+const { $axios } = useNuxtApp();
 
 const isOpened = ref(false);
 
@@ -31,6 +32,8 @@ interface CollegeMenu {
   childs: DepartmentMenu[];
 }
 
+const { data: departments } = await $axios.get('/departments');
+
 const menu: CollegeMenu[] = [];
 for (const department of departments) {
   // college
@@ -49,13 +52,13 @@ for (const department of departments) {
     childs: [],
   });
 }
-for (const course of courses) {
-  const department = menu.find(m => m.childs.findIndex(d => d.name === course.parent.name) !== -1)?.childs.find(d => d.name === course.parent.name);
-  department.childs.push({
-    name: course.name,
-    href: `/qna/course/${course.id}`,
-  });
-}
+// for (const course of courses) {
+//   const department = menu.find(m => m.childs.findIndex(d => d.name === course.parent.name) !== -1)?.childs.find(d => d.name === course.parent.name);
+//   department.childs.push({
+//     name: course.name,
+//     href: `/qna/course/${course.id}`,
+//   });
+// }
 </script>
 
 <template>
