@@ -11,11 +11,8 @@ async function requestVerify() {
       signupToken: token,
     });
 
-    alert('성공!' + data);
-    console.log(data);
     router.replace('/auth/login');
   } catch (e) {
-    alert('오류!' + e.response);
     console.log(e, e.response);
     router.replace('/');
   }
