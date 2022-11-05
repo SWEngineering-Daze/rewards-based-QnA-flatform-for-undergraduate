@@ -27,11 +27,9 @@ app.get('/departments', async (req, res) => {
 });
 
 app.get('/courses', async (req, res) => {
-  const courses = await Course.find().exec();
+  const courses_with_depts = await Course.find().populate('parent').exec();
 
-  const joined = await Course.find().populate('parent').exec();
-
-  res.json(joined);
+  res.json(courses_with_depts);
 });
 
 app.get('/', (req, res) => {
