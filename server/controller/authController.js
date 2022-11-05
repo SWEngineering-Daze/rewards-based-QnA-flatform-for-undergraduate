@@ -6,7 +6,7 @@ import nodeMailer from 'nodemailer';
 import crypto from 'crypto';
 
 export const signup = async (req, res) => {
-  const { email, password, name } = req.body;
+  const { email, password } = req.body;
 
   const domain = email.split('@')[1];
   console.log(domain);
@@ -27,7 +27,6 @@ export const signup = async (req, res) => {
       value: tokenValue,
       email,
       password: encrypted,
-      name,
     });
 
     const transporter = nodeMailer.createTransport({

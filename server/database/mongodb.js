@@ -23,5 +23,13 @@ const SignupTokenSchema = mongoose.Schema({
   password: String,
 });
 
+const departmentSchema = mongoose.Schema({
+  parent: {
+    id: Number,
+    name: String,
+  },
+  name: String,
+});
+
 export const User = mongoose.model('users', UserSchema);
 export const SignupToken = mongoose.model('signupTokens', SignupTokenSchema);
