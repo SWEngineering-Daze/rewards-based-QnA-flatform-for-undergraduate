@@ -15,6 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/auth', authRouter);
+
 app.get('/departments', async (req, res) => {
   const departments = await Department.find()
     .sort({
@@ -28,7 +29,9 @@ app.get('/departments', async (req, res) => {
 app.get('/courses', async (req, res) => {
   const courses = await Course.find().exec();
 
-  res.json(courses);
+  const joined = await Course.find().populate('parent').exec();
+
+  res.json(joined);
 });
 
 app.get('/', (req, res) => {
