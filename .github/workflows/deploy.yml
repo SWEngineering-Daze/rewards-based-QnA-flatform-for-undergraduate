@@ -25,7 +25,7 @@ jobs:
             npm install
             npm run build
             pm2 start ecosystem.config.js
-            cd ./server
+            cd ../server
             pm2 stop ecosystem.config.js
             npm install
             pm2 start ecosystem.config.js
