@@ -69,7 +69,7 @@ const auth = {
       </template>
       <template v-else>
         <NuxtLink class="btn btn-link hidden sm:inline-block" to="/auth/register">회원가입</NuxtLink>
-        <NuxtLink class="btn btn-indigo hidden sm:inline-block" to="/auth/login">로그인</NuxtLink>
+        <NuxtLink class="btn btn-indigo" to="/auth/login">로그인</NuxtLink>
       </template>
     </div>
   </header>
