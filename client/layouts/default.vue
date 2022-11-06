@@ -1,8 +1,12 @@
+<script lang="ts" setup>
+const sidebarOpened = ref(false);
+</script>
+
 <template>
   <div class="min-h-screen flex flex-col">
-    <TheHeader />
+    <TheHeader @sidebar-toggle="sidebarOpened = !sidebarOpened" />
     <div class="flex-1 flex">
-      <TheSidebar />
+      <TheSidebar :opened="sidebarOpened" @sidebar-close="sidebarOpened = false" />
       <div class="flex-1">
         <slot></slot>
       </div>

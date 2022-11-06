@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { Menu, MenuButton, MenuItems } from '@headlessui/vue';
 
+defineEmits(['sidebarToggle']);
+
 const auth = {
   loggedIn: false,
   user: null,
@@ -9,6 +11,9 @@ const auth = {
 
 <template>
   <header class="flex items-center shadow bg-white py-2 px-4 z-20">
+    <button class="inline-block md:hidden mr-2" @click="$emit('sidebarToggle')">
+      <img class="w-8" src="@/assets/img/menu.svg" />
+    </button>
     <NuxtLink to="/" class="inline-flex items-center">
       <img src="@/assets/img/logo.svg" alt="얼렁뚱땅" />
       <span class="text-sm font-medium ml-2">얼렁뚱땅</span>
