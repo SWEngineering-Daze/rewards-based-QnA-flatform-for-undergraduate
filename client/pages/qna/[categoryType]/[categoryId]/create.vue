@@ -1,11 +1,14 @@
 <script lang="ts" setup>
+import { useToast } from 'vue-toastification';
+
 const { type, category } = useCategory();
+const toast = useToast();
 
 const title = ref('');
 const content = ref('');
 
 function submit() {
-  alert(`submit with '${title.value}' and '${content.value}'`);
+  toast.success(`테스트용 - 게시: ${title.value}\n${content.value}`);
 }
 </script>
 

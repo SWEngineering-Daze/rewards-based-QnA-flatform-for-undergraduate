@@ -1,5 +1,8 @@
 <script lang="ts" setup>
+import { useToast } from 'vue-toastification';
+
 const { $axios } = useNuxtApp();
+const toast = useToast();
 
 const email = ref('');
 const emailSuffix = ref('@dongguk.edu');
@@ -18,9 +21,9 @@ async function submit() {
 
     const { data } = await $axios.post('/auth/login', credentials);
 
-    alert(`token: ${data.token}`);
+    toast.success(`성공!\n테스트용 - token: ${data.token}`);
   } catch (e) {
-    alert('에러!');
+    toast.error('오류가 발생했습니다!');
 
     console.error(e, e.response);
   } finally {

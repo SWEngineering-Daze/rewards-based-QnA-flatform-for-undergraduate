@@ -1,6 +1,9 @@
 <script lang="ts" setup>
+import { useToast } from 'vue-toastification';
+
 const { $axios } = useNuxtApp();
 const router = useRouter();
+const toast = useToast();
 
 const email = ref('');
 const emailSuffix = ref('@dongguk.edu');
@@ -20,10 +23,10 @@ async function submit() {
 
     await $axios.post('/auth/signup', credentials);
 
-    alert('인증 링크가 이메일로 전송되었습니다!');
+    toast.success(`인증 링크가 이메일로 전송되었습니다!`);
     router.replace('/auth/login');
   } catch (e) {
-    alert('에러!');
+    toast.error('오류가 발생했습니다!');
 
     console.error(e, e.response);
   } finally {
