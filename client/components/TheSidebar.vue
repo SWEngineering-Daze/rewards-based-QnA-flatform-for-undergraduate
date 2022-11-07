@@ -53,7 +53,7 @@ for (const course of courses) {
 
 <template>
   <div class="relative">
-    <nav class="sidebar absolute left-0 top md:static p-6 z-10" :class="{ opened: props.opened }">
+    <nav class="sidebar absolute left-0 top md:static p-6 z-10 overflow-y-auto" :class="{ opened: props.opened }">
       <button class="absolute top-0 right-0 p-5 md:hidden" @click="$emit('sidebarClose')">
         <img class="w-6" src="@/assets/img/close.svg" />
       </button>
