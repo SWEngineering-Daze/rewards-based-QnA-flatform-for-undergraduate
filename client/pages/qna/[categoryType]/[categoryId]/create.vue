@@ -29,7 +29,7 @@ function submit() {
         <textarea v-model="content" name="content" rows="30"></textarea>
       </div>
       <div class="flex">
-        <NuxtLink class="btn btn-link flex-1" :to="`/qna/${type}/${category.id}`">취소</NuxtLink>
+        <NuxtLink class="btn btn-link flex-1" :to="`/qna/${type}/${category.name}`">취소</NuxtLink>
         <button class="btn btn-primary flex-1" type="submit">작성</button>
       </div>
     </form>

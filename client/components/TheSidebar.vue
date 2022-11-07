@@ -38,7 +38,7 @@ for (const department of departments) {
   // department
   college.childs.push({
     name: department.name,
-    href: `/qna/department/${department.id}`,
+    href: `/qna/department/${department.name}`,
     childs: [],
   });
 }
@@ -46,7 +46,7 @@ for (const course of courses) {
   const department = menu.find(m => m.childs.findIndex(d => d.name === course.parent.name) !== -1)?.childs.find(d => d.name === course.parent.name);
   department.childs.push({
     name: course.name,
-    href: `/qna/course/${course.id}`,
+    href: `/qna/course/${course.name}`,
   });
 }
 </script>

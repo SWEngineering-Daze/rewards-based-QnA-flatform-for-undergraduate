@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-import { fakeAxiosQuestions } from '~~/fakeBackend';
+const { type, category } = await useCategory();
 
-const { type, category } = useCategory();
-
-const questions = fakeAxiosQuestions({ type, id: category.id });
+const questions = [];
 </script>
 
 <template>
@@ -13,7 +11,7 @@ const questions = fakeAxiosQuestions({ type, id: category.id });
         <h2 class="font-light text-blue-500 mb-2">{{ category.parent.name }}</h2>
       </template>
       <template v-else>
-        <NuxtLink class="block font-light text-blue-500 mb-2" :to="`/qna/department/${category.parent.id}`">{{ category.parent.name }}</NuxtLink>
+        <NuxtLink class="block font-light text-blue-500 mb-2" :to="`/qna/department/${category.parent.name}`">{{ category.parent.name }}</NuxtLink>
       </template>
       <h1 class="font-bold text-4xl">{{ category.name }}</h1>
     </div>
@@ -29,14 +27,16 @@ const questions = fakeAxiosQuestions({ type, id: category.id });
         </div>
         <div v-for="question in questions" :key="question.id" class="flex items-center my-2">
           <div class="subject-col">
-            <NuxtLink class="block text-indigo-500 text-opacity-75 transition-all hover:text-opacity-100 text-sm" :to="`/qna/course/${question.course.id}`">{{
+            <NuxtLink class="block text-indigo-500 text-opacity-75 transition-all hover:text-opacity-100 text-sm" :to="`/qna/course/${question.course.name}`">{{
               question.course.name
             }}</NuxtLink>
           </div>
           <div class="title-col">
-            <NuxtLink class="block text-indigo-500 text-opacity-75 transition-all hover:text-opacity-100" :to="`/qna/${type}/${category.id}/${question.id}`">{{
-              question.title
-            }}</NuxtLink>
+            <NuxtLink
+              class="block text-indigo-500 text-opacity-75 transition-all hover:text-opacity-100"
+              :to="`/qna/${type}/${category.name}/${question.id}`"
+              >{{ question.title }}</NuxtLink
+            >
           </div>
           <div class="created-col">
             <span class="ml-auto text-gray-500 text-sm">{{ $dayjs(question.createdAt).fromNow() }}</span>
@@ -53,7 +53,7 @@ const questions = fakeAxiosQuestions({ type, id: category.id });
     </template>
 
     <div class="flex justify-end my-8">
-      <NuxtLink class="inline-block text-indigo-500 btn btn-primary" :to="`/qna/${type}/${category.id}/create`">작성하기</NuxtLink>
+      <NuxtLink class="inline-block text-indigo-500 btn btn-primary" :to="`/qna/${type}/${category.name}/create`">작성하기</NuxtLink>
     </div>
   </div>
 </template>
