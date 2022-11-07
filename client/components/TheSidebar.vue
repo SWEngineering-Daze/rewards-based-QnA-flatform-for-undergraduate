@@ -53,7 +53,7 @@ for (const course of courses) {
 
 <template>
   <div class="relative">
-    <nav class="sidebar absolute left-0 top md:static p-6 z-10 overflow-y-auto" :class="{ opened: props.opened }">
+    <nav class="sidebar absolute left-0 top md:static p-6 z-10" :class="{ opened: props.opened }">
       <button class="absolute top-0 right-0 p-5 md:hidden" @click="$emit('sidebarClose')">
         <img class="w-6" src="@/assets/img/close.svg" />
       </button>
@@ -91,7 +91,7 @@ for (const course of courses) {
                       leave-to-class="transform scale-95 opacity-0"
                     >
                       <PopoverPanel
-                        class="absolute top-0 right-0 translate-x-full bg-white rounded border shadow p-3 whitespace-nowrap max-w-xs max-h-60 overflow-y-scroll z-10"
+                        class="absolute top-0 left-full bg-white rounded border shadow p-3 whitespace-nowrap max-w-xs max-h-60 overflow-y-scroll z-10"
                       >
                         <NuxtLink
                           v-for="course in department.childs"
