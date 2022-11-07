@@ -78,8 +78,8 @@ for (const course of courses) {
             >
               <DisclosurePanel class="pl-12">
                 <div v-for="department in college.childs" :key="department.name" class="relative mb-2 last:mb-0">
-                  <Popover v-slot="{ open }" class="inline-block relative">
-                    <PopoverButton class="text-black transition-all outline-none pr-5" :class="{ 'text-opacity-75 hover:text-opacity-100': !open }">
+                  <Popover v-slot="{ open: dropdownOpened }" class="inline-block relative">
+                    <PopoverButton class="text-black transition-all outline-none pr-5" :class="{ 'text-opacity-75 hover:text-opacity-100': !dropdownOpened }">
                       {{ department.name }}
                     </PopoverButton>
                     <transition

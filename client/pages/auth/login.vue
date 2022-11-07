@@ -22,7 +22,7 @@ async function submit() {
   } catch (e) {
     alert('에러!');
 
-    console.log(e, e.response);
+    console.error(e, e.response);
   } finally {
     loading.value = false;
   }

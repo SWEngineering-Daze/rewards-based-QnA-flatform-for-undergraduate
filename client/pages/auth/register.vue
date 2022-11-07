@@ -23,7 +23,9 @@ async function submit() {
     alert('인증 링크가 이메일로 전송되었습니다!');
     router.replace('/auth/login');
   } catch (e) {
-    console.log(e, e.response);
+    alert('에러!');
+
+    console.error(e, e.response);
   } finally {
     loading.value = false;
   }

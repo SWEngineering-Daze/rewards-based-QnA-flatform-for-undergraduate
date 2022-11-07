@@ -14,6 +14,7 @@ async function requestVerify() {
     router.replace('/auth/login');
   } catch (e) {
     alert('인증 중 에러가 발생했습니다.\n유효한 토큰인지 확인해주세요!');
+
     console.log(e, e.response);
     router.replace('/');
   }
