@@ -20,7 +20,7 @@ if (type !== 'course') {
 
 async function submit() {
   try {
-    const { data } = await $axios.post('/questions', {
+    await $axios.post('/questions', {
       title: title.value,
       content: content.value,
       courseName: category.name,

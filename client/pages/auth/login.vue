@@ -6,7 +6,6 @@ definePageMeta({
   middleware: ['guest'],
 });
 
-const { $axios } = useNuxtApp();
 const auth = useAuth();
 const router = useRouter();
 const toast = useToast();

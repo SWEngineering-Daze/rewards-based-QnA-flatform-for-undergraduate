@@ -1,7 +1,7 @@
-import { useAuth } from '@/stores/auth';
 import { useToast } from 'vue-toastification';
+import { useAuth } from '@/stores/auth';
 
-export default defineNuxtRouteMiddleware((to, from) => {
+export default defineNuxtRouteMiddleware(() => {
   const auth = useAuth();
 
   if (!auth.loggedIn) {
