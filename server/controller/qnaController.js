@@ -1,4 +1,4 @@
-import { Course, Department, Question } from '../database/mongodb.js';
+import { Answer, Course, Department, Question } from '../database/mongodb.js';
 
 export const writeQuestion = async (req, res) => {
   const { email } = req.decoded;
@@ -76,15 +76,27 @@ export const viewQuestionDetail = async (req, res) => {
   const { email } = req.decoded;
   const { id } = req.params;
 
-  const question = await Question.findOne({
+  const qna = await Question.findOne({
     _id: id,
-  }).exec();
+  })
+    .populate('answers')
+    .exec();
 
-  console.log(question);
+  console.log(qna);
+
+  res.json(qna);
 };
 
 export const writeAnswer = async (req, res) => {
   const { email } = req.decoded;
   const { id } = req.params;
-  const { title, content } = req.body;
+  const { content } = req.body;
+
+  const answer = await Answer.create({
+    writer: email,
+    content,
+    question: id,
+  });
+
+  res.json(answer);
 };
