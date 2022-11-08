@@ -71,3 +71,20 @@ export const viewQuestionList = async (req, res) => {
     res.json(questionList);
   }
 };
+
+export const viewQuestionDetail = async (req, res) => {
+  const { email } = req.decoded;
+  const { id } = req.params;
+
+  const question = await Question.findOne({
+    _id: id,
+  }).exec();
+
+  console.log(question);
+};
+
+export const writeAnswer = async (req, res) => {
+  const { email } = req.decoded;
+  const { id } = req.params;
+  const { title, content } = req.body;
+};
