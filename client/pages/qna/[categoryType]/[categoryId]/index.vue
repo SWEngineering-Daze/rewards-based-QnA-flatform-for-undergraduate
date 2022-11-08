@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+definePageMeta({
+  middleware: ['auth'],
+});
+
 const { type, category } = await useCategory();
 const { $axios } = useNuxtApp();
 

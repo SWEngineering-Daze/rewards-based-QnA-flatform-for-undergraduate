@@ -1,12 +1,37 @@
 <script lang="ts" setup>
+import { useToast } from 'vue-toastification';
+
+definePageMeta({
+  middleware: ['auth'],
+});
+
+const { $axios } = useNuxtApp();
 const { type, category } = await useCategory();
 const toast = useToast();
+const router = useRouter();
 
 const title = ref('');
 const content = ref('');
 
-function submit() {
-  toast.success(`테스트용 - 게시: ${title.value}\n${content.value}`);
+if (type !== 'course') {
+  toast.error('유효하지 않은 접근입니다!');
+  router.replace('/');
+}
+
+async function submit() {
+  try {
+    const { data } = await $axios.post('/questions', {
+      title: title.value,
+      content: content.value,
+      courseName: category.name,
+    });
+
+    toast.success(`성공적으로 질문을 작성했습니다!"`);
+    router.replace(`/qna/${type}/${category.name}`);
+  } catch (e) {
+    toast.error('에러가 발생했습니다!');
+    console.error(e, e.response);
+  }
 }
 </script>
 

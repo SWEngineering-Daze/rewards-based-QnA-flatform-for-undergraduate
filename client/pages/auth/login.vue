@@ -1,7 +1,14 @@
 <script lang="ts" setup>
 import { useToast } from 'vue-toastification';
+import { useAuth } from '@/stores/auth';
+
+definePageMeta({
+  middleware: ['guest'],
+});
 
 const { $axios } = useNuxtApp();
+const auth = useAuth();
+const router = useRouter();
 const toast = useToast();
 
 const email = ref('');
@@ -19,9 +26,10 @@ async function submit() {
   try {
     loading.value = true;
 
-    const { data } = await $axios.post('/auth/login', credentials);
+    await auth.login(credentials);
 
-    toast.success(`성공!\n테스트용 - token: ${data.token}`);
+    toast.success(`로그인 되었습니다!`);
+    router.replace('/');
   } catch (e) {
     toast.error('오류가 발생했습니다!');
 

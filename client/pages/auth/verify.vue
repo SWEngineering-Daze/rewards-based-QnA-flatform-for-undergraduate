@@ -1,6 +1,10 @@
 <script lang="ts" setup>
 import { useToast } from 'vue-toastification';
 
+definePageMeta({
+  middleware: ['guest'],
+});
+
 const { $axios } = useNuxtApp();
 const route = useRoute();
 const router = useRouter();
