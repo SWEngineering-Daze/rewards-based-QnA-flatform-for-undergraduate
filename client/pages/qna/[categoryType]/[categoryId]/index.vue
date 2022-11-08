@@ -34,8 +34,8 @@ const { data: questions } = await $axios.get(`/questions/${type}/${category.name
           <div class="subject-col">
             <NuxtLink
               class="block text-indigo-500 text-opacity-75 transition-all hover:text-opacity-100 text-sm"
-              :to="`/qna/course/${question.courseID.name}`"
-              >{{ question.courseID.name }}</NuxtLink
+              :to="`/qna/course/${question.course.name}`"
+              >{{ question.course.name }}</NuxtLink
             >
           </div>
           <div class="title-col">

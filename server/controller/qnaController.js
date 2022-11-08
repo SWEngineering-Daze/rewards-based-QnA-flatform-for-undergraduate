@@ -16,7 +16,7 @@ export const writeQuestion = async (req, res) => {
     writer: email,
     title,
     content,
-    courseID: courseID,
+    course: courseID,
   });
 
   res.json(question);
@@ -36,14 +36,14 @@ export const viewQuestionList = async (req, res) => {
     const questionList = (
       await Question.find()
         .populate({
-          path: 'courseID',
+          path: 'course',
           populate: {
             path: 'parent',
           },
         })
         .exec()
     ).filter((question) => {
-      return question.courseID.parent.id == id;
+      return question.course.parent.id == id;
     });
 
     console.log(questionList);
@@ -60,11 +60,11 @@ export const viewQuestionList = async (req, res) => {
     const questionList = (
       await Question.find()
         .populate({
-          path: 'courseID',
+          path: 'course',
         })
         .exec()
     ).filter((question) => {
-      return question.courseID._id == id;
+      return question.course._id == id;
     });
 
     console.log(questionList);

@@ -42,9 +42,18 @@ const questionSchema = mongoose.Schema({
   writer: String,
   title: String,
   content: String,
-  courseID: {
+  course: {
     type: Schema.Types.ObjectId,
     ref: 'courses',
+  },
+});
+
+const answerSchema = mongoose.Schema({
+  writer: String,
+  content: String,
+  question: {
+    type: Schema.Types.ObjectId,
+    ref: 'questions',
   },
 });
 
