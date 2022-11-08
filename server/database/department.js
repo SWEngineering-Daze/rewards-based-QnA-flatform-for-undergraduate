@@ -1,4 +1,4 @@
-import { Department } from './mongodb';
+import { Department } from './mongodb.js';
 
 const depts = [
   {
