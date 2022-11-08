@@ -19,19 +19,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/auth', authRouter);
 app.get('/departments', listController.getDepartments);
 app.get('/courses', listController.getCourses);
-app.post('/questions', isAuth, (req, res) => {
+app.post('/questions', isAuth, async (req, res) => {
   const { email } = req.decoded;
   const { title, content } = req.body;
 
-  Question.create({
+  const question = await Question.create({
     writer: email,
     title,
     content,
   });
 
-  res.json({
-    message: 'success',
-  });
+  res.json(question);
 });
 
 app.get('/', (req, res) => {
