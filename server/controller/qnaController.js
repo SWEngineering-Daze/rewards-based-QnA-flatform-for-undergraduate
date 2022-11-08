@@ -23,8 +23,13 @@ export const writeQuestion = async (req, res) => {
 };
 
 export const viewQuestionList = async (req, res) => {
+  const page = parseInt(req.query.page); // 1페이지부터 시작
+  const perPage = 10;
+
   const { email } = req.decoded;
   const { type, name } = req.params;
+
+  let questionList;
 
   if (type == 'department') {
     const { id } = await Department.findOne({
@@ -33,8 +38,11 @@ export const viewQuestionList = async (req, res) => {
       .select('id')
       .exec();
 
-    const questionList = (
+    questionList = (
       await Question.find()
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * perPage)
+        .limit(perPage)
         .populate({
           path: 'course',
           populate: {
@@ -45,9 +53,6 @@ export const viewQuestionList = async (req, res) => {
     ).filter((question) => {
       return question.course.parent.id == id;
     });
-
-    console.log(questionList);
-    res.json(questionList);
   } else if (type == 'course') {
     const { id } = await Course.findOne({
       name,
@@ -57,8 +62,11 @@ export const viewQuestionList = async (req, res) => {
 
     console.log(id);
 
-    const questionList = (
+    questionList = (
       await Question.find()
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * perPage)
+        .limit(perPage)
         .populate({
           path: 'course',
         })
@@ -66,25 +74,32 @@ export const viewQuestionList = async (req, res) => {
     ).filter((question) => {
       return question.course._id == id;
     });
-
-    console.log(questionList);
-    res.json(questionList);
   }
+
+  const cntQuestions = await Question.count();
+
+  res.json({
+    questionList,
+    cntQuestions,
+  });
 };
 
 export const viewQuestionDetail = async (req, res) => {
   const { email } = req.decoded;
   const { id } = req.params;
 
-  const qna = await Question.findOne({
+  const question = await Question.findOne({
     _id: id,
-  })
-    .populate('answers')
-    .exec();
+  }).exec();
 
-  console.log(qna);
+  const answers = await Answer.find({
+    question: question._id,
+  }).sort({ createdAt: 1 });
 
-  res.json(qna);
+  res.json({
+    question,
+    answers,
+  });
 };
 
 export const writeAnswer = async (req, res) => {
