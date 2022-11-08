@@ -5,8 +5,13 @@ definePageMeta({
 
 const { type, category } = await useCategory();
 const { $axios } = useNuxtApp();
+const route = useRoute();
 
-const { data: questions } = await $axios.get(`/questions/${type}/${category.name}`);
+const page = Number.parseInt((route.query.page as string) ?? '1');
+
+const { data: questionPaginator } = await $axios.get(`/questions/${type}/${category.name}?page=${page}`);
+const questions = questionPaginator.questionList;
+const totalQuestions = questionPaginator.cntQuestions;
 </script>
 
 <template>
@@ -21,7 +26,7 @@ const { data: questions } = await $axios.get(`/questions/${type}/${category.name
       <h1 class="font-bold text-4xl">{{ category.name }}</h1>
     </div>
 
-    <div class="text-xs text-gray-500 mb-4">총 {{ questions.length }}개</div>
+    <div class="text-xs text-gray-500 mb-4">총 {{ totalQuestions }}개</div>
 
     <template v-if="questions.length > 0">
       <div>
