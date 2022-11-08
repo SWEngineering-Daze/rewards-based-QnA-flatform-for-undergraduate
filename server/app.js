@@ -18,10 +18,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/auth', authRouter);
-app.get('/departments', listController.getDepartments);
-app.get('/courses', listController.getCourses);
+app.get('/departments', isAuth, listController.getDepartments);
+app.get('/courses', isAuth, listController.getCourses);
 app.post('/questions', isAuth, qnaController.writeQuestion);
 app.get('/questions/:type/:name', isAuth, qnaController.viewQuestionList);
+app.get('/questions/:id', isAuth, qnaController.viewQuestionDetail);
 
 app.get('/', (req, res) => {
   res.json({

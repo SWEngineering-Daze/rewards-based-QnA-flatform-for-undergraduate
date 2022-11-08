@@ -71,3 +71,8 @@ export const viewQuestionList = async (req, res) => {
     res.json(questionList);
   }
 };
+
+export const viewQuestionDetail = async (req, res) => {
+  const { email } = req.decoded;
+  const { id } = req.params;
+};
