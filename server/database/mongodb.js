@@ -38,7 +38,14 @@ const courseSchema = mongoose.Schema({
   name: String,
 });
 
+const questionSchema = mongoose.Schema({
+  writer: String,
+  title: String,
+  content: String,
+});
+
 export const User = mongoose.model('users', UserSchema);
 export const SignupToken = mongoose.model('signupTokens', SignupTokenSchema);
 export const Department = mongoose.model('departments', departmentSchema);
 export const Course = mongoose.model('courses', courseSchema);
+export const Question = mongoose.model('questions', questionSchema);
