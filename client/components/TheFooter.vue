@@ -3,7 +3,7 @@
     <div class="flex justify-center mb-3">
       <a
         class="inline-flex flex-col items-center text-center transition-opacity hover:opacity-80"
-        href="https://github.com/SWEngineering-Daze/client"
+        href="https://github.com/SWEngineering-Daze/rewards-based-QnA-flatform-for-undergraduate"
         target="_blank"
       >
         <img class="w-10 mb-1" src="@/assets/img/github.svg" />
