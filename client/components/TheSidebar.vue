@@ -60,7 +60,7 @@ for (const course of courses) {
 
       <div v-for="college in menu" :key="college.name" class="mb-4 last:mb-0">
         <ClientOnly>
-          <Disclosure v-slot="{ open }">
+          <Disclosure v-slot="{ open, close }">
             <DisclosureButton
               class="inline-flex items-center text-xl text-black font-bold mb-3 transition-all"
               :class="{ 'text-opacity-75 hover:text-opacity-100': !open }"
@@ -78,7 +78,7 @@ for (const course of courses) {
             >
               <DisclosurePanel class="pl-12">
                 <div v-for="department in college.childs" :key="department.name" class="relative mb-2 last:mb-0">
-                  <Popover v-slot="{ open: dropdownOpened }" class="inline-block relative">
+                  <Popover v-slot="{ open: dropdownOpened, close: closeDropdown }" class="inline-block relative">
                     <PopoverButton class="text-black transition-all outline-none pr-5" :class="{ 'text-opacity-75 hover:text-opacity-100': !dropdownOpened }">
                       {{ department.name }}
                     </PopoverButton>
@@ -98,6 +98,11 @@ for (const course of courses) {
                           :key="course.name"
                           class="block mb-2 last:mb-0 text-sm text-black transition-all text-opacity-75 hover:text-opacity-100"
                           :to="course.href"
+                          @click="
+                            close();
+                            closeDropdown();
+                            $emit('sidebarClose');
+                          "
                         >
                           {{ course.name }}
                         </NuxtLink>
