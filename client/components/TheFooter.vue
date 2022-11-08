@@ -16,6 +16,6 @@
 
 <style lang="postcss" scoped>
 footer {
-  @apply p-3 bg-slate-700 text-white text-xs text-gray-300;
+  @apply p-3 bg-slate-700 text-xs text-gray-300;
 }
 </style>

@@ -38,7 +38,7 @@ for (const department of departments) {
   // department
   college.childs.push({
     name: department.name,
-    href: `/qna/department/${department.id}`,
+    href: `/qna/department/${department.name}`,
     childs: [],
   });
 }
@@ -46,7 +46,7 @@ for (const course of courses) {
   const department = menu.find(m => m.childs.findIndex(d => d.name === course.parent.name) !== -1)?.childs.find(d => d.name === course.parent.name);
   department.childs.push({
     name: course.name,
-    href: `/qna/course/${course.id}`,
+    href: `/qna/course/${course.name}`,
   });
 }
 </script>
@@ -78,8 +78,8 @@ for (const course of courses) {
             >
               <DisclosurePanel class="pl-12">
                 <div v-for="department in college.childs" :key="department.name" class="relative mb-2 last:mb-0">
-                  <Popover v-slot="{ open }" class="inline-block relative">
-                    <PopoverButton class="text-black transition-all outline-none pr-5" :class="{ 'text-opacity-75 hover:text-opacity-100': !open }">
+                  <Popover v-slot="{ open: dropdownOpened }" class="inline-block relative">
+                    <PopoverButton class="text-black transition-all outline-none pr-5" :class="{ 'text-opacity-75 hover:text-opacity-100': !dropdownOpened }">
                       {{ department.name }}
                     </PopoverButton>
                     <transition
@@ -91,7 +91,7 @@ for (const course of courses) {
                       leave-to-class="transform scale-95 opacity-0"
                     >
                       <PopoverPanel
-                        class="absolute top-0 right-0 translate-x-full bg-white rounded border shadow p-3 whitespace-nowrap max-w-xs max-h-60 overflow-y-scroll z-10"
+                        class="absolute top-0 left-full bg-white rounded border shadow p-3 whitespace-nowrap max-w-xs max-h-60 overflow-y-scroll z-10"
                       >
                         <NuxtLink
                           v-for="course in department.childs"
