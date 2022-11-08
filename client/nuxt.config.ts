@@ -3,6 +3,9 @@ export default defineNuxtConfig({
   root: true,
   modules: ['@nuxtjs/tailwindcss'],
   css: ['@/assets/css/fonts.css', '@/assets/css/main.css'],
+  build: {
+    transpile: ['vue-toastification'],
+  },
 
   app: {
     head: {
