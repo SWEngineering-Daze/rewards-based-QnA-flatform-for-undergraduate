@@ -10,8 +10,6 @@ const todayScholarship = 456000;
 
 <template>
   <div class="py-12 px-8">
-    <NuxtLink to="/profile">profile test</NuxtLink>
-
     <div class="text-center my-8 mb-24">
       <div class="text-2xl font-medium mb-3">오늘의 장학금</div>
       <div class="text-5xl text-indigo-500 font-bold">{{ numberFormatter.format(todayScholarship) }} P</div>
