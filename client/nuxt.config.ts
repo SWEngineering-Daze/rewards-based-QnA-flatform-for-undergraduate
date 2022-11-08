@@ -6,11 +6,11 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: '얼렁뚱땅', // 임시
+      title: '쉿! 교수님 몰래 들어오세요..', // 임시
       htmlAttrs: {
         lang: 'ko',
       },
-      meta: [{ name: 'description', content: '팀 얼렁뚱땅' }],
+      meta: [{ name: 'description', content: '리워드 기반 학술 질문/답변 플랫폼' }],
     },
     pageTransition: { name: 'page', mode: 'out-in' },
   },
