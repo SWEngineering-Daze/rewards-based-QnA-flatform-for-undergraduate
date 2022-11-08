@@ -1,10 +1,68 @@
+import { Department } from './mongodb';
+
 const depts = [
   {
     parent: {
       id: 1,
       name: '공과대학',
     },
-    name: '컴퓨터공학과',
+    name: '컴퓨터공학전공',
+  },
+  {
+    parent: {
+      id: 1,
+      name: '공과대학',
+    },
+    name: '정보통신공학전공',
+  },
+  {
+    parent: {
+      id: 1,
+      name: '공과대학',
+    },
+    name: '전자전기공학부',
+  },
+  {
+    parent: {
+      id: 1,
+      name: '공과대학',
+    },
+    name: '건설환경공학과',
+  },
+  {
+    parent: {
+      id: 1,
+      name: '공과대학',
+    },
+    name: '화공생물공학과',
+  },
+  {
+    parent: {
+      id: 1,
+      name: '공과대학',
+    },
+    name: '산업시스템공학과',
+  },
+  {
+    parent: {
+      id: 1,
+      name: '공과대학',
+    },
+    name: '멀티미디어공학과',
+  },
+  {
+    parent: {
+      id: 1,
+      name: '공과대학',
+    },
+    name: '기계에너지로봇공학과',
+  },
+  {
+    parent: {
+      id: 1,
+      name: '공과대학',
+    },
+    name: '융합에너지신소재공학과',
   },
   {
     parent: {

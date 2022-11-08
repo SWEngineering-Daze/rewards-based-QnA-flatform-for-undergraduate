@@ -20,6 +20,10 @@ export const signup = async (req, res) => {
   if (user) {
     res.status(400).json({ error: 'existing email address' });
   } else {
+    res.status(200).json({
+      message: 'success',
+    });
+
     const tokenValue = crypto.randomBytes(20).toString('hex');
     const encrypted = await bcrypt.hash(password, config.BCRYPT_SALT_ROUNDS);
 
@@ -45,11 +49,7 @@ export const signup = async (req, res) => {
       subject: '[대학생을 위한 리워드 기반 Q&A 플랫폼] 회원가입 승인 이메일입니다.',
       html:
         '회원가입을 완료하기 위해 아래의 URL로 이동해주세요. <br>' +
-        `http://sw.bisue.shop/auth/verify?token=${tokenValue}`, // 프론트 URL
-    });
-
-    res.status(200).json({
-      message: 'success',
+        `<a href='http://sw.bisue.shop/auth/verify?token=${tokenValue}'> http://sw.bisue.shop/auth/verify?token=${tokenValue} </a>`, // 프론트 URL
     });
   }
 };
