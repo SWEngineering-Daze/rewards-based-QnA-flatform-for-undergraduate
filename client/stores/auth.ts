@@ -11,6 +11,9 @@ export interface Credentials {
 }
 
 export const useAuth = defineStore('auth', () => {
+  const savedToken = useCookie('auth.token');
+  const savedUser = useCookie<User>('auth.user');
+
   const token = ref<string>(null);
   const user = ref<User>(null);
 
@@ -24,26 +27,26 @@ export const useAuth = defineStore('auth', () => {
     const { data } = await $axios.get('/auth/me');
 
     user.value = data;
-    localStorage.setItem('auth.user', JSON.stringify(user.value));
+
+    savedUser.value = user.value;
+    savedToken.value = token.value;
   }
 
-  async function logout() {
+  function logout() {
     token.value = null;
-    localStorage.removeItem('auth.token');
+    savedToken.value = null;
 
     user.value = null;
-    localStorage.removeItem('auth.user');
+    savedUser.value = null;
   }
 
   function loadUser() {
-    const loadedToken = localStorage.getItem('auth.token');
-    if (loadedToken) {
-      token.value = JSON.parse(loadedToken);
+    if (savedToken.value) {
+      token.value = savedToken.value;
     }
 
-    const loadedUser = localStorage.getItem('auth.user');
-    if (loadedUser) {
-      user.value = JSON.parse(loadedUser);
+    if (savedUser.value) {
+      user.value = savedUser.value;
     }
   }
 
@@ -53,7 +56,6 @@ export const useAuth = defineStore('auth', () => {
     const { data } = await $axios.post('/auth/login', credentials);
 
     token.value = data.token;
-    localStorage.setItem('auth.token', JSON.stringify(token.value));
 
     await fetch();
   }
