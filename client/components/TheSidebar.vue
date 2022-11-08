@@ -94,6 +94,17 @@ for (const course of courses) {
                         class="absolute top-0 left-full bg-white rounded border shadow p-3 whitespace-nowrap max-w-xs max-h-60 overflow-y-scroll z-10"
                       >
                         <NuxtLink
+                          class="block mb-2 last:mb-0 text-sm text-black transition-all text-opacity-75 hover:text-opacity-100 font-bold"
+                          :to="department.href"
+                          @click="
+                            close();
+                            closeDropdown();
+                            $emit('sidebarClose');
+                          "
+                        >
+                          전체보기
+                        </NuxtLink>
+                        <NuxtLink
                           v-for="course in department.childs"
                           :key="course.name"
                           class="block mb-2 last:mb-0 text-sm text-black transition-all text-opacity-75 hover:text-opacity-100"
