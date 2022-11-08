@@ -76,7 +76,7 @@ export const viewQuestionList = async (req, res) => {
     });
   }
 
-  const cntQuestions = await Question.count();
+  const cntQuestions = questionList.length;
 
   res.json({
     questionList,
