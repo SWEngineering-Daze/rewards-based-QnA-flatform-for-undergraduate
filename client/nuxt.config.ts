@@ -1,7 +1,7 @@
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
   root: true,
-  modules: ['@nuxtjs/tailwindcss'],
+  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt'],
   css: ['@/assets/css/fonts.css', '@/assets/css/main.css'],
   build: {
     transpile: ['vue-toastification'],
