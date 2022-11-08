@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-import { useToast } from 'vue-toastification';
-
-const { type, category } = useCategory();
+const { type, category } = await useCategory();
 const toast = useToast();
 
 const title = ref('');

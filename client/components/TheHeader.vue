@@ -15,7 +15,7 @@ const auth = {
       <img class="w-8" src="@/assets/img/menu.svg" />
     </button>
     <NuxtLink to="/" class="inline-flex items-center">
-      <img src="@/assets/img/logo.svg" alt="얼렁뚱땅" />
+      <img class="w-8" src="@/assets/img/graduation.svg" alt="얼렁뚱땅" />
       <span class="text-sm font-medium ml-2">얼렁뚱땅</span>
     </NuxtLink>
     <div class="flex items-center ml-auto">
