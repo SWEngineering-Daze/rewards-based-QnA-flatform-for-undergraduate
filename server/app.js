@@ -23,6 +23,7 @@ app.get('/courses', listController.getCourses);
 app.post('/questions', isAuth, qnaController.writeQuestion);
 app.get('/questions/:type/:name', isAuth, qnaController.viewQuestionList);
 app.get('/questions/:id', isAuth, qnaController.viewQuestionDetail);
+app.post('/questions/:id/answers', isAuth, qnaController.writeAnswer);
 
 app.get('/', (req, res) => {
   res.json({
