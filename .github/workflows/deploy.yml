@@ -18,7 +18,7 @@ jobs:
           script_stop: true
           script: |
             cd /var/www/app
-            git clean -fd
+            git reset --hard HEAD
             git pull
             cd ./client
             pm2 delete ecosystem.config.js
