@@ -6,6 +6,7 @@ import { config } from './config.js';
 import authRouter from './router/auth.js';
 import * as listController from './controller/listController.js';
 import { Course, Department, Question } from './database/mongodb.js';
+import * as qnaController from './controller/qnaController.js';
 import { isAuth } from './middleware/auth.js';
 
 const app = express();
@@ -19,27 +20,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/auth', authRouter);
 app.get('/departments', listController.getDepartments);
 app.get('/courses', listController.getCourses);
-app.post('/questions', isAuth, async (req, res) => {
-  const { email } = req.decoded;
-  const { title, content, courseName } = req.body;
-
-  const course = await Course.findOne({
-    name: courseName,
-  }).exec();
-
-  const courseID = course._id;
-
-  console.log(course._id);
-
-  const question = await Question.create({
-    writer: email,
-    title,
-    content,
-    courseID: courseID,
-  });
-
-  res.json(question);
-});
+app.post('/questions', isAuth, qnaController.writeQuestion);
+app.get('/questions/:type/:id', isAuth, qnaController.viewQuestionList);
 
 app.get('/', (req, res) => {
   res.json({
