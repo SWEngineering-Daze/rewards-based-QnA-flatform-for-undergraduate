@@ -30,6 +30,7 @@ export const viewQuestionList = async (req, res) => {
   const { type, name } = req.params;
 
   let questionList;
+  let cntQuestions;
 
   if (type == 'department') {
     const { id } = await Department.findOne({
@@ -53,6 +54,19 @@ export const viewQuestionList = async (req, res) => {
     ).filter((question) => {
       return question.course.parent.id == id;
     });
+
+    cntQuestions = (
+      await Question.find()
+        .populate({
+          path: 'course',
+          populate: {
+            path: 'parent',
+          },
+        })
+        .exec()
+    ).filter((question) => {
+      return question.course.parent.id == id;
+    }).length;
   } else if (type == 'course') {
     const { id } = await Course.findOne({
       name,
@@ -74,9 +88,17 @@ export const viewQuestionList = async (req, res) => {
     ).filter((question) => {
       return question.course._id == id;
     });
-  }
 
-  const cntQuestions = questionList.length;
+    cntQuestions = (
+      await Question.find()
+        .populate({
+          path: 'course',
+        })
+        .exec()
+    ).filter((question) => {
+      return question.course._id == id;
+    }).length;
+  }
 
   res.json({
     questionList,
