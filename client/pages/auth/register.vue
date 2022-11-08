@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { useToast } from 'vue-toastification';
+
 const { $axios } = useNuxtApp();
 const router = useRouter();
 const toast = useToast();
