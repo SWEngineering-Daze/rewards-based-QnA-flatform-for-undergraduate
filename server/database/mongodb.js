@@ -42,6 +42,10 @@ const questionSchema = mongoose.Schema({
   writer: String,
   title: String,
   content: String,
+  courseID: {
+    type: Schema.Types.ObjectId,
+    ref: 'courses',
+  },
 });
 
 export const User = mongoose.model('users', UserSchema);

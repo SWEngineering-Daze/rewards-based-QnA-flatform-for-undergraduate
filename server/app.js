@@ -21,12 +21,21 @@ app.get('/departments', listController.getDepartments);
 app.get('/courses', listController.getCourses);
 app.post('/questions', isAuth, async (req, res) => {
   const { email } = req.decoded;
-  const { title, content } = req.body;
+  const { title, content, courseName } = req.body;
+
+  const course = await Course.findOne({
+    name: courseName,
+  }).exec();
+
+  const courseID = course._id;
+
+  console.log(course._id);
 
   const question = await Question.create({
     writer: email,
     title,
     content,
+    courseID: courseID,
   });
 
   res.json(question);
