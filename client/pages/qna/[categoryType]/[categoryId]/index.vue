@@ -46,7 +46,8 @@ const { data: questions } = await $axios.get(`/questions/${type}/${category.name
             >
           </div>
           <div class="created-col">
-            <span class="ml-auto text-gray-500 text-sm">{{ $dayjs(question.createdAt).fromNow() }}</span>
+            <span class="ml-auto text-gray-500 text-sm">??</span>
+            <!-- <span class="ml-auto text-gray-500 text-sm">{{ $dayjs(question.createdAt).fromNow() }}</span> -->
           </div>
         </div>
       </div>
