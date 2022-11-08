@@ -59,9 +59,11 @@ const { data: questions } = await $axios.get(`/questions/${type}/${category.name
       </div>
     </template>
 
-    <div class="flex justify-end my-8">
-      <NuxtLink class="inline-block text-indigo-500 btn btn-primary" :to="`/qna/${type}/${category.name}/create`">작성하기</NuxtLink>
-    </div>
+    <template v-if="type === 'course'">
+      <div class="flex justify-end my-8">
+        <NuxtLink class="inline-block text-indigo-500 btn btn-primary" :to="`/qna/${type}/${category.name}/create`">작성하기</NuxtLink>
+      </div>
+    </template>
   </div>
 </template>
 
