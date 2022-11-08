@@ -38,27 +38,38 @@ const courseSchema = mongoose.Schema({
   name: String,
 });
 
-const questionSchema = mongoose.Schema({
-  writer: String,
-  title: String,
-  content: String,
-  course: {
-    type: Schema.Types.ObjectId,
-    ref: 'courses',
+const questionSchema = mongoose.Schema(
+  {
+    writer: String,
+    title: String,
+    content: String,
+    course: {
+      type: Schema.Types.ObjectId,
+      ref: 'courses',
+    },
   },
-});
+  {
+    timestamps: true,
+  }
+);
 
-const answerSchema = mongoose.Schema({
-  writer: String,
-  content: String,
-  question: {
-    type: Schema.Types.ObjectId,
-    ref: 'questions',
+const answerSchema = mongoose.Schema(
+  {
+    writer: String,
+    content: String,
+    question: {
+      type: Schema.Types.ObjectId,
+      ref: 'questions',
+    },
   },
-});
+  {
+    timestamps: true,
+  }
+);
 
 export const User = mongoose.model('users', UserSchema);
 export const SignupToken = mongoose.model('signupTokens', SignupTokenSchema);
 export const Department = mongoose.model('departments', departmentSchema);
 export const Course = mongoose.model('courses', courseSchema);
 export const Question = mongoose.model('questions', questionSchema);
+export const Answer = mongoose.model('answers', answerSchema);
