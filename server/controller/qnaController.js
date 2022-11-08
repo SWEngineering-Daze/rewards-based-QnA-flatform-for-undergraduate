@@ -26,15 +26,13 @@ export const viewQuestionList = async (req, res) => {
   const { email } = req.decoded;
   const { type, name } = req.params;
 
-  const { id } = await Department.findOne({
-    name,
-  })
-    .select('id')
-    .exec();
-
-  console.log(id);
-
   if (type == 'department') {
+    const { id } = await Department.findOne({
+      name,
+    })
+      .select('id')
+      .exec();
+
     const questionList = (
       await Question.find()
         .populate({
@@ -51,7 +49,25 @@ export const viewQuestionList = async (req, res) => {
     console.log(questionList);
     res.json(questionList);
   } else if (type == 'course') {
-  }
+    const { id } = await Course.findOne({
+      name,
+    })
+      .select('id')
+      .exec();
 
-  console.log(type, id);
+    console.log(id);
+
+    const questionList = (
+      await Question.find()
+        .populate({
+          path: 'courseID',
+        })
+        .exec()
+    ).filter((question) => {
+      return question.courseID._id == id;
+    });
+
+    console.log(questionList);
+    res.json(questionList);
+  }
 };
