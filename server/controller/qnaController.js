@@ -1,4 +1,4 @@
-import { Course, Question } from '../database/mongodb.js';
+import { Course, Department, Question } from '../database/mongodb.js';
 
 export const writeQuestion = async (req, res) => {
   const { email } = req.decoded;
@@ -24,7 +24,15 @@ export const writeQuestion = async (req, res) => {
 
 export const viewQuestionList = async (req, res) => {
   const { email } = req.decoded;
-  const { type, id } = req.params;
+  const { type, name } = req.params;
+
+  const { id } = await Department.findOne({
+    name,
+  })
+    .select('id')
+    .exec();
+
+  console.log(id);
 
   if (type == 'department') {
     const questionList = (
@@ -37,7 +45,7 @@ export const viewQuestionList = async (req, res) => {
         })
         .exec()
     ).filter((question) => {
-      return question.courseID.parent.parent.id == Number.parseInt(id);
+      return question.courseID.parent.id == id;
     });
 
     console.log(questionList);

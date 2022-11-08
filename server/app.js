@@ -21,7 +21,7 @@ app.use('/auth', authRouter);
 app.get('/departments', listController.getDepartments);
 app.get('/courses', listController.getCourses);
 app.post('/questions', isAuth, qnaController.writeQuestion);
-app.get('/questions/:type/:id', isAuth, qnaController.viewQuestionList);
+app.get('/questions/:type/:name', isAuth, qnaController.viewQuestionList);
 
 app.get('/', (req, res) => {
   res.json({
