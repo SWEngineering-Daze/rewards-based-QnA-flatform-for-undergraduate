@@ -5,6 +5,12 @@ import { useAuth } from '@/stores/auth';
 defineEmits(['sidebarToggle']);
 
 const auth = useAuth();
+const router = useRouter();
+
+function logout() {
+  auth.logout();
+  router.go(0);
+}
 </script>
 
 <template>
@@ -56,7 +62,7 @@ const auth = useAuth();
                   </div>
                 </div>
                 <div class="p-3">
-                  <button class="text-red-500" @click="auth.logout()">로그아웃</button>
+                  <button class="text-red-500" @click="logout()">로그아웃</button>
                 </div>
               </MenuItems>
             </transition>
