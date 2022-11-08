@@ -1,12 +1,10 @@
 <script lang="ts" setup>
 import { Menu, MenuButton, MenuItems } from '@headlessui/vue';
+import { useAuth } from '@/stores/auth';
 
 defineEmits(['sidebarToggle']);
 
-const auth = {
-  loggedIn: false,
-  user: null,
-};
+const auth = useAuth();
 </script>
 
 <template>
@@ -58,7 +56,7 @@ const auth = {
                   </div>
                 </div>
                 <div class="p-3">
-                  <button class="text-red-500">로그아웃</button>
+                  <button class="text-red-500" @click="auth.logout()">로그아웃</button>
                 </div>
               </MenuItems>
             </transition>
