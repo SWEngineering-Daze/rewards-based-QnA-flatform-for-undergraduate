@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 const { type, category } = await useCategory();
+const { $axios } = useNuxtApp();
 
-const questions = [];
+const { data: questions } = await $axios.get(`/questions/${type}/${category.name}`);
 </script>
 
 <template>
@@ -25,16 +26,18 @@ const questions = [];
           <span class="title-col">제목</span>
           <span class="created-col">날짜</span>
         </div>
-        <div v-for="question in questions" :key="question.id" class="flex items-center my-2">
+        <div v-for="question in questions" :key="question._id" class="flex items-center my-2">
           <div class="subject-col">
-            <NuxtLink class="block text-indigo-500 text-opacity-75 transition-all hover:text-opacity-100 text-sm" :to="`/qna/course/${question.course.name}`">{{
-              question.course.name
-            }}</NuxtLink>
+            <NuxtLink
+              class="block text-indigo-500 text-opacity-75 transition-all hover:text-opacity-100 text-sm"
+              :to="`/qna/course/${question.courseID.name}`"
+              >{{ question.courseID.name }}</NuxtLink
+            >
           </div>
           <div class="title-col">
             <NuxtLink
               class="block text-indigo-500 text-opacity-75 transition-all hover:text-opacity-100"
-              :to="`/qna/${type}/${category.name}/${question.id}`"
+              :to="`/qna/${type}/${category.name}/${question._id}`"
               >{{ question.title }}</NuxtLink
             >
           </div>
