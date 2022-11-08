@@ -32,11 +32,9 @@ const { data: questions } = await $axios.get(`/questions/${type}/${category.name
         </div>
         <div v-for="question in questions" :key="question._id" class="flex items-center my-2">
           <div class="subject-col">
-            <NuxtLink
-              class="block text-indigo-500 text-opacity-75 transition-all hover:text-opacity-100 text-sm"
-              :to="`/qna/course/${question.course.name}`"
-              >{{ question.course.name }}</NuxtLink
-            >
+            <NuxtLink class="block text-indigo-500 text-opacity-75 transition-all hover:text-opacity-100 text-sm" :to="`/qna/course/${question.course.name}`">{{
+              question.course.name
+            }}</NuxtLink>
           </div>
           <div class="title-col">
             <NuxtLink
@@ -46,8 +44,7 @@ const { data: questions } = await $axios.get(`/questions/${type}/${category.name
             >
           </div>
           <div class="created-col">
-            <span class="ml-auto text-gray-500 text-sm">??</span>
-            <!-- <span class="ml-auto text-gray-500 text-sm">{{ $dayjs(question.createdAt).fromNow() }}</span> -->
+            <span class="ml-auto text-gray-500 text-sm">{{ $dayjs(question.createdAt).fromNow() }}</span>
           </div>
         </div>
       </div>
