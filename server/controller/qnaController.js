@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import { Answer, Course, Department, Question } from '../database/mongodb.js';
 
 export const writeQuestion = async (req, res) => {
@@ -39,21 +40,22 @@ export const viewQuestionList = async (req, res) => {
       .select('id')
       .exec();
 
-    questionList = (
-      await Question.find()
-        .sort({ createdAt: -1 })
-        .skip((page - 1) * perPage)
-        .limit(perPage)
-        .populate({
-          path: 'course',
-          populate: {
-            path: 'parent',
+    questionList = await Question.find()
+      .populate({
+        path: 'course',
+        populate: {
+          path: 'parent',
+          match: {
+            _id: id,
           },
-        })
-        .exec()
-    ).filter((question) => {
-      return question.course.parent.id == id;
-    });
+        },
+      })
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * perPage)
+      .limit(perPage)
+      .exec();
+
+    console.log(questionList);
 
     cntQuestions = (
       await Question.find()
@@ -61,12 +63,13 @@ export const viewQuestionList = async (req, res) => {
           path: 'course',
           populate: {
             path: 'parent',
+            match: {
+              _id: id,
+            },
           },
         })
         .exec()
-    ).filter((question) => {
-      return question.course.parent.id == id;
-    }).length;
+    ).length;
   } else if (type == 'course') {
     const { id } = await Course.findOne({
       name,
@@ -76,28 +79,14 @@ export const viewQuestionList = async (req, res) => {
 
     console.log(id);
 
-    questionList = (
-      await Question.find()
-        .sort({ createdAt: -1 })
-        .skip((page - 1) * perPage)
-        .limit(perPage)
-        .populate({
-          path: 'course',
-        })
-        .exec()
-    ).filter((question) => {
-      return question.course._id == id;
-    });
+    questionList = (await Question.find().populate('course').exec())
+      .filter((question_CSEs) => question_CSEs.course._id == id)
+      .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
+      .slice((page - 1) * perPage, (page - 1) * perPage + perPage);
 
-    cntQuestions = (
-      await Question.find()
-        .populate({
-          path: 'course',
-        })
-        .exec()
-    ).filter((question) => {
-      return question.course._id == id;
-    }).length;
+    cntQuestions = questionList.length;
+
+    console.log(questionList);
   }
 
   res.json({
