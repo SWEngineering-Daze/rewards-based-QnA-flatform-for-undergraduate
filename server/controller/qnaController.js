@@ -113,7 +113,12 @@ export const viewQuestionDetail = async (req, res) => {
   const question = await Question.findOne({
     _id: id,
   })
-    .populate('course')
+    .populate({
+      path: 'course',
+      populate: {
+        path: 'parent',
+      },
+    })
     .exec();
 
   const answers = await Answer.find({
