@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { AxiosError } from 'axios';
 import { useToast } from 'vue-toastification';
 
 definePageMeta({
@@ -9,6 +10,7 @@ const { $axios } = useNuxtApp();
 const { type, category } = await useCategory();
 const toast = useToast();
 const router = useRouter();
+const { loading, startLoading, finishLoading } = useLoading();
 
 const title = ref('');
 const content = ref('');
@@ -24,6 +26,8 @@ async function submit() {
     return;
   }
   try {
+    startLoading();
+
     await $axios.post('/questions', {
       title: title.value,
       content: content.value,
@@ -33,8 +37,15 @@ async function submit() {
     toast.success(`성공적으로 질문을 작성했습니다!"`);
     router.replace(`/qna/${type}/${category.name}`);
   } catch (e) {
-    toast.error('에러가 발생했습니다!');
-    console.error(e, e.response);
+    if (e instanceof AxiosError) {
+      toast.error('알 수 없는 네트워크 에러가 발생했습니다!');
+    } else {
+      toast.error('알 수 없는 에러가 발생했습니다!');
+
+      console.error(e);
+    }
+  } finally {
+    finishLoading();
   }
 }
 </script>
@@ -57,7 +68,7 @@ async function submit() {
       </div>
       <div class="flex">
         <NuxtLink class="btn btn-link flex-1" :to="`/qna/${type}/${category.name}`">취소</NuxtLink>
-        <button class="btn btn-primary flex-1" type="submit">작성</button>
+        <BaseButton class="flex-1" type="submit" :loading="loading">작성</BaseButton>
       </div>
     </form>
   </div>

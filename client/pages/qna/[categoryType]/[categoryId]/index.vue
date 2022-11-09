@@ -26,6 +26,8 @@ watch(
     await refresh();
   }
 );
+// 임시 (TODO: useAsyncData 대신 쌩 await $axios? - 뭐가 나은지 확인하기)
+refresh();
 
 const questions = computed(() => questionPaginator.value.questionList);
 const totalQuestions = computed(() => questionPaginator.value.cntQuestions);
@@ -41,7 +43,7 @@ for (let i = page.value - 2; i <= page.value + 2; i++) {
 </script>
 
 <template>
-  <div class="py-8 px-12">
+  <div class="py-8 px-4 md:px-12">
     <div class="tracking-widest mb-12">
       <template v-if="type === 'department'">
         <h2 class="font-light text-blue-500 mb-2">{{ category.parent.name }}</h2>
@@ -66,7 +68,7 @@ for (let i = page.value - 2; i <= page.value + 2; i++) {
       </div>
     </template>
     <template v-else-if="questions.length > 0">
-      <div>
+      <div class="hidden sm:block">
         <div class="flex items-center border-t border-b py-3 text-indigo-500 font-bold">
           <span class="subject-col">과목</span>
           <span class="title-col">제목</span>
@@ -86,6 +88,25 @@ for (let i = page.value - 2; i <= page.value + 2; i++) {
             >
           </div>
           <div class="created-col">
+            <span class="ml-auto text-gray-500 text-sm">{{ $dayjs(question.createdAt).fromNow() }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="block sm:hidden rounded border">
+        <div v-for="question in questions" :key="question._id" class="mb-2 last:mb-0 rounded border-b last:border-none py-2 px-4">
+          <div class="mb-1">
+            <NuxtLink
+              class="inline-block text-indigo-500 text-opacity-75 transition-all hover:text-opacity-100 text-sm"
+              :to="`/qna/course/${question.course.name}`"
+              >{{ question.course.name }}</NuxtLink
+            >
+          </div>
+          <div class="title-col">
+            <NuxtLink class="block text-black text-opacity-75 transition-all hover:text-opacity-100" :to="`/qna/${type}/${category.name}/${question._id}`">{{
+              question.title
+            }}</NuxtLink>
+          </div>
+          <div class="flex justify-end">
             <span class="ml-auto text-gray-500 text-sm">{{ $dayjs(question.createdAt).fromNow() }}</span>
           </div>
         </div>
@@ -129,7 +150,7 @@ for (let i = page.value - 2; i <= page.value + 2; i++) {
 }
 
 .subject-col {
-  @apply w-44 flex-shrink-0;
+  @apply w-44 flex-shrink-0 single-line;
 }
 .title-col {
   @apply flex-grow single-line;
