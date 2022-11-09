@@ -1,6 +1,6 @@
 import { Course, Department } from './mongodb.js';
 
-const courses = [
+const courses_CSE = [
   '소프트웨어공학개론',
   '데이터베이스프로그래밍',
   '웹프로그래밍',
@@ -14,6 +14,11 @@ const courses = [
   '시스템소프트웨어와실습',
   '컴퓨터공학종합설계2',
   '계산적사고법',
+  // 나머지 추가하셈
+];
+
+const courses_INC = [
+  // 여기에다가 정통 추가하면 됨
 ];
 
 const CSE = await Department.findOne({ name: '컴퓨터공학과' }).exec();
