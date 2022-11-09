@@ -26,6 +26,8 @@ watch(
     await refresh();
   }
 );
+// 임시 (TODO: useAsyncData 대신 쌩 await $axios? - 뭐가 나은지 확인하기)
+refresh();
 
 const questions = computed(() => questionPaginator.value.questionList);
 const totalQuestions = computed(() => questionPaginator.value.cntQuestions);
