@@ -95,7 +95,8 @@ const { data: menu } = await useAsyncData('sidebar', async ({ $axios }) => {
                       leave-to-class="transform scale-95 opacity-0"
                     >
                       <PopoverPanel
-                        class="absolute top-0 left-full bg-white rounded border shadow p-3 whitespace-nowrap max-w-xs max-h-60 overflow-y-scroll z-10"
+                        class="absolute top-0 left-full bg-white rounded border shadow p-3 whitespace-nowrap max-w-xs overflow-y-scroll z-10"
+                        style="max-height: 27rem"
                       >
                         <NuxtLink
                           class="block mb-2 last:mb-0 text-sm text-black transition-all text-opacity-75 hover:text-opacity-100 font-bold"
