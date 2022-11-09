@@ -1,10 +1,6 @@
 <script lang="ts" setup>
 import { Popover, PopoverButton, PopoverPanel, Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 
-const { $axios } = useNuxtApp();
-const props = defineProps<{ opened: boolean }>();
-defineEmits(['sidebarClose']);
-
 interface CourseMenu {
   name: string;
   href: string;
@@ -21,34 +17,42 @@ interface CollegeMenu {
   childs: DepartmentMenu[];
 }
 
-const { data: departments } = await $axios.get('/departments');
-const { data: courses } = await $axios.get('/courses');
+const props = defineProps<{ opened: boolean }>();
+defineEmits(['sidebarClose']);
 
-const menu: CollegeMenu[] = [];
-for (const department of departments) {
-  // college
-  let college = menu.find(m => m.name === department.parent.name);
-  if (!college) {
-    menu.push({
-      name: department.parent.name,
+const { data: menu } = await useAsyncData('sidebar', async ({ $axios }) => {
+  const { data: departments } = await $axios.get('/departments');
+  const { data: courses } = await $axios.get('/courses');
+
+  const menu: CollegeMenu[] = [];
+
+  for (const department of departments) {
+    // college
+    let college = menu.find(m => m.name === department.parent.name);
+    if (!college) {
+      menu.push({
+        name: department.parent.name,
+        childs: [],
+      });
+      college = menu.find(m => m.name === department.parent.name);
+    }
+    // department
+    college.childs.push({
+      name: department.name,
+      href: `/qna/department/${department.name}`,
       childs: [],
     });
-    college = menu.find(m => m.name === department.parent.name);
   }
-  // department
-  college.childs.push({
-    name: department.name,
-    href: `/qna/department/${department.name}`,
-    childs: [],
-  });
-}
-for (const course of courses) {
-  const department = menu.find(m => m.childs.findIndex(d => d.name === course.parent.name) !== -1)?.childs.find(d => d.name === course.parent.name);
-  department.childs.push({
-    name: course.name,
-    href: `/qna/course/${course.name}`,
-  });
-}
+  for (const course of courses) {
+    const department = menu.find(m => m.childs.findIndex(d => d.name === course.parent.name) !== -1)?.childs.find(d => d.name === course.parent.name);
+    department.childs.push({
+      name: course.name,
+      href: `/qna/course/${course.name}`,
+    });
+  }
+
+  return menu;
+});
 </script>
 
 <template>
