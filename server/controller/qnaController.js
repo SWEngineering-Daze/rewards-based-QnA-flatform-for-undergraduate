@@ -112,7 +112,9 @@ export const viewQuestionDetail = async (req, res) => {
 
   const question = await Question.findOne({
     _id: id,
-  }).exec();
+  })
+    .populate('course')
+    .exec();
 
   const answers = await Answer.find({
     question: question._id,
