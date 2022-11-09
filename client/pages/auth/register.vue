@@ -14,16 +14,25 @@ const emailSuffix = ref('@dongguk.edu');
 const password = ref('');
 const passwordConfirmation = ref('');
 
-const loading = ref(false);
+const { loading, startLoading, finishLoading } = useLoading();
 
 async function submit() {
+  if (email.value === '' || password.value === '' || passwordConfirmation.value === '') {
+    toast.error('이메일과 비밀번호 모두 입력해주세요!');
+    return;
+  } else if (password.value !== passwordConfirmation.value) {
+    toast.error('비밀번호 확인이 일치하지 않습니다.\n다시 입력해주세요!');
+    passwordConfirmation.value = '';
+    return;
+  }
+
   const credentials = {
     email: email.value + emailSuffix.value,
     password: password.value,
   };
 
   try {
-    loading.value = true;
+    startLoading();
 
     await $axios.post('/auth/signup', credentials);
 
@@ -38,7 +47,7 @@ async function submit() {
       console.error(e, e.response);
     }
   } finally {
-    loading.value = false;
+    finishLoading();
   }
 }
 </script>

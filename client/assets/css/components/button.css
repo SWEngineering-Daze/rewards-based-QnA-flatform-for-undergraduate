@@ -1,11 +1,19 @@
 .btn {
-  @apply px-6 py-3 text-center;
+  @apply px-6 py-3 text-center transition-all;
 }
 
 .btn-primary {
-  @apply bg-indigo-500 text-white rounded;
+  @apply bg-indigo-500 text-white rounded hover:bg-indigo-600;
+}
+
+.btn-primary:disabled {
+  @apply bg-indigo-600;
 }
 
 .btn-link {
   @apply text-indigo-500 transition-all hover:bg-gray-100;
+}
+
+.btn-link:disabled {
+  @apply bg-gray-100;
 }

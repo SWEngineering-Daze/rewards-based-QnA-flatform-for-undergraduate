@@ -14,7 +14,7 @@ const email = ref('');
 const emailSuffix = ref('@dongguk.edu');
 const password = ref('');
 
-const loading = ref(false);
+const { loading, startLoading, finishLoading } = useLoading();
 
 async function submit() {
   if (email.value === '' || password.value === '') {
@@ -28,7 +28,7 @@ async function submit() {
   };
 
   try {
-    loading.value = true;
+    startLoading();
 
     await auth.login(credentials);
 
@@ -39,13 +39,14 @@ async function submit() {
       toast.error('존재하지 않는 이메일 주소입니다!');
     } else if (e.response && e.response.data.error === 'wrong password') {
       toast.error('비밀번호가 맞지 않습니다!');
+      password.value = '';
     } else {
       toast.error('오류가 발생했습니다!');
 
       console.error(e, e.response);
     }
   } finally {
-    loading.value = false;
+    finishLoading();
   }
 }
 </script>
@@ -70,7 +71,7 @@ async function submit() {
       </div>
       <div class="flex">
         <NuxtLink class="btn btn-link flex-1" to="/auth/register">회원가입</NuxtLink>
-        <button class="btn btn-primary flex-1" type="submit">로그인</button>
+        <button class="btn btn-primary flex-1" type="submit" :disabled="loading">{{ loading ? '로딩중..' : '로그인' }}</button>
       </div>
     </form>
   </div>
