@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useToast } from 'vue-toastification';
+import { AxiosError } from 'axios';
 import { useAuth } from '@/stores/auth';
 
 definePageMeta({
@@ -35,15 +36,19 @@ async function submit() {
     toast.success(`로그인 되었습니다!`);
     router.replace('/');
   } catch (e) {
-    if (e.response && e.response.data.error === 'wrong email address') {
-      toast.error('존재하지 않는 이메일 주소입니다!');
-    } else if (e.response && e.response.data.error === 'wrong password') {
-      toast.error('비밀번호가 맞지 않습니다!');
-      password.value = '';
+    if (e instanceof AxiosError) {
+      if (e.response?.data.error === 'wrong email address') {
+        toast.error('존재하지 않는 이메일 주소입니다!');
+      } else if (e.response?.data.error === 'wrong password') {
+        toast.error('비밀번호가 맞지 않습니다!');
+        password.value = '';
+      } else {
+        toast.error('알 수 없는 네트워크 에러가 발생했습니다!');
+      }
     } else {
-      toast.error('오류가 발생했습니다!');
+      toast.error('알 수 없는 에러가 발생했습니다!');
 
-      console.error(e, e.response);
+      console.error(e);
     }
   } finally {
     finishLoading();

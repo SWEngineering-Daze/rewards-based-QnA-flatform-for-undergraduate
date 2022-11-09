@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { AxiosError } from 'axios';
 import { useToast } from 'vue-toastification';
 
 definePageMeta({
@@ -39,12 +40,16 @@ async function submit() {
     toast.success(`인증 링크가 이메일로 전송되었습니다!`);
     router.replace('/auth/login');
   } catch (e) {
-    if (e.response && e.response.data.error === 'existing email address') {
-      toast.error('이미 가입한 이메일입니다!\n이메일을 다시 확인해주세요.');
+    if (e instanceof AxiosError) {
+      if (e.response?.data.error === 'existing email address') {
+        toast.error('이미 가입한 이메일입니다!\n이메일을 다시 확인해주세요.');
+      } else {
+        toast.error('알 수 없는 네트워크 에러가 발생했습니다!');
+      }
     } else {
-      toast.error('오류가 발생했습니다!');
+      toast.error('알 수 없는 에러가 발생했습니다!');
 
-      console.error(e, e.response);
+      console.error(e);
     }
   } finally {
     finishLoading();
