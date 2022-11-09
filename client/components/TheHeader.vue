@@ -24,7 +24,7 @@ function logout() {
     </NuxtLink>
     <div class="flex items-center ml-auto">
       <nav class="flex items-center">
-        <NuxtLink class="header-link" to="/store">
+        <NuxtLink class="header-link" to="/">
           <span class="hidden sm:inline-block">포인트 상점</span>
           <img class="inline-block sm:hidden w-6" src="@/assets/img/store.svg" />
         </NuxtLink>
@@ -69,7 +69,7 @@ function logout() {
           </Menu>
         </ClientOnly>
 
-        <NuxtLink class="btn btn-indigo ml-6 hidden sm:inline-block" to="/profile">내정보</NuxtLink>
+        <NuxtLink class="btn btn-indigo ml-6 hidden sm:inline-block" to="/">내정보</NuxtLink>
       </template>
       <template v-else>
         <NuxtLink class="btn btn-link hidden sm:inline-block" to="/auth/register">회원가입</NuxtLink>
