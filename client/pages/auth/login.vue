@@ -76,7 +76,7 @@ async function submit() {
       </div>
       <div class="flex">
         <NuxtLink class="btn btn-link flex-1" to="/auth/register">회원가입</NuxtLink>
-        <button class="btn btn-primary flex-1" type="submit" :disabled="loading">{{ loading ? '로딩중..' : '로그인' }}</button>
+        <BaseButton class="flex-1" type="submit" :loading="loading">로그인</BaseButton>
       </div>
     </form>
   </div>
