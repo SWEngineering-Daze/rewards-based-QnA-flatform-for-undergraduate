@@ -53,12 +53,16 @@ async function submit() {
 
 <template>
   <div class="py-8 px-4 md:px-12">
-    <form class="max-w-5xl w-full mx-auto" @submit.prevent="submit">
+    <form class="max-w-4xl w-full mx-auto" @submit.prevent="submit">
       <div class="mb-8 text-center">
         <div class="text-sm text-indigo-500 mb-1">{{ question.course.parent.name }}</div>
         <div class="text-xl">{{ question.course.name }}</div>
       </div>
       <h1 class="text-3xl text-center mb-6">{{ question.title }}</h1>
+      <div class="my-6">
+        <div class="text-lg font-medium mb-1">질문 내용</div>
+        <div class="py-3 px-4 rounded border">{{ question.content }}</div>
+      </div>
       <div class="group">
         <div class="text-lg font-medium mb-1">답변</div>
         <textarea v-model="content" name="content" rows="30"></textarea>
