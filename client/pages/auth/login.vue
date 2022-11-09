@@ -17,6 +17,11 @@ const password = ref('');
 const loading = ref(false);
 
 async function submit() {
+  if (email.value === '' || password.value === '') {
+    toast.error('이메일과 비밀번호 모두 입력해주세요!');
+    return;
+  }
+
   const credentials = {
     email: email.value + emailSuffix.value,
     password: password.value,
@@ -30,9 +35,15 @@ async function submit() {
     toast.success(`로그인 되었습니다!`);
     router.replace('/');
   } catch (e) {
-    toast.error('오류가 발생했습니다!');
+    if (e.response && e.response.data.error === 'wrong email address') {
+      toast.error('존재하지 않는 이메일 주소입니다!');
+    } else if (e.response && e.response.data.error === 'wrong password') {
+      toast.error('비밀번호가 맞지 않습니다!');
+    } else {
+      toast.error('오류가 발생했습니다!');
 
-    console.error(e, e.response);
+      console.error(e, e.response);
+    }
   } finally {
     loading.value = false;
   }
