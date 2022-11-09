@@ -11,7 +11,7 @@ export const getDepartments = async (req, res) => {
 };
 
 export const getCourses = async (req, res) => {
-  const courses_with_depts = await Course.find().populate('parent').exec();
+  const courses_with_depts = await Course.find().populate('parent').sort({ name: 1 }).exec();
 
   res.json(courses_with_depts);
 };
