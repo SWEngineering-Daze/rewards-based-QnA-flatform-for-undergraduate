@@ -5,11 +5,10 @@ import { useAuth } from '@/stores/auth';
 defineEmits(['sidebarToggle']);
 
 const auth = useAuth();
-const router = useRouter();
 
 function logout() {
   auth.logout();
-  router.go(0);
+  location.reload();
 }
 </script>
 
