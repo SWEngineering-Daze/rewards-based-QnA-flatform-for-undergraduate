@@ -49,12 +49,13 @@ export const viewQuestionList = async (req, res) => {
       })
     )
       .filter((question) => question.course.parent._id == id)
-      .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
-      .slice((page - 1) * perPage, (page - 1) * perPage + perPage);
+      .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
 
     cntQuestions = questionList.length;
+    questionList = questionList.slice((page - 1) * perPage, (page - 1) * perPage + perPage);
 
     console.log(questionList);
+    console.log(cntQuestions);
   } else if (type == 'course') {
     const { id } = await Course.findOne({
       name,
@@ -66,12 +67,13 @@ export const viewQuestionList = async (req, res) => {
 
     questionList = (await Question.find().populate('course').exec())
       .filter((question) => question.course._id == id)
-      .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
-      .slice((page - 1) * perPage, (page - 1) * perPage + perPage);
+      .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
 
     cntQuestions = questionList.length;
+    questionList = questionList.slice((page - 1) * perPage, (page - 1) * perPage + perPage);
 
     console.log(questionList);
+    console.log(cntQuestions);
   }
 
   res.json({
