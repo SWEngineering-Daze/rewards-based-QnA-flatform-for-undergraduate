@@ -7,6 +7,7 @@ export default defineNuxtPlugin(nuxtApp => {
 
   const instance = axios.create({
     baseURL: 'https://api.sw.bisue.shop',
+    timeout: 5000,
   });
 
   instance.interceptors.request.use(config => {
