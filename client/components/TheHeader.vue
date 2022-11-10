@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { Menu, MenuButton, MenuItems } from '@headlessui/vue';
 import { useAuth } from '@/stores/auth';
+import { useSidebar } from '@/stores/sidebar';
 
-defineEmits(['sidebarToggle']);
-
+const sidebar = useSidebar();
 const auth = useAuth();
 
 function logout() {
@@ -14,7 +14,7 @@ function logout() {
 
 <template>
   <header class="flex items-center shadow bg-white py-2 px-4 z-20">
-    <button class="inline-block md:hidden mr-2" @click="$emit('sidebarToggle')">
+    <button class="inline-block md:hidden mr-2" @click="sidebar.open()">
       <img class="w-8" src="@/assets/img/menu.svg" />
     </button>
     <NuxtLink to="/" class="inline-flex items-center">

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { Popover, PopoverButton, PopoverPanel, Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
+import { useSidebar } from '@/stores/sidebar';
 
 interface CourseMenu {
   name: string;
@@ -17,8 +18,7 @@ interface CollegeMenu {
   childs: DepartmentMenu[];
 }
 
-const props = defineProps<{ opened: boolean }>();
-defineEmits(['sidebarClose']);
+const sidebar = useSidebar();
 
 const { data: menu } = await useAsyncData('sidebar', async () => {
   const api = useApi();
@@ -59,8 +59,8 @@ const { data: menu } = await useAsyncData('sidebar', async () => {
 
 <template>
   <div class="relative">
-    <nav class="sidebar absolute left-0 top md:static p-6 z-10" :class="{ opened: props.opened }">
-      <button class="absolute top-0 right-0 p-5 md:hidden" @click="$emit('sidebarClose')">
+    <nav class="sidebar absolute left-0 top md:static p-6 z-10" :class="{ opened: sidebar.opened }">
+      <button class="absolute top-0 right-0 p-5 md:hidden" @click="sidebar.close()">
         <img class="w-6" src="@/assets/img/close.svg" />
       </button>
 
