@@ -94,8 +94,8 @@ function flushSearchCourse() {
         <input v-model="courseQuery" type="text" placeholder="과목 검색" @keyup.enter="searchCourse()" />
         <template v-if="courseSearchResult.length > 0">
           <div
+            v-click-outside="flushSearchCourse"
             class="absolute top-full left-0 bg-white rounded border shadow p-3 whitespace-nowrap max-w-xs overflow-y-scroll z-10"
-            @focusout="flushSearchCourse()"
           >
             <NuxtLink
               v-for="course in courseSearchResult"
