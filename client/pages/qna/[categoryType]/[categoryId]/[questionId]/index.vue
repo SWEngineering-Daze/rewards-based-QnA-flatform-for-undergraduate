@@ -6,7 +6,7 @@ definePageMeta({
 const route = useRoute();
 
 const api = useApi();
-const { data: qna } = await api.questions.show(route.params.questionId as string);
+const qna = await api.questions.show(route.params.questionId as string);
 const question = qna.question;
 question.answers = qna.answers;
 

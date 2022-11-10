@@ -17,9 +17,9 @@ const {
 } = await useAsyncData(`question-${type}-${category.name}-${page.value}`, async () => {
   const api = useApi();
 
-  const { data } = await api.questions.index(type, encodeURIComponent(category.name), page.value);
+  const paginator = await api.questions.index(type, encodeURIComponent(category.name), page.value);
 
-  return data;
+  return paginator;
 });
 
 watch(

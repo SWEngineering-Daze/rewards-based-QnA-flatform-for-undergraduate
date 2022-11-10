@@ -1,4 +1,3 @@
-import { useToast } from 'vue-toastification';
 import type { Department, Course } from '@/composables/useApi';
 
 let departments: Department[] = null;
@@ -14,16 +13,14 @@ function getCategory(data: { type: string; name: string }) {
 
 export const useCategory = async () => {
   const api = useApi();
-  const toast = useToast();
   const route = useRoute();
-  const router = useRouter();
 
   if (!departments) {
-    const { data: fetchedDepartments } = await api.category.departments();
+    const fetchedDepartments = await api.category.departments();
     departments = fetchedDepartments;
   }
   if (!courses) {
-    const { data: fetchedCourses } = await api.category.courses();
+    const fetchedCourses = await api.category.courses();
     courses = fetchedCourses;
   }
 
@@ -40,7 +37,6 @@ export const useCategory = async () => {
       category,
     };
   } else {
-    toast.error(`${type} ${name}은\n유효하지 않은 URL입니다!`);
-    router.replace('/');
+    showError({ statusCode: 404, message: `${type === 'course' ? '과목' : '학과'} "${name}" 를 찾을 수 없습니다!` });
   }
 };

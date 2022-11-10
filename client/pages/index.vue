@@ -3,16 +3,18 @@ definePageMeta({
   middleware: ['auth'],
 });
 
-const numberFormatter = Intl.NumberFormat('ko-KR');
-
 const todayScholarship = 456000;
+
+function format(n: number) {
+  return Intl.NumberFormat('ko-KR').format(n);
+}
 </script>
 
 <template>
   <div class="py-12 px-8">
     <div class="text-center my-8 mb-24">
       <div class="text-2xl font-medium mb-3">오늘의 장학금</div>
-      <div class="text-5xl text-indigo-500 font-bold">{{ numberFormatter.format(todayScholarship) }} P</div>
+      <div class="text-5xl text-indigo-500 font-bold">{{ format(todayScholarship) }} P</div>
     </div>
     <div class="mb-16">
       <div class="text-2xl font-bold mb-3">장학글</div>

@@ -12,26 +12,24 @@ export const useAuth = defineStore('auth', () => {
     return user.value !== null;
   });
 
-  async function fetch() {
+  const fetch = async () => {
     const api = useApi();
 
-    const { data } = await api.auth.me();
-
-    user.value = data;
+    user.value = await api.auth.me();
 
     savedUser.value = user.value;
     savedToken.value = token.value;
-  }
+  };
 
-  function logout() {
+  const logout = () => {
     token.value = null;
     savedToken.value = null;
 
     user.value = null;
     savedUser.value = null;
-  }
+  };
 
-  function loadUser() {
+  const loadUser = () => {
     if (savedToken.value) {
       token.value = savedToken.value;
     }
@@ -39,17 +37,17 @@ export const useAuth = defineStore('auth', () => {
     if (savedUser.value) {
       user.value = savedUser.value;
     }
-  }
+  };
 
-  async function login(credentials: Credentials) {
+  const login = async (credentials: Credentials) => {
     const api = useApi();
 
-    const { data } = await api.auth.login(credentials);
+    const data = await api.auth.login(credentials);
 
     token.value = data.token;
 
     await fetch();
-  }
+  };
 
   return { user, token, loggedIn, login, fetch, logout, loadUser };
 });

@@ -15,9 +15,9 @@ const { loading, startLoading, finishLoading } = useLoading();
 const content = ref('');
 
 const { data: question } = await useAsyncData(`answer-create-${route.params.questionId}`, async () => {
-  const { data } = await api.questions.show(route.params.questionId as string);
+  const qna = await api.questions.show(route.params.questionId as string);
 
-  const question = data.question;
+  const question = qna.question;
 
   // nested property
   return question;

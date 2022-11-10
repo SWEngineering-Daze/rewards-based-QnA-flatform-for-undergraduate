@@ -22,7 +22,7 @@ if (type !== 'course') {
 
 async function submit() {
   if (title.value === '' || content.value === '') {
-    toast.error('제목과 내용을 모두 작성해주세요!\n- 허상운 -');
+    toast.error('제목과 내용을 모두 작성해주세요!');
     return;
   }
   try {

@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { Popover, PopoverButton, PopoverPanel, Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
+import { useToast } from 'vue-toastification';
+import { useSidebar } from '@/stores/sidebar';
 
 interface CourseMenu {
   name: string;
@@ -17,14 +19,14 @@ interface CollegeMenu {
   childs: DepartmentMenu[];
 }
 
-const props = defineProps<{ opened: boolean }>();
-defineEmits(['sidebarClose']);
+const sidebar = useSidebar();
+const toast = useToast();
 
 const { data: menu } = await useAsyncData('sidebar', async () => {
   const api = useApi();
 
-  const { data: departments } = await api.category.departments();
-  const { data: courses } = await api.category.courses();
+  const departments = await api.category.departments();
+  const courses = await api.category.courses();
 
   const menu: CollegeMenu[] = [];
 
@@ -55,14 +57,60 @@ const { data: menu } = await useAsyncData('sidebar', async () => {
 
   return menu;
 });
+
+const courseQuery = ref('');
+const courseSearchResult = ref<CourseMenu[]>([]);
+
+function searchCourse() {
+  if (courseQuery.value.length < 2) {
+    toast.error('두 글자 이상 입력해주세요!');
+    return;
+  }
+
+  const courses = computed(() =>
+    menu.value
+      .map(c => c.childs)
+      .reduce((prevDArr, curDArr) => prevDArr.concat(...curDArr), [])
+      .map(d => d.childs)
+      .reduce((prevCArr, curCArr) => prevCArr.concat(curCArr), [])
+  );
+
+  courseSearchResult.value = courses.value.filter(c => c.name.includes(courseQuery.value));
+}
+
+function flushSearchCourse() {
+  courseSearchResult.value = [];
+}
 </script>
 
 <template>
   <div class="relative">
-    <nav class="sidebar absolute left-0 top md:static p-6 z-10" :class="{ opened: props.opened }">
-      <button class="absolute top-0 right-0 p-5 md:hidden" @click="$emit('sidebarClose')">
+    <nav class="sidebar absolute left-0 top md:static p-6 z-10" :class="{ opened: sidebar.opened }">
+      <button class="absolute top-0 right-0 p-5 md:hidden" @click="sidebar.close()">
         <img class="w-6" src="@/assets/img/close.svg" />
       </button>
+
+      <div class="mb-5 relative">
+        <input v-model="courseQuery" type="text" placeholder="과목 검색" @keyup.enter="searchCourse()" />
+        <template v-if="courseSearchResult.length > 0">
+          <div
+            class="absolute top-full left-0 bg-white rounded border shadow p-3 whitespace-nowrap max-w-xs overflow-y-scroll z-10"
+            @focusout="flushSearchCourse()"
+          >
+            <NuxtLink
+              v-for="course in courseSearchResult"
+              :key="course.name"
+              class="block mb-2 last:mb-0 text-sm text-black transition-all text-opacity-75 hover:text-opacity-100"
+              :to="course.href"
+              @click="
+                sidebar.close();
+                flushSearchCourse();
+              "
+              >{{ course.name }}</NuxtLink
+            >
+          </div>
+        </template>
+      </div>
 
       <div v-for="college in menu" :key="college.name" class="mb-4 last:mb-0">
         <ClientOnly>
@@ -106,7 +154,7 @@ const { data: menu } = await useAsyncData('sidebar', async () => {
                           @click="
                             close();
                             closeDropdown();
-                            $emit('sidebarClose');
+                            sidebar.close();
                           "
                         >
                           전체보기
@@ -119,7 +167,7 @@ const { data: menu } = await useAsyncData('sidebar', async () => {
                           @click="
                             close();
                             closeDropdown();
-                            $emit('sidebarClose');
+                            sidebar.close();
                           "
                         >
                           {{ course.name }}
