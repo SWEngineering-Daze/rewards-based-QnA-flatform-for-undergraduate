@@ -47,7 +47,7 @@ const { data: menu } = await useAsyncData('sidebar', async ({ $axios }) => {
     const department = menu.find(m => m.childs.findIndex(d => d.name === course.parent.name) !== -1)?.childs.find(d => d.name === course.parent.name);
     department.childs.push({
       name: course.name,
-      href: `/qna/course/${course.name}`,
+      href: `/qna/course/${encodeURIComponent(course.name)}`,
     });
   }
 

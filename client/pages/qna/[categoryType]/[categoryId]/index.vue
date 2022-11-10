@@ -15,7 +15,7 @@ const {
   refresh,
   pending,
 } = await useAsyncData(`question-${type}-${category.name}-${page.value}`, async ({ $axios }) => {
-  const { data } = await $axios.get(`/questions/${type}/${category.name}?page=${page.value}`);
+  const { data } = await $axios.get(`/questions/${type}/${encodeURIComponent(category.name)}?page=${page.value}`);
 
   return data;
 });
