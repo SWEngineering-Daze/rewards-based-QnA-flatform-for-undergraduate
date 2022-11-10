@@ -19,11 +19,11 @@ export const useCategory = async () => {
   const router = useRouter();
 
   if (!departments) {
-    const { data: fetchedDepartments } = await api.category.departments();
+    const fetchedDepartments = await api.category.departments();
     departments = fetchedDepartments;
   }
   if (!courses) {
-    const { data: fetchedCourses } = await api.category.courses();
+    const fetchedCourses = await api.category.courses();
     courses = fetchedCourses;
   }
 

@@ -23,8 +23,8 @@ const sidebar = useSidebar();
 const { data: menu } = await useAsyncData('sidebar', async () => {
   const api = useApi();
 
-  const { data: departments } = await api.category.departments();
-  const { data: courses } = await api.category.courses();
+  const departments = await api.category.departments();
+  const courses = await api.category.courses();
 
   const menu: CollegeMenu[] = [];
 

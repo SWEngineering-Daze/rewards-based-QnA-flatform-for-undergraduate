@@ -15,9 +15,7 @@ export const useAuth = defineStore('auth', () => {
   const fetch = async () => {
     const api = useApi();
 
-    const { data } = await api.auth.me();
-
-    user.value = data;
+    user.value = await api.auth.me();
 
     savedUser.value = user.value;
     savedToken.value = token.value;
@@ -44,7 +42,7 @@ export const useAuth = defineStore('auth', () => {
   const login = async (credentials: Credentials) => {
     const api = useApi();
 
-    const { data } = await api.auth.login(credentials);
+    const data = await api.auth.login(credentials);
 
     token.value = data.token;
 
