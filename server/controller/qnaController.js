@@ -40,36 +40,21 @@ export const viewQuestionList = async (req, res) => {
       .select('id')
       .exec();
 
-    questionList = await Question.find()
-      .populate({
+    questionList = (
+      await Question.find().populate({
         path: 'course',
         populate: {
           path: 'parent',
-          match: {
-            _id: id,
-          },
         },
       })
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * perPage)
-      .limit(perPage)
-      .exec();
+    )
+      .filter((question) => question.course.parent._id == id)
+      .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
+      .slice((page - 1) * perPage, (page - 1) * perPage + perPage);
+
+    cntQuestions = questionList.length;
 
     console.log(questionList);
-
-    cntQuestions = (
-      await Question.find()
-        .populate({
-          path: 'course',
-          populate: {
-            path: 'parent',
-            match: {
-              _id: id,
-            },
-          },
-        })
-        .exec()
-    ).length;
   } else if (type == 'course') {
     const { id } = await Course.findOne({
       name,
@@ -80,7 +65,7 @@ export const viewQuestionList = async (req, res) => {
     console.log(id);
 
     questionList = (await Question.find().populate('course').exec())
-      .filter((question_CSEs) => question_CSEs.course._id == id)
+      .filter((question) => question.course._id == id)
       .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
       .slice((page - 1) * perPage, (page - 1) * perPage + perPage);
 
