@@ -1,16 +1,8 @@
 import { useToast } from 'vue-toastification';
+import type { Department, Course } from '@/composables/useApi';
 
-interface Category {
-  parent: {
-    _id?: string;
-    name: string;
-  };
-  _id?: string;
-  name: string;
-}
-
-let departments: Category[] = null;
-let courses: Category[] = null;
+let departments: Department[] = null;
+let courses: Course[] = null;
 
 function getCategory(data: { type: string; name: string }) {
   if (data.type === 'department') {
@@ -21,17 +13,17 @@ function getCategory(data: { type: string; name: string }) {
 }
 
 export const useCategory = async () => {
-  const { $axios } = useNuxtApp();
+  const api = useApi();
   const toast = useToast();
   const route = useRoute();
   const router = useRouter();
 
   if (!departments) {
-    const { data: fetchedDepartments } = await $axios.get('/departments');
+    const { data: fetchedDepartments } = await api.category.departments();
     departments = fetchedDepartments;
   }
   if (!courses) {
-    const { data: fetchedCourses } = await $axios.get('/courses');
+    const { data: fetchedCourses } = await api.category.courses();
     courses = fetchedCourses;
   }
 

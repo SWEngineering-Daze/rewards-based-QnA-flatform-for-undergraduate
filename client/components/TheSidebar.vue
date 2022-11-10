@@ -20,9 +20,11 @@ interface CollegeMenu {
 const props = defineProps<{ opened: boolean }>();
 defineEmits(['sidebarClose']);
 
-const { data: menu } = await useAsyncData('sidebar', async ({ $axios }) => {
-  const { data: departments } = await $axios.get('/departments');
-  const { data: courses } = await $axios.get('/courses');
+const { data: menu } = await useAsyncData('sidebar', async () => {
+  const api = useApi();
+
+  const { data: departments } = await api.category.departments();
+  const { data: courses } = await api.category.courses();
 
   const menu: CollegeMenu[] = [];
 

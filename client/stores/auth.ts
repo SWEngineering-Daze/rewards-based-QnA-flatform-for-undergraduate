@@ -1,14 +1,5 @@
 import { defineStore } from 'pinia';
-
-export interface User {
-  _id: string;
-  email: string;
-}
-
-export interface Credentials {
-  email: string;
-  password: string;
-}
+import { Credentials, User } from '@/composables/useApi';
 
 export const useAuth = defineStore('auth', () => {
   const savedToken = useCookie('auth.token');
@@ -22,9 +13,9 @@ export const useAuth = defineStore('auth', () => {
   });
 
   async function fetch() {
-    const { $axios } = useNuxtApp();
+    const api = useApi();
 
-    const { data } = await $axios.get('/auth/me');
+    const { data } = await api.auth.me();
 
     user.value = data;
 
@@ -51,9 +42,9 @@ export const useAuth = defineStore('auth', () => {
   }
 
   async function login(credentials: Credentials) {
-    const { $axios } = useNuxtApp();
+    const api = useApi();
 
-    const { data } = await $axios.post('/auth/login', credentials);
+    const { data } = await api.auth.login(credentials);
 
     token.value = data.token;
 

@@ -6,7 +6,7 @@ definePageMeta({
   middleware: ['guest'],
 });
 
-const { $axios } = useNuxtApp();
+const api = useApi();
 const route = useRoute();
 const router = useRouter();
 const toast = useToast();
@@ -15,7 +15,7 @@ const token = route.query.token as string;
 
 async function requestVerify() {
   try {
-    await $axios.post('/auth/verifyUser', {
+    await api.auth.verify({
       signupToken: token,
     });
 
