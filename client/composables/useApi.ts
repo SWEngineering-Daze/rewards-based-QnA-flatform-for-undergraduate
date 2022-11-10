@@ -43,6 +43,7 @@ export interface Credentials {
 export interface User {
   _id: string;
   email: string;
+  [key: string]: any;
 }
 
 const createApiRequester = (axios: AxiosInstance) => ({
