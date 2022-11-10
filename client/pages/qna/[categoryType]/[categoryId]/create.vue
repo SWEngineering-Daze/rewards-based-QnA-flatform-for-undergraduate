@@ -6,7 +6,7 @@ definePageMeta({
   middleware: ['auth'],
 });
 
-const { $axios } = useNuxtApp();
+const api = useApi();
 const { type, category } = await useCategory();
 const toast = useToast();
 const router = useRouter();
@@ -28,7 +28,7 @@ async function submit() {
   try {
     startLoading();
 
-    await $axios.post('/questions', {
+    await api.questions.write({
       title: title.value,
       content: content.value,
       courseName: category.name,

@@ -5,18 +5,8 @@ definePageMeta({
 
 const route = useRoute();
 
-// const { data: question } = await useAsyncData(`question-detail-${route.params.questionId}`, async ({ $axios }) => {
-//   const { data } = await $axios.get(`/questions/${route.params.questionId}`);
-
-//   const question = data.question;
-//   question.answers = data.answers;
-
-//   // nested property
-//   return question;
-// });
-
-const { $axios } = useNuxtApp();
-const { data: qna } = await $axios.get(`/questions/${route.params.questionId}`);
+const api = useApi();
+const { data: qna } = await api.questions.show(route.params.questionId as string);
 const question = qna.question;
 question.answers = qna.answers;
 

@@ -6,7 +6,7 @@ definePageMeta({
   middleware: ['guest'],
 });
 
-const { $axios } = useNuxtApp();
+const api = useApi();
 const router = useRouter();
 const toast = useToast();
 
@@ -35,7 +35,7 @@ async function submit() {
   try {
     startLoading();
 
-    await $axios.post('/auth/signup', credentials);
+    await api.auth.register(credentials);
 
     toast.success(`인증 링크가 이메일로 전송되었습니다!`);
     router.replace('/auth/login');

@@ -14,8 +14,10 @@ const {
   data: questionPaginator,
   refresh,
   pending,
-} = await useAsyncData(`question-${type}-${category.name}-${page.value}`, async ({ $axios }) => {
-  const { data } = await $axios.get(`/questions/${type}/${encodeURIComponent(category.name)}?page=${page.value}`);
+} = await useAsyncData(`question-${type}-${category.name}-${page.value}`, async () => {
+  const api = useApi();
+
+  const { data } = await api.questions.index(type, encodeURIComponent(category.name), page.value);
 
   return data;
 });

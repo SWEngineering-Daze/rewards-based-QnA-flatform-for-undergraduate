@@ -6,7 +6,7 @@ definePageMeta({
   middleware: ['auth'],
 });
 
-const { $axios } = useNuxtApp();
+const api = useApi();
 const toast = useToast();
 const route = useRoute();
 const router = useRouter();
@@ -14,8 +14,8 @@ const { loading, startLoading, finishLoading } = useLoading();
 
 const content = ref('');
 
-const { data: question } = await useAsyncData(`answer-create-${route.params.questionId}`, async ({ $axios }) => {
-  const { data } = await $axios.get(`/questions/${route.params.questionId}`);
+const { data: question } = await useAsyncData(`answer-create-${route.params.questionId}`, async () => {
+  const { data } = await api.questions.show(route.params.questionId as string);
 
   const question = data.question;
 
@@ -31,9 +31,7 @@ async function submit() {
   try {
     startLoading();
 
-    await $axios.post(`/questions/${question.value._id}/answers`, {
-      content: content.value,
-    });
+    await api.answers.write(question.value._id, { content: content.value });
 
     toast.success(`성공적으로 답변을 작성했습니다!"`);
     router.replace(`/qna/course/${question.value.course.name}/${question.value._id}`);
