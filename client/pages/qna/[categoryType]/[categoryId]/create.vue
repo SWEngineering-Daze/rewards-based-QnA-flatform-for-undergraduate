@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { AxiosError } from 'axios';
 import { useToast } from 'vue-toastification';
-import { encodeUrlSlash } from '~~/utils/urlSlashEncode';
 
 definePageMeta({
   middleware: ['auth'],
@@ -36,7 +35,7 @@ async function submit() {
     });
 
     toast.success(`성공적으로 질문을 작성했습니다!"`);
-    router.replace(`/qna/${type}/${encodeUrlSlash(category.name)}`);
+    router.replace(`/qna/${type}/${encodeURIComponent(category.name)}`);
   } catch (e) {
     if (e instanceof AxiosError) {
       toast.error('알 수 없는 네트워크 에러가 발생했습니다!');
@@ -68,7 +67,7 @@ async function submit() {
         <textarea v-model="content" name="content" rows="30"></textarea>
       </div>
       <div class="flex">
-        <NuxtLink class="btn btn-link flex-1" :to="`/qna/${type}/${encodeUrlSlash(category.name)}`">취소</NuxtLink>
+        <NuxtLink class="btn btn-link flex-1" :to="`/qna/${type}/${encodeURIComponent(category.name)}`">취소</NuxtLink>
         <BaseButton class="flex-1" type="submit" :loading="loading">작성</BaseButton>
       </div>
     </form>
