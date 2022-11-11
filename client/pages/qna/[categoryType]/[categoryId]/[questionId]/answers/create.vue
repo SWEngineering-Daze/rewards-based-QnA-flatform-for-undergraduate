@@ -43,7 +43,7 @@ async function submit() {
     await api.answers.write(question.value._id, { content: content.value });
 
     toast.success(`성공적으로 답변을 작성했습니다!"`);
-    router.replace(`/qna/course/${question.value.course.name}/${question.value._id}`);
+    router.replace(`/qna/course/${encodeURIComponent(question.value.course.name)}/${question.value._id}`);
   } catch (e) {
     if (e instanceof AxiosError) {
       toast.error('알 수 없는 네트워크 에러가 발생했습니다!');
@@ -75,7 +75,7 @@ async function submit() {
         <textarea v-model="content" name="content" rows="30"></textarea>
       </div>
       <div class="flex">
-        <NuxtLink class="btn btn-link flex-1" :to="`/qna/course/${question.course.name}/${question._id}`">취소</NuxtLink>
+        <NuxtLink class="btn btn-link flex-1" :to="`/qna/course/${encodeURIComponent(question.course.name)}/${question._id}`">취소</NuxtLink>
         <BaseButton class="flex-1" type="submit" :loading="loading">작성</BaseButton>
       </div>
     </form>

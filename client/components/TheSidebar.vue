@@ -25,8 +25,7 @@ const toast = useToast();
 const { data: menu } = await useAsyncData('sidebar', async () => {
   const api = useApi();
 
-  const departments = await api.category.departments();
-  const courses = await api.category.courses();
+  const [departments, courses] = await Promise.all([api.category.departments(), api.category.courses()]);
 
   const menu: CollegeMenu[] = [];
 

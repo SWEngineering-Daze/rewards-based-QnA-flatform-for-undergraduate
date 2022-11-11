@@ -49,7 +49,9 @@ function like() {
         <div class="whitespace-pre-line">{{ question.content }}</div>
       </article>
       <div class="flex justify-center my-12">
-        <NuxtLink class="btn btn-primary block w-full" :to="`/qna/course/${question.course.name}/${question._id}/answers/create`">답변 작성</NuxtLink>
+        <NuxtLink class="btn btn-primary block w-full" :to="`/qna/course/${encodeURIComponent(question.course.name)}/${question._id}/answers/create`"
+          >답변 작성</NuxtLink
+        >
       </div>
       <div v-for="answer in question.answers" :key="answer._id">
         <hr class="my-6" />

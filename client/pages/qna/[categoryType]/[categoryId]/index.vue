@@ -95,14 +95,16 @@ for (let i = page.value - 2; i <= page.value + 2; i++) {
         </div>
         <div v-for="question in questions" :key="question._id" class="flex items-center my-2">
           <div class="subject-col">
-            <NuxtLink class="block text-indigo-500 text-opacity-75 transition-all hover:text-opacity-100 text-sm" :to="`/qna/course/${question.course.name}`">{{
-              question.course.name
-            }}</NuxtLink>
+            <NuxtLink
+              class="block text-indigo-500 text-opacity-75 transition-all hover:text-opacity-100 text-sm"
+              :to="`/qna/course/${encodeURIComponent(question.course.name)}`"
+              >{{ question.course.name }}</NuxtLink
+            >
           </div>
           <div class="title-col">
             <NuxtLink
               class="block text-indigo-500 text-opacity-75 transition-all hover:text-opacity-100"
-              :to="`/qna/${type}/${category.name}/${question._id}`"
+              :to="`/qna/${type}/${encodeURIComponent(category.name)}/${question._id}`"
               >{{ question.title }}</NuxtLink
             >
           </div>
@@ -116,14 +118,16 @@ for (let i = page.value - 2; i <= page.value + 2; i++) {
           <div class="mb-1">
             <NuxtLink
               class="inline-block text-indigo-500 text-opacity-75 transition-all hover:text-opacity-100 text-sm"
-              :to="`/qna/course/${question.course.name}`"
+              :to="`/qna/course/${encodeURIComponent(question.course.name)}`"
               >{{ question.course.name }}</NuxtLink
             >
           </div>
           <div class="title-col">
-            <NuxtLink class="block text-black text-opacity-75 transition-all hover:text-opacity-100" :to="`/qna/${type}/${category.name}/${question._id}`">{{
-              question.title
-            }}</NuxtLink>
+            <NuxtLink
+              class="block text-black text-opacity-75 transition-all hover:text-opacity-100"
+              :to="`/qna/${type}/${encodeURIComponent(category.name)}/${question._id}`"
+              >{{ question.title }}</NuxtLink
+            >
           </div>
           <div class="flex justify-end">
             <span class="ml-auto text-gray-500 text-sm">{{ $dayjs(question.createdAt).fromNow() }}</span>
@@ -144,7 +148,7 @@ for (let i = page.value - 2; i <= page.value + 2; i++) {
         <NuxtLink
           v-for="p in pagingNumbers"
           :key="p"
-          :to="page === p ? undefined : `/qna/${type}/${category.name}?page=${p}`"
+          :to="page === p ? undefined : `/qna/${type}/${encodeURIComponent(category.name)}?page=${p}`"
           class="pagination-link"
           :class="{ active: page === p }"
           >{{ p }}</NuxtLink
@@ -154,7 +158,7 @@ for (let i = page.value - 2; i <= page.value + 2; i++) {
 
     <template v-if="type === 'course'">
       <div class="flex justify-end my-8">
-        <NuxtLink class="inline-block text-indigo-500 btn btn-primary" :to="`/qna/${type}/${category.name}/create`">작성하기</NuxtLink>
+        <NuxtLink class="inline-block text-indigo-500 btn btn-primary" :to="`/qna/${type}/${encodeURIComponent(category.name)}/create`">작성하기</NuxtLink>
       </div>
     </template>
   </div>
