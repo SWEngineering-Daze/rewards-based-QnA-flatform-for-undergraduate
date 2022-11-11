@@ -1,10 +1,14 @@
 <script lang="ts" setup>
+import { AxiosError } from 'axios';
+import { useToast } from 'vue-toastification';
+
 definePageMeta({
   middleware: ['auth'],
 });
 
 const { type, category } = await useCategory();
 const route = useRoute();
+const toast = useToast();
 
 const page = computed(() => {
   return Number.parseInt((route.query.page as string) ?? '1');
@@ -17,9 +21,21 @@ const {
 } = await useAsyncData(`question-${type}-${category.name}-${page.value}`, async () => {
   const api = useApi();
 
-  const paginator = await api.questions.index(type, encodeURIComponent(category.name), page.value);
+  try {
+    const paginator = await api.questions.index(type, encodeURIComponent(category.name), page.value);
 
-  return paginator;
+    return paginator;
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      toast.error('알 수 없는 네트워크 에러가 발생했습니다.');
+
+      await navigateTo('/');
+    } else {
+      toast.error('알 수 없는 에러가 발생했습니다.');
+
+      console.error(e);
+    }
+  }
 });
 
 watch(

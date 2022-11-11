@@ -1,14 +1,33 @@
 <script lang="ts" setup>
+import { AxiosError } from 'axios';
+import { useToast } from 'vue-toastification';
+import { Answer, Question } from '~~/composables/useApi';
+
 definePageMeta({
   middleware: ['auth'],
 });
 
 const route = useRoute();
+const toast = useToast();
 
 const api = useApi();
-const qna = await api.questions.show(route.params.questionId as string);
-const question = qna.question;
-question.answers = qna.answers;
+
+const qna = ref<{ question: Question; answers: Answer[] }>(null);
+try {
+  qna.value = await api.questions.show(route.params.questionId as string);
+} catch (e) {
+  if (e instanceof AxiosError) {
+    toast.error('알 수 없는 네트워크 에러가 발생했습니다.');
+
+    await navigateTo('/');
+  } else {
+    toast.error('알 수 없는 에러가 발생했습니다.');
+
+    console.error(e);
+  }
+}
+const question = qna.value.question;
+question.answers = qna.value.answers;
 
 function like() {
   alert('미구현');

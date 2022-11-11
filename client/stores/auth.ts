@@ -15,7 +15,13 @@ export const useAuth = defineStore('auth', () => {
   const fetch = async () => {
     const api = useApi();
 
-    user.value = await api.auth.me();
+    try {
+      user.value = await api.auth.me();
+    } catch (e) {
+      logout();
+
+      await navigateTo('/auth/login');
+    }
 
     savedUser.value = user.value;
     savedToken.value = token.value;
