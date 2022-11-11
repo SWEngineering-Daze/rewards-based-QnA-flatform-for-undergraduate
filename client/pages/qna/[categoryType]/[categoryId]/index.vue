@@ -15,6 +15,15 @@ const page = computed(() => {
   return Number.parseInt((route.query.page as string) ?? '1');
 });
 
+const query = computed(() => {
+  return (route.query.q as string) ?? null;
+});
+const searchInput = ref(query.value);
+
+async function search() {
+  await navigateTo(`/qna/${type}/${category.name}?q=${searchInput.value}`);
+}
+
 const {
   data: questionPaginator,
   refresh,
@@ -23,7 +32,7 @@ const {
   const api = useApi();
 
   try {
-    const paginator = await api.questions.index(type, encodeUrlSlash(category.name), page.value);
+    const paginator = await api.questions.index(type, encodeUrlSlash(category.name), page.value, query.value);
 
     return paginator;
   } catch (e) {
@@ -77,6 +86,12 @@ for (let i = page.value - 2; i <= page.value + 2; i++) {
         </button>
       </div>
     </div>
+
+    <template v-if="query">
+      <div class="mb-12">
+        <span class="font-bold">'{{ query }}'</span> 에 대한 검색 결과입니다.
+      </div>
+    </template>
 
     <div class="text-xs text-gray-500 mb-4">총 {{ totalQuestions }}개</div>
 
@@ -142,6 +157,10 @@ for (let i = page.value - 2; i <= page.value + 2; i++) {
         첫 번째 질문을 해보세요!
       </div>
     </template>
+
+    <div class="flex justify-center my-12">
+      <input v-model="searchInput" class="max-w-xs text-sm text-gray-700" type="text" placeholder="검색어를 입력하세요." @keypress.enter="search" />
+    </div>
 
     <template v-if="pagingNumbers.length > 0">
       <div class="flex justify-center my-8">
