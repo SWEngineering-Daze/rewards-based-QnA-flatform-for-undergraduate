@@ -29,8 +29,20 @@ try {
 const question = qna.value.question;
 question.answers = qna.value.answers;
 
-function like() {
-  alert('미구현');
+async function like(id: string) {
+  try {
+    await api.answers.like(id);
+
+    toast.success('이 답변을 추천했습니다!');
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      toast.error('알 수 없는 네트워크 에러가 발생했습니다.');
+    } else {
+      toast.error('알 수 없는 에러가 발생했습니다.');
+
+      console.error(e);
+    }
+  }
 }
 </script>
 
@@ -67,7 +79,7 @@ function like() {
             {{ answer.content }}
           </div>
           <div class="flex justify-center mt-12">
-            <button class="rounded-full border-2 border-indigo-500 bg-white text-indigo-500 font-medium py-2 px-12" @click="like()">좋아요!</button>
+            <button class="rounded-full border-2 border-indigo-500 bg-white text-indigo-500 font-medium py-2 px-12" @click="like(answer._id)">좋아요!</button>
           </div>
         </article>
       </div>

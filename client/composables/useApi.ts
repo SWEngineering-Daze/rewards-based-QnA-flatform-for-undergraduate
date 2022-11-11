@@ -98,6 +98,9 @@ const createApiRequester = (axios: AxiosInstance) => ({
     write(questionId: string, data: { content: string }) {
       return axios.post<Answer>(`/questions/${questionId}/answers`, data).then(response => response.data);
     },
+    like(id: string) {
+      return axios.post(`/answers/${id}`).then(response => response.data);
+    },
   },
 });
 
