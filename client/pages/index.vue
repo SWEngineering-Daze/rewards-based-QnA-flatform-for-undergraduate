@@ -1,9 +1,28 @@
 <script lang="ts" setup>
+import { AxiosError } from 'axios';
+import { useToast } from 'vue-toastification';
+
 definePageMeta({
   middleware: ['auth'],
 });
 
-const todayScholarship = 456000;
+const api = useApi();
+const toast = useToast();
+
+const todayScholarship = ref(0);
+try {
+  todayScholarship.value = await api.point.todayPoint();
+} catch (e) {
+  if (e instanceof AxiosError) {
+    if (process.client) {
+      toast.error('오늘의 장학금을 불러오지 못했습니다!');
+    } else {
+      throw createError({ statusCode: e.status, message: '오늘의 장학금을 불러오지 못했습니다!' });
+    }
+  } else {
+    throw e;
+  }
+}
 
 function format(n: number) {
   return Intl.NumberFormat('ko-KR').format(n);

@@ -99,6 +99,11 @@ const createApiRequester = (axios: AxiosInstance) => ({
       return axios.post<Answer>(`/questions/${questionId}/answers`, data).then(response => response.data);
     },
   },
+  point: {
+    todayPoint() {
+      return axios.get<number>(`/point/today`).then(response => response.data);
+    },
+  },
 });
 
 export const useApi = () => {
