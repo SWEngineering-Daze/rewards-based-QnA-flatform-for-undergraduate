@@ -28,7 +28,8 @@ export const viewQuestionList = async (req, res) => {
   const perPage = 10;
 
   const { email } = req.decoded;
-  const { type, name } = req.params;
+  const { type, name: encodedUrl } = req.params;
+  const name = encodedUrl.replaceAll('!', '/');
 
   let questionList;
   let cntQuestions;

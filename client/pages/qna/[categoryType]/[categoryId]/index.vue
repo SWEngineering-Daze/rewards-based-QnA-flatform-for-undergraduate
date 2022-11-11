@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { AxiosError } from 'axios';
 import { useToast } from 'vue-toastification';
+import { encodeUrlSlash } from '~~/utils/urlSlashEncode';
 
 definePageMeta({
   middleware: ['auth'],
@@ -22,7 +23,7 @@ const {
   const api = useApi();
 
   try {
-    const paginator = await api.questions.index(type, encodeURIComponent(category.name), page.value);
+    const paginator = await api.questions.index(type, encodeUrlSlash(category.name), page.value);
 
     return paginator;
   } catch (e) {

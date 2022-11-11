@@ -2,6 +2,7 @@
 import { Popover, PopoverButton, PopoverPanel, Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 import { useToast } from 'vue-toastification';
 import { useSidebar } from '@/stores/sidebar';
+import { encodeUrlSlash } from '~~/utils/urlSlashEncode';
 
 interface CourseMenu {
   name: string;
@@ -51,7 +52,7 @@ const { data: menu } = await useAsyncData('sidebar', async () => {
     const department = menu.find(m => m.childs.findIndex(d => d.name === course.parent.name) !== -1)?.childs.find(d => d.name === course.parent.name);
     department.childs.push({
       name: course.name,
-      href: `/qna/course/${encodeURIComponent(course.name)}`,
+      href: `/qna/course/${encodeUrlSlash(course.name)}`,
     });
   }
 
