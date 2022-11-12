@@ -1,6 +1,6 @@
 const title = '쉿! 교수님 몰래 들어오세요';
 const description = '리워드 기반 학술 정보 QnA 커뮤니티';
-const thumb = 'https://sw.bisue.shop/thumb.png';
+const thumb = 'https://sw.bisue.shop/thumb2.png';
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
