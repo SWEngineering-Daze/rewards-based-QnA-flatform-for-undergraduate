@@ -1,3 +1,7 @@
+const title = '쉿! 교수님 몰래 들어오세요';
+const description = '리워드 기반 학술 정보 QnA 커뮤니티';
+const thumb = 'https://sw.bisue.shop/thumb.png';
+
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
   root: true,
@@ -9,11 +13,16 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: '쉿! 교수님 몰래 들어오세요..', // 임시
+      title,
       htmlAttrs: {
         lang: 'ko',
       },
-      meta: [{ name: 'description', content: '리워드 기반 학술 질문/답변 플랫폼' }],
+      meta: [
+        { name: 'description', content: description },
+        { name: 'og:title', content: title },
+        { name: 'og:description', content: description },
+        { name: 'og:image', content: thumb },
+      ],
     },
     pageTransition: { name: 'page', mode: 'out-in' },
   },
