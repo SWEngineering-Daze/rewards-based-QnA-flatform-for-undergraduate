@@ -8,7 +8,7 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt'],
   css: ['@/assets/css/fonts.css', '@/assets/css/main.css'],
   build: {
-    transpile: ['vue-toastification'],
+    transpile: ['vue-toastification', '@toast-ui/editor'],
   },
 
   app: {
