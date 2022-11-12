@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import Editor from '@toast-ui/editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
-import '@toast-ui/editor/dist/i18n/ko-KR';
+import '@toast-ui/editor/dist/i18n/ko-kr';
 
 const props = defineProps<{
   modelValue: string;
