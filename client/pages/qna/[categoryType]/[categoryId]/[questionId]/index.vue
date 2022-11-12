@@ -46,7 +46,9 @@ function like() {
           <h1 class="text-3xl mb-3">{{ question.title }}</h1>
         </div>
         <hr class="my-6" />
-        <div class="whitespace-pre-line">{{ question.content }}</div>
+        <div>
+          <MarkdownViewer :content="question.content" />
+        </div>
       </article>
       <div class="flex justify-center my-12">
         <NuxtLink class="btn btn-primary block w-full" :to="`/qna/course/${encodeURIComponent(question.course.name)}/${question._id}/answers/create`"
