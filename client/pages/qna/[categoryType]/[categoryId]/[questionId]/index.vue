@@ -66,7 +66,7 @@ function like() {
             <span class="rounded-full bg-slate-500 text-white text-sm py-2 px-6 ml-8">답변</span>
           </div>
           <div>
-            {{ answer.content }}
+            <MarkdownViewer :content="answer.content" />
           </div>
           <div class="flex justify-center mt-12">
             <button class="rounded-full border-2 border-indigo-500 bg-white text-indigo-500 font-medium py-2 px-12" @click="like()">좋아요!</button>
