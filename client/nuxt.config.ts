@@ -19,9 +19,9 @@ export default defineNuxtConfig({
       },
       meta: [
         { name: 'description', content: description },
-        { name: 'og:title', content: title },
-        { name: 'og:description', content: description },
-        { name: 'og:image', content: thumb },
+        { property: 'og:title', content: title },
+        { property: 'og:description', content: description },
+        { property: 'og:image', content: thumb },
       ],
     },
     pageTransition: { name: 'page', mode: 'out-in' },
