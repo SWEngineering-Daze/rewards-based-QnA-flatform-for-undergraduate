@@ -1,19 +1,19 @@
 <script lang="ts" setup>
-import Viewer from '@toast-ui/editor/dist/toastui-editor-viewer';
-import '@toast-ui/editor/dist/toastui-editor-viewer.css';
-
 const props = defineProps<{
   content: string;
 }>();
 
-const editor = ref<Viewer>(null);
+const { $editor } = useNuxtApp();
+
+const editor = ref<any>(null);
 const el = ref<HTMLElement>(null);
 
 onMounted(() => {
   nextTick(() => {
-    editor.value = new Viewer({
+    editor.value = $editor.factory({
       el: el.value,
       initialValue: props.content,
+      viewer: true,
     });
   });
 });

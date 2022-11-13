@@ -1,19 +1,17 @@
 <script lang="ts" setup>
-import Editor from '@toast-ui/editor';
-import '@toast-ui/editor/dist/toastui-editor.css';
-import '@toast-ui/editor/dist/i18n/ko-kr';
-
 const props = defineProps<{
   modelValue: string;
 }>();
 const emit = defineEmits(['update:modelValue']);
 
-const editor = ref<Editor>(null);
+const { $editor } = useNuxtApp();
+
+const editor = ref<any>(null);
 const el = ref<HTMLElement>(null);
 
 onMounted(() => {
   nextTick(() => {
-    editor.value = new Editor({
+    editor.value = new $editor({
       el: el.value,
       height: '500px',
       initialValue: props.modelValue,
