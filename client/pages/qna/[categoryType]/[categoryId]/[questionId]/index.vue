@@ -40,8 +40,12 @@ function like() {
       <article>
         <div class="text-center">
           <div class="mb-6 text-center">
-            <div class="text-sm text-indigo-500 mb-1">{{ question.course.parent.name }}</div>
-            <div class="text-xl">{{ question.course.name }}</div>
+            <div>
+              <NuxtLink :to="`/qna/department/${question.course.parent.name}`" class="text-sm text-indigo-500 mb-1">{{ question.course.parent.name }}</NuxtLink>
+            </div>
+            <div>
+              <NuxtLink :to="`/qna/course/${question.course.name}`" class="text-xl">{{ question.course.name }}</NuxtLink>
+            </div>
           </div>
           <h1 class="text-3xl mb-3">{{ question.title }}</h1>
         </div>
