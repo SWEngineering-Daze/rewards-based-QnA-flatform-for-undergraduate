@@ -34,7 +34,7 @@ async function submit() {
     router.replace('/auth/login');
   } catch (e) {
     if (e instanceof AxiosError) {
-      if (e.response?.data.error === 'wrong email address') {
+      if (e.response?.data.error === 'The account with that email address does not exist') {
         toast.error('존재하지 않는 이메일 주소입니다!');
       } else {
         toast.error('알 수 없는 네트워크 에러가 발생했습니다!');
