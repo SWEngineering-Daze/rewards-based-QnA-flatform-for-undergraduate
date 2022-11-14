@@ -64,7 +64,8 @@ async function submit() {
       </div>
       <div class="group">
         <div class="text-lg font-medium mb-1">내용</div>
-        <textarea v-model="content" name="content" rows="30"></textarea>
+        <MarkdownEditor v-model="content" name="content" />
+        <!-- <textarea v-model="content" name="content" rows="30"></textarea> -->
       </div>
       <div class="flex">
         <NuxtLink class="btn btn-link flex-1" :to="`/qna/${type}/${encodeURIComponent(category.name)}`">취소</NuxtLink>

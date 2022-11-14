@@ -68,11 +68,13 @@ async function submit() {
       <h1 class="text-3xl text-center mb-6">{{ question.title }}</h1>
       <div class="my-6">
         <div class="text-lg font-medium mb-1">질문 내용</div>
-        <div class="py-3 px-4 rounded border">{{ question.content }}</div>
+        <div class="py-3 px-4 rounded border">
+          <MarkdownViewer :content="question.content" />
+        </div>
       </div>
       <div class="group">
         <div class="text-lg font-medium mb-1">답변</div>
-        <textarea v-model="content" name="content" rows="30"></textarea>
+        <MarkdownEditor v-model="content" name="content" />
       </div>
       <div class="flex">
         <NuxtLink class="btn btn-link flex-1" :to="`/qna/course/${encodeURIComponent(question.course.name)}/${question._id}`">취소</NuxtLink>
