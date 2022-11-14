@@ -66,10 +66,10 @@ const createApiRequester = (axios: AxiosInstance) => ({
     },
     find: {
       send(data: { email: string }) {
-        return axios.post('/auth/findPassword', data).then(response => response.data);
+        return axios.post('/users/find-password', data).then(response => response.data);
       },
       reset(data: { userToken: string; password: string }) {
-        return axios.post('/auth/resetPassword', data).then(response => response.data);
+        return axios.put('/users/reset-password', data).then(response => response.data);
       },
     },
   },
