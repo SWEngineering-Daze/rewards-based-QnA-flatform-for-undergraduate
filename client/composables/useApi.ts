@@ -64,6 +64,14 @@ const createApiRequester = (axios: AxiosInstance) => ({
     me() {
       return axios.get<User>('/auth/me').then(response => response.data);
     },
+    find: {
+      send(data: { email: string }) {
+        return axios.post('/users/find-password', data).then(response => response.data);
+      },
+      reset(data: { userToken: string; password: string }) {
+        return axios.put('/users/reset-password', data).then(response => response.data);
+      },
+    },
   },
   category: {
     departments() {
