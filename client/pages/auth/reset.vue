@@ -42,7 +42,11 @@ async function submit() {
     router.replace('/auth/login');
   } catch (e) {
     if (e instanceof AxiosError) {
-      toast.error('알 수 없는 네트워크 에러가 발생했습니다!');
+      if (e.response.data.error === 'Invalid Token') {
+        toast.error('잘못된 토큰입니다!');
+      } else {
+        toast.error('알 수 없는 네트워크 에러가 발생했습니다!');
+      }
     } else {
       toast.error('알 수 없는 에러가 발생했습니다!');
 
