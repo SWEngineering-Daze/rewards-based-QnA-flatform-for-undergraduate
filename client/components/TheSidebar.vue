@@ -89,7 +89,7 @@ function flushSearchCourse() {
         <img class="w-6" src="@/assets/img/close.svg" />
       </button>
 
-      <div class="mb-5 relative">
+      <div class="mb-5 relative mt-9 md:mt-0">
         <input v-model="courseQuery" type="text" placeholder="과목 검색" @keyup.enter="searchCourse()" />
         <template v-if="courseSearchResult.length > 0">
           <div

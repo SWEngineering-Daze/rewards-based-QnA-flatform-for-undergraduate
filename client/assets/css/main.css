@@ -1,2 +1,12 @@
 @import './components/form.css';
 @import './components/button.css';
+
+/* 드래그 스타일 */
+::-moz-selection {
+  background: #6366f1;
+  color: #fff;
+}
+::selection {
+  background: #6366f1;
+  color: #fff;
+}
