@@ -11,7 +11,7 @@ const toast = useToast();
 
 const todayScholarship = ref(0);
 try {
-  todayScholarship.value = await api.point.todayPoint();
+  todayScholarship.value = await api.point.todayPoint().then(r => r.value);
 } catch (e) {
   if (e instanceof AxiosError) {
     if (process.client) {

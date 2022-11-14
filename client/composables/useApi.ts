@@ -109,7 +109,7 @@ const createApiRequester = (axios: AxiosInstance) => ({
   },
   point: {
     todayPoint() {
-      return axios.get<number>(`/points/today`).then(response => response.data);
+      return axios.get<{ value: number }>(`/points/today`).then(response => response.data);
     },
   },
 });
