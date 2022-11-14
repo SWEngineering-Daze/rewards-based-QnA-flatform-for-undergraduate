@@ -107,7 +107,7 @@ for (let i = page.value - 2; i <= page.value + 2; i++) {
             <NuxtLink
               class="block text-indigo-500 text-opacity-75 transition-all hover:text-opacity-100"
               :to="`/qna/${type}/${encodeURIComponent(category.name)}/${question._id}`"
-              >{{ question.title }}</NuxtLink
+              >{{ question.title }} [{{ question.countAnswer ?? 'x' }}]</NuxtLink
             >
           </div>
           <div class="created-col">

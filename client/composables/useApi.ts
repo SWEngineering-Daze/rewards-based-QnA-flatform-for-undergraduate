@@ -86,7 +86,7 @@ const createApiRequester = (axios: AxiosInstance) => ({
       return axios
         .get<{
           cntQuestions: number;
-          questionList: Question[];
+          questionList: (Question & { countAnswer: number })[];
         }>(`/questions/${type}/${name}?page=${page}`)
         .then(response => response.data);
     },
