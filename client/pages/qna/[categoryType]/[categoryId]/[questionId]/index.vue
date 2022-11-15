@@ -42,6 +42,7 @@ function getLikeCount(answer: Answer) {
 async function like(answer: Answer) {
   if (isAlreadyLiked(answer)) {
     toast.error('이미 추천했습니다!');
+    return;
   }
 
   try {
