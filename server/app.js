@@ -6,10 +6,10 @@ import { config } from './config.js';
 import authRouter from './router/auth.js';
 import * as listController from './controller/listController.js';
 import { Course, Department, Question, TodayPoint } from './database/mongodb.js';
-import * as qnaController from './controller/qnaController.js';
 import { isAuth } from './middleware/auth.js';
 import usersRouter from './router/users.js';
 import { getPointsOfToday } from './controller/pointController.js';
+import questionsRouter from './router/questions.js';
 
 const app = express();
 
@@ -23,10 +23,7 @@ app.use('/auth', authRouter);
 app.use('/users', usersRouter);
 app.get('/departments', listController.getDepartments);
 app.get('/courses', listController.getCourses);
-app.post('/questions', isAuth, qnaController.writeQuestion);
-app.get('/questions/:type/:name', isAuth, qnaController.viewQuestionList);
-app.get('/questions/:id', isAuth, qnaController.viewQuestionDetail);
-app.post('/questions/:id/answers', isAuth, qnaController.writeAnswer);
+app.use('/questions', questionsRouter);
 app.get('/points/today', getPointsOfToday);
 
 app.get('/', (req, res) => {
