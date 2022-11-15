@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { Answer, Course, Department, Question } from '../database/mongodb.js';
+import { Answer, Course, Department, Question, User } from '../database/mongodb.js';
 
 export const writeQuestion = async (req, res) => {
   const { email } = req.decoded;
@@ -173,4 +173,26 @@ export const writeAnswer = async (req, res) => {
   });
 
   res.json(answer);
+};
+
+export const recommendAnswer = async (req, res) => {
+  const { email } = req.decoded;
+  const { answerID } = req.params;
+
+  const userID = await User.findOne({ email }).select('_id').exec();
+
+  await Answer.updateOne(
+    {
+      _id: answerID,
+    },
+    {
+      $push: {
+        recommendedBy: userID,
+      },
+    }
+  ).exec();
+
+  res.json({
+    message: 'success',
+  });
 };

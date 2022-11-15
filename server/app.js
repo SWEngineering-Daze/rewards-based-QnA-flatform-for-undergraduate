@@ -10,6 +10,7 @@ import { isAuth } from './middleware/auth.js';
 import usersRouter from './router/users.js';
 import { getPointsOfToday } from './controller/pointController.js';
 import questionsRouter from './router/questions.js';
+import answersRouter from './router/answers.js';
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use('/users', usersRouter);
 app.get('/departments', listController.getDepartments);
 app.get('/courses', listController.getCourses);
 app.use('/questions', questionsRouter);
+app.use('/answers', answersRouter);
 app.get('/points/today', getPointsOfToday);
 
 app.get('/', (req, res) => {
