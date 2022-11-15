@@ -68,7 +68,9 @@ for (let i = page.value - 2; i <= page.value + 2; i++) {
         <h2 class="font-light text-blue-500 mb-2">{{ category.parent.name }}</h2>
       </template>
       <template v-else>
-        <NuxtLink class="block font-light text-blue-500 mb-2" :to="`/qna/department/${category.parent.name}`">{{ category.parent.name }}</NuxtLink>
+        <div class="mb-2">
+          <NuxtLink class="font-light text-blue-500" :to="`/qna/department/${category.parent.name}`">{{ category.parent.name }}</NuxtLink>
+        </div>
       </template>
       <div class="flex items-center">
         <h1 class="font-bold text-4xl">{{ category.name }}</h1>
@@ -105,7 +107,7 @@ for (let i = page.value - 2; i <= page.value + 2; i++) {
             <NuxtLink
               class="block text-indigo-500 text-opacity-75 transition-all hover:text-opacity-100"
               :to="`/qna/${type}/${encodeURIComponent(category.name)}/${question._id}`"
-              >{{ question.title }}</NuxtLink
+              >{{ question.title }} [{{ question.countAnswer ?? 'x' }}]</NuxtLink
             >
           </div>
           <div class="created-col">

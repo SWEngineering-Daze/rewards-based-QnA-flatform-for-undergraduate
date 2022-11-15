@@ -1,12 +1,7 @@
 import { Course, Department } from '../database/mongodb.js';
 
 export const getDepartments = async (req, res) => {
-  const departments = await Department.find()
-    .sort({
-      'parent.id': 1,
-    })
-    .exec();
-
+  const departments = await Department.find().sort({ 'parent.id': 1 }).exec();
   res.json(departments);
 };
 

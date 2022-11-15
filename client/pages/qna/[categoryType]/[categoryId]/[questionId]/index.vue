@@ -52,13 +52,19 @@ async function like(id: string) {
       <article>
         <div class="text-center">
           <div class="mb-6 text-center">
-            <div class="text-sm text-indigo-500 mb-1">{{ question.course.parent.name }}</div>
-            <div class="text-xl">{{ question.course.name }}</div>
+            <div>
+              <NuxtLink :to="`/qna/department/${question.course.parent.name}`" class="text-sm text-indigo-500 mb-1">{{ question.course.parent.name }}</NuxtLink>
+            </div>
+            <div>
+              <NuxtLink :to="`/qna/course/${question.course.name}`" class="text-xl">{{ question.course.name }}</NuxtLink>
+            </div>
           </div>
           <h1 class="text-3xl mb-3">{{ question.title }}</h1>
         </div>
         <hr class="my-6" />
-        <div class="whitespace-pre-line">{{ question.content }}</div>
+        <div>
+          <MarkdownViewer :content="question.content" />
+        </div>
       </article>
       <div class="flex justify-center my-12">
         <NuxtLink class="btn btn-primary block w-full" :to="`/qna/course/${encodeURIComponent(question.course.name)}/${question._id}/answers/create`"
@@ -76,7 +82,7 @@ async function like(id: string) {
             <span class="rounded-full bg-slate-500 text-white text-sm py-2 px-6 ml-8">답변</span>
           </div>
           <div>
-            {{ answer.content }}
+            <MarkdownViewer :content="answer.content" />
           </div>
           <div class="flex justify-center mt-12">
             <button class="rounded-full border-2 border-indigo-500 bg-white text-indigo-500 font-medium py-2 px-12" @click="like(answer._id)">좋아요!</button>

@@ -64,6 +64,14 @@ const createApiRequester = (axios: AxiosInstance) => ({
     me() {
       return axios.get<User>('/auth/me').then(response => response.data);
     },
+    find: {
+      send(data: { email: string }) {
+        return axios.post('/users/find-password', data).then(response => response.data);
+      },
+      reset(data: { userToken: string; password: string }) {
+        return axios.put('/users/reset-password', data).then(response => response.data);
+      },
+    },
   },
   category: {
     departments() {
@@ -78,7 +86,7 @@ const createApiRequester = (axios: AxiosInstance) => ({
       return axios
         .get<{
           cntQuestions: number;
-          questionList: Question[];
+          questionList: (Question & { countAnswer: number })[];
         }>(`/questions/${type}/${name}?page=${page}`)
         .then(response => response.data);
     },
@@ -100,6 +108,11 @@ const createApiRequester = (axios: AxiosInstance) => ({
     },
     like(id: string) {
       return axios.post(`/answers/${id}`).then(response => response.data);
+    },
+  },
+  point: {
+    todayPoint() {
+      return axios.get<{ value: number }>(`/points/today`).then(response => response.data);
     },
   },
 });
