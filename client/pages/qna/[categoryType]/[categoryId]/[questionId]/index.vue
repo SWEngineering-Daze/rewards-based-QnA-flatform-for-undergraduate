@@ -40,7 +40,7 @@ function getLikeCount(answer: Answer) {
 }
 
 function isMine(answer: Answer) {
-  return answer._id === auth.user._id;
+  return answer.writer === auth.user.email;
 }
 
 async function like(answer: Answer) {
