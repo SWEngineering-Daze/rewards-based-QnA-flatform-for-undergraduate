@@ -49,7 +49,7 @@ watch(
 refresh();
 
 const questions = computed(() => questionPaginator.value.questionList);
-const totalQuestions = computed(() => questionPaginator.value.total);
+const totalQuestions = computed(() => questionPaginator.value.cntQuestions);
 
 const perPage = 10; // from server
 const totalPages = Math.ceil(totalQuestions.value / perPage);

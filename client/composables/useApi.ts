@@ -86,8 +86,8 @@ const createApiRequester = (axios: AxiosInstance) => ({
     index(type: 'department' | 'course', name: string, page: number = 1) {
       return axios
         .get<{
-          total: number;
-          questionList: (Question & { countAnswer: number })[];
+          cntQuestions: number;
+          questionList: (Question & { answers: Answer[] })[];
         }>(`/questions/${type}/${name}?page=${page}`)
         .then(response => response.data);
     },
