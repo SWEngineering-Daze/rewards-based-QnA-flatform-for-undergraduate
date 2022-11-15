@@ -262,6 +262,30 @@ export const viewMyQuestions = async (req, res) => {
 
 export const viewMyAnswers = async (req, res) => {
   const { email } = req.decoded;
-  const answers = await Answer.find({ writer: email }).exec();
-  res.json(answers);
+  const page = parseInt(req.query.page);
+  const perPage = parseInt(req.query.perPage);
+
+  let answerList = (await Answer.find({ writer: email }).exec()).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+
+  const cntAnswers = answerList.length;
+  answerList = answerList.slice((page - 1) * perPage, (page - 1) * perPage + perPage);
+
+  const answers = await Answer.find().populate('question').exec();
+
+  answerList = answerList.map((question, index) => {
+    return {
+      _id: question._id,
+      writer: question.writer,
+      title: question.title,
+      content: question.content,
+      course: question.course,
+      createdAt: question.createdAt,
+      updatedAt: question.updatedAt,
+    };
+  });
+
+  res.json({
+    answerList,
+    cntAnswers,
+  });
 };
