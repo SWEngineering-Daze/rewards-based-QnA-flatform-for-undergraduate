@@ -39,9 +39,16 @@ function getLikeCount(answer: Answer) {
   return answer.recommendedBy.length;
 }
 
+function isMine(answer: Answer) {
+  return answer._id === auth.user._id;
+}
+
 async function like(answer: Answer) {
   if (isAlreadyLiked(answer)) {
     toast.error('이미 추천했습니다!');
+    return;
+  } else if (isMine(answer)) {
+    toast.error('자신의 답변은 추천할 수 없습니다!');
     return;
   }
 
