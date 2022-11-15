@@ -1,5 +1,11 @@
-import { ObjectId } from 'mongodb';
-import { Answer, Course, Department, Question, User } from '../database/mongodb.js';
+import { ObjectId } from "mongodb";
+import {
+  Answer,
+  Course,
+  Department,
+  Question,
+  User,
+} from "../database/mongodb.js";
 
 export const writeQuestion = async (req, res) => {
   const { email } = req.decoded;
@@ -27,112 +33,63 @@ export const viewQuestionList = async (req, res) => {
   const page = parseInt(req.query.page); // 1페이지부터 시작
   const perPage = 10;
 
-  const { email } = req.decoded;
   const { type, name: encodedUrl } = req.params;
-  const name = encodedUrl.replaceAll('!', '/');
+  const name = encodedUrl.replaceAll("!", "/");
 
-  let questionList;
-  let cntQuestions;
-  let cntAnswers = [];
-
-  if (type == 'department') {
-    const { id } = await Department.findOne({
-      name,
-    })
-      .select('id')
-      .exec();
-
-    questionList = (
-      await Question.find().populate({
-        path: 'course',
-        populate: {
-          path: 'parent',
-        },
+  const fetchQuestionPaginator = async (type, name) => {
+    let queryBuilder = Question.aggregate([])
+      // 과목 join (1:1 - unwind)
+      .lookup({
+        from: "courses",
+        localField: "course",
+        foreignField: "_id",
+        as: "course",
       })
-    )
-      .filter((question) => question.course.parent._id == id)
-      .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+      .unwind({ path: "$course", preserveNullAndEmptyArrays: true })
+      // 과목.학과 join (1:1 - unwind)
+      .lookup({
+        from: "departments",
+        localField: "course.parent",
+        foreignField: "_id",
+        as: "course.parent",
+      })
+      .unwind({ path: "$course.parent", preserveNullAndEmptyArrays: true })
+      // sort latest
+      .sort({ createdAt: -1 });
 
-    cntQuestions = questionList.length;
-    questionList = questionList.slice((page - 1) * perPage, (page - 1) * perPage + perPage);
-
-    const answers = await Answer.find().populate('question').exec();
-
-    for (const question of questionList) {
-      const questionID = question._id;
-      let cntAnswer = 0;
-
-      for (const answer of answers) {
-        if (answer.question != null) {
-          if (answer.question._id.equals(questionID)) {
-            cntAnswer++;
-          }
-        }
-      }
-      cntAnswers.push(cntAnswer);
+    // 학과 or 과목 match
+    if (type === "department") {
+      queryBuilder = queryBuilder.match({ "course.parent.name": name });
+    } else {
+      queryBuilder = queryBuilder.match({ "course.name": name });
     }
 
-    questionList = questionList.map((question, index) => {
-      return {
-        _id: question._id,
-        writer: question.writer,
-        title: question.title,
-        content: question.content,
-        course: question.course,
-        createdAt: question.createdAt,
-        updatedAt: question.updatedAt,
-        countAnswer: cntAnswers[index],
-      };
-    });
-  } else if (type == 'course') {
-    const { id } = await Course.findOne({
-      name,
-    })
-      .select('id')
-      .exec();
+    return (
+      queryBuilder
+        // 답변 join (1:N)
+        .lookup({
+          from: "answers",
+          localField: "_id",
+          foreignField: "question",
+          as: "answers",
+        })
+        // 분기
+        .facet({
+          questionList: [{ $skip: (page - 1) * perPage }, { $limit: perPage }],
+          total: [{ $count: "total" }],
+        })
+        .unwind({ path: "$total", preserveNullAndEmptyArrays: true })
+        .exec()
+        // aggregate 반환값이 배열이라 결과 mapping
+        .then((r) => r[0])
+    );
+  };
 
-    console.log(id);
-
-    questionList = (await Question.find().populate('course').exec())
-      .filter((question) => question.course._id == id)
-      .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
-
-    cntQuestions = questionList.length;
-    questionList = questionList.slice((page - 1) * perPage, (page - 1) * perPage + perPage);
-  }
-
-  const answers = await Answer.find().populate('question').exec();
-
-  for (const question of questionList) {
-    const questionID = question._id;
-    let cntAnswer = 0;
-
-    for (const answer of answers) {
-      if (answer.question != null) {
-        if (answer.question._id.equals(questionID)) {
-          cntAnswer++;
-        }
-      }
-    }
-    cntAnswers.push(cntAnswer);
-  }
-
-  questionList = questionList.map((question, index) => {
-    return {
-      _id: question._id,
-      writer: question.writer,
-      title: question.title,
-      content: question.content,
-      course: question.course,
-      createdAt: question.createdAt,
-      updatedAt: question.updatedAt,
-      countAnswer: cntAnswers[index],
-    };
-  });
+  const paginator = await fetchQuestionPaginator(type, name);
 
   res.json({
-    questionList,
-    cntQuestions,
+    questionList: paginator.questionList,
+    cntQuestions: paginator.total ?? 0,
   });
 };
 
@@ -144,9 +101,9 @@ export const viewQuestionDetail = async (req, res) => {
     _id: id,
   })
     .populate({
-      path: 'course',
+      path: "course",
       populate: {
-        path: 'parent',
+        path: "parent",
       },
     })
     .exec();
@@ -179,16 +136,18 @@ export const recommendAnswer = async (req, res) => {
   const { email } = req.decoded;
   const { id } = req.params;
 
-  const userID = await User.findOne({ email }).select('_id').exec();
+  const userID = await User.findOne({ email }).select("_id").exec();
 
-  const answerWriter = (await Answer.findOne({ _id: id }).select('writer').exec()).writer;
+  const answerWriter = (
+    await Answer.findOne({ _id: id }).select("writer").exec()
+  ).writer;
 
   console.log(email);
   console.log(answerWriter);
 
   if (answerWriter == email) {
     res.status(400).json({
-      message: 'not a valid user',
+      message: "not a valid user",
     });
 
     return;
@@ -207,7 +166,7 @@ export const recommendAnswer = async (req, res) => {
     ).exec();
 
   res.json({
-    message: 'success',
+    message: "success",
   });
 };
 
@@ -222,9 +181,9 @@ export const viewMyQuestions = async (req, res) => {
 
   questionList = (
     await Question.find().populate({
-      path: 'course',
+      path: "course",
       populate: {
-        path: 'parent',
+        path: "parent",
       },
     })
   )
@@ -232,9 +191,12 @@ export const viewMyQuestions = async (req, res) => {
     .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
 
   cntQuestions = questionList.length;
-  questionList = questionList.slice((page - 1) * perPage, (page - 1) * perPage + perPage);
+  questionList = questionList.slice(
+    (page - 1) * perPage,
+    (page - 1) * perPage + perPage
+  );
 
-  const answers = await Answer.find().populate('question').exec();
+  const answers = await Answer.find().populate("question").exec();
 
   for (const question of questionList) {
     const questionID = question._id;
@@ -279,11 +241,11 @@ export const viewMyAnswers = async (req, res) => {
 
   answerList = (
     await Answer.find().populate({
-      path: 'question',
+      path: "question",
       populate: {
-        path: 'course',
+        path: "course",
         populate: {
-          path: 'parent',
+          path: "parent",
         },
       },
     })
@@ -292,7 +254,10 @@ export const viewMyAnswers = async (req, res) => {
     .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
 
   cntAnswers = answerList.length;
-  answerList = answerList.slice((page - 1) * perPage, (page - 1) * perPage + perPage);
+  answerList = answerList.slice(
+    (page - 1) * perPage,
+    (page - 1) * perPage + perPage
+  );
 
   answerList = answerList.map((answer, index) => {
     return {
