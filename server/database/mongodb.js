@@ -68,6 +68,12 @@ const answerSchema = mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: 'questions',
     },
+    recommendedBy: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'users',
+      },
+    ],
   },
   {
     timestamps: true,
