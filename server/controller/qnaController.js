@@ -181,19 +181,30 @@ export const recommendAnswer = async (req, res) => {
 
   const userID = await User.findOne({ email }).select('_id').exec();
 
-  console.log(id);
-  console.log(userID);
+  const answerWriter = (await Answer.findOne({ _id: id }).select('writer').exec()).writer;
 
-  await Answer.updateOne(
-    {
-      _id: id,
-    },
-    {
-      $push: {
-        recommendedBy: userID,
+  console.log(email);
+  console.log(answerWriter);
+
+  if (answerWriter == email) {
+    res.status(400).json({
+      message: 'not a valid user',
+    });
+
+    return;
+  }
+
+  if (answerWriter)
+    await Answer.updateOne(
+      {
+        _id: id,
       },
-    }
-  ).exec();
+      {
+        $push: {
+          recommendedBy: userID,
+        },
+      }
+    ).exec();
 
   res.json({
     message: 'success',
