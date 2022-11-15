@@ -210,3 +210,11 @@ export const recommendAnswer = async (req, res) => {
     message: 'success',
   });
 };
+
+export const viewMyQuestions = async (req, res) => {
+  const { email } = req.decoded;
+
+  const questions = await Question.find({ writer: email }).exec();
+
+  res.json(questions);
+};
