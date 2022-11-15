@@ -213,8 +213,55 @@ export const recommendAnswer = async (req, res) => {
 
 export const viewMyQuestions = async (req, res) => {
   const { email } = req.decoded;
+  const page = parseInt(req.query.page);
+  const perPage = parseInt(req.query.perPage);
 
-  const questions = await Question.find({ writer: email }).exec();
+  let questionList = (await Question.find({ writer: email }).exec()).sort((a, b) =>
+    a.createdAt < b.createdAt ? 1 : -1
+  );
 
-  res.json(questions);
+  const cntQuestions = questionList.length;
+  questionList = questionList.slice((page - 1) * perPage, (page - 1) * perPage + perPage);
+
+  const answers = await Answer.find().populate('question').exec();
+
+  let cntAnswers = [];
+
+  for (const question of questionList) {
+    const questionID = question._id;
+    let cntAnswer = 0;
+
+    for (const answer of answers) {
+      if (answer.question != null) {
+        if (answer.question._id.equals(questionID)) {
+          cntAnswer++;
+        }
+      }
+    }
+    cntAnswers.push(cntAnswer);
+  }
+
+  questionList = questionList.map((question, index) => {
+    return {
+      _id: question._id,
+      writer: question.writer,
+      title: question.title,
+      content: question.content,
+      course: question.course,
+      createdAt: question.createdAt,
+      updatedAt: question.updatedAt,
+      countAnswer: cntAnswers[index],
+    };
+  });
+
+  res.json({
+    questionList,
+    cntQuestions,
+  });
+};
+
+export const viewMyAnswers = async (req, res) => {
+  const { email } = req.decoded;
+  const answers = await Answer.find({ writer: email }).exec();
+  res.json(answers);
 };
