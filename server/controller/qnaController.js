@@ -89,7 +89,7 @@ export const viewQuestionList = async (req, res) => {
 
   res.json({
     questionList: paginator.questionList,
-    cntQuestions: paginator.total ?? 0,
+    cntQuestions: paginator.total?.total ?? 0,
   });
 };
 
