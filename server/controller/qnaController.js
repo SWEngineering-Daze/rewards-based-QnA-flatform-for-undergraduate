@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { Answer, Course, Department, Question } from '../database/mongodb.js';
+import { Answer, Course, Department, Question, User } from '../database/mongodb.js';
 
 export const writeQuestion = async (req, res) => {
   const { email } = req.decoded;
@@ -33,6 +33,7 @@ export const viewQuestionList = async (req, res) => {
 
   let questionList;
   let cntQuestions;
+  let cntAnswers = [];
 
   if (type == 'department') {
     const { id } = await Department.findOne({
@@ -55,8 +56,34 @@ export const viewQuestionList = async (req, res) => {
     cntQuestions = questionList.length;
     questionList = questionList.slice((page - 1) * perPage, (page - 1) * perPage + perPage);
 
-    console.log(questionList);
-    console.log(cntQuestions);
+    const answers = await Answer.find().populate('question').exec();
+
+    for (const question of questionList) {
+      const questionID = question._id;
+      let cntAnswer = 0;
+
+      for (const answer of answers) {
+        if (answer.question != null) {
+          if (answer.question._id.equals(questionID)) {
+            cntAnswer++;
+          }
+        }
+      }
+      cntAnswers.push(cntAnswer);
+    }
+
+    questionList = questionList.map((question, index) => {
+      return {
+        _id: question._id,
+        writer: question.writer,
+        title: question.title,
+        content: question.content,
+        course: question.course,
+        createdAt: question.createdAt,
+        updatedAt: question.updatedAt,
+        countAnswer: cntAnswers[index],
+      };
+    });
   } else if (type == 'course') {
     const { id } = await Course.findOne({
       name,
@@ -72,10 +99,36 @@ export const viewQuestionList = async (req, res) => {
 
     cntQuestions = questionList.length;
     questionList = questionList.slice((page - 1) * perPage, (page - 1) * perPage + perPage);
-
-    console.log(questionList);
-    console.log(cntQuestions);
   }
+
+  const answers = await Answer.find().populate('question').exec();
+
+  for (const question of questionList) {
+    const questionID = question._id;
+    let cntAnswer = 0;
+
+    for (const answer of answers) {
+      if (answer.question != null) {
+        if (answer.question._id.equals(questionID)) {
+          cntAnswer++;
+        }
+      }
+    }
+    cntAnswers.push(cntAnswer);
+  }
+
+  questionList = questionList.map((question, index) => {
+    return {
+      _id: question._id,
+      writer: question.writer,
+      title: question.title,
+      content: question.content,
+      course: question.course,
+      createdAt: question.createdAt,
+      updatedAt: question.updatedAt,
+      countAnswer: cntAnswers[index],
+    };
+  });
 
   res.json({
     questionList,
@@ -120,4 +173,29 @@ export const writeAnswer = async (req, res) => {
   });
 
   res.json(answer);
+};
+
+export const recommendAnswer = async (req, res) => {
+  const { email } = req.decoded;
+  const { id } = req.params;
+
+  const userID = await User.findOne({ email }).select('_id').exec();
+
+  console.log(id);
+  console.log(userID);
+
+  await Answer.updateOne(
+    {
+      _id: id,
+    },
+    {
+      $push: {
+        recommendedBy: userID,
+      },
+    }
+  ).exec();
+
+  res.json({
+    message: 'success',
+  });
 };

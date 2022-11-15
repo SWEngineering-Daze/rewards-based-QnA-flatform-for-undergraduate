@@ -1,47 +1,41 @@
 <script lang="ts" setup>
 import { useToast } from 'vue-toastification';
 import { AxiosError } from 'axios';
-import { useAuth } from '@/stores/auth';
 
 definePageMeta({
   middleware: ['guest'],
 });
 
-const auth = useAuth();
+const api = useApi();
 const router = useRouter();
 const toast = useToast();
 
 const email = ref('');
 const emailSuffix = ref('@dongguk.edu');
-const password = ref('');
 
 const { loading, startLoading, finishLoading } = useLoading();
 
 async function submit() {
-  if (email.value === '' || password.value === '') {
-    toast.error('이메일과 비밀번호 모두 입력해주세요!');
+  if (email.value === '') {
+    toast.error('이메일을 입력해주세요!');
     return;
   }
 
-  const credentials = {
+  const data = {
     email: email.value + emailSuffix.value,
-    password: password.value,
   };
 
   try {
     startLoading();
 
-    await auth.login(credentials);
+    await api.auth.find.send(data);
 
-    toast.success(`로그인 되었습니다!`);
-    router.replace('/');
+    toast.success(`${email.value}로 이메일을 전송했습니다!`);
+    router.replace('/auth/login');
   } catch (e) {
     if (e instanceof AxiosError) {
-      if (e.response?.data.error === 'wrong email address') {
+      if (e.response?.data.error === 'The account with that email address does not exist') {
         toast.error('존재하지 않는 이메일 주소입니다!');
-      } else if (e.response?.data.error === 'wrong password') {
-        toast.error('비밀번호가 맞지 않습니다!');
-        password.value = '';
       } else {
         toast.error('알 수 없는 네트워크 에러가 발생했습니다!');
       }
@@ -59,7 +53,7 @@ async function submit() {
 <template>
   <div class="py-12 px-4">
     <form class="max-w-md w-full mx-auto" @submit.prevent="submit">
-      <h1 class="text-3xl font-bold text-center mb-6">로그인</h1>
+      <h1 class="text-3xl font-bold text-center mb-6">비밀번호 찾기</h1>
       <div class="group">
         <div class="text-lg font-medium mb-1">학교 이메일</div>
         <div class="flex">
@@ -70,16 +64,9 @@ async function submit() {
           </select>
         </div>
       </div>
-      <div class="group">
-        <div class="text-lg font-medium mb-1">비밀번호</div>
-        <input v-model="password" type="password" name="password" />
-      </div>
-      <div class="group flex">
-        <NuxtLink class="btn btn-link flex-1" to="/auth/register">회원가입</NuxtLink>
-        <BaseButton class="flex-1" type="submit" :loading="loading">로그인</BaseButton>
-      </div>
-      <div class="flex justify-end">
-        <NuxtLink class="text-indigo-500 text-opacity-75 transition-all hover:text-opacity-100 underline" to="/auth/find">비밀번호를 잊어버렸어요!</NuxtLink>
+      <div class="flex">
+        <NuxtLink class="btn btn-link flex-1" to="/auth/login">취소</NuxtLink>
+        <BaseButton class="flex-1" type="submit" :loading="loading">전송</BaseButton>
       </div>
     </form>
   </div>

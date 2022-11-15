@@ -22,6 +22,13 @@ const SignupTokenSchema = mongoose.Schema({
   password: String,
 });
 
+const ResetTokenSchema = mongoose.Schema({
+  value: String,
+  email: String,
+  createdAt: String,
+  ttl: Number,
+});
+
 const departmentSchema = mongoose.Schema({
   parent: {
     id: Number,
@@ -61,6 +68,21 @@ const answerSchema = mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: 'questions',
     },
+    recommendedBy: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'users',
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const todayPointSchema = mongoose.Schema(
+  {
+    value: Number,
   },
   {
     timestamps: true,
@@ -69,7 +91,9 @@ const answerSchema = mongoose.Schema(
 
 export const User = mongoose.model('users', UserSchema);
 export const SignupToken = mongoose.model('signupTokens', SignupTokenSchema);
+export const ResetToken = mongoose.model('resetTokens', ResetTokenSchema);
 export const Department = mongoose.model('departments', departmentSchema);
 export const Course = mongoose.model('courses', courseSchema);
 export const Question = mongoose.model('questions', questionSchema);
 export const Answer = mongoose.model('answers', answerSchema);
+export const TodayPoint = mongoose.model('todayPoints', todayPointSchema);
