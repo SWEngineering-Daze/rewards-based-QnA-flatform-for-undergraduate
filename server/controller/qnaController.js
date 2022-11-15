@@ -216,16 +216,25 @@ export const viewMyQuestions = async (req, res) => {
   const page = parseInt(req.query.page);
   const perPage = parseInt(req.query.perPage);
 
-  let questionList = (await Question.find({ writer: email }).exec()).sort((a, b) =>
-    a.createdAt < b.createdAt ? 1 : -1
-  );
+  let questionList;
+  let cntQuestions;
+  let cntAnswers = [];
 
-  const cntQuestions = questionList.length;
+  questionList = (
+    await Question.find().populate({
+      path: 'course',
+      populate: {
+        path: 'parent',
+      },
+    })
+  )
+    .filter((question) => question.writer == email)
+    .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+
+  cntQuestions = questionList.length;
   questionList = questionList.slice((page - 1) * perPage, (page - 1) * perPage + perPage);
 
   const answers = await Answer.find().populate('question').exec();
-
-  let cntAnswers = [];
 
   for (const question of questionList) {
     const questionID = question._id;
@@ -265,22 +274,35 @@ export const viewMyAnswers = async (req, res) => {
   const page = parseInt(req.query.page);
   const perPage = parseInt(req.query.perPage);
 
-  let answerList = (await Answer.find({ writer: email }).exec()).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+  let answerList;
+  let cntAnswers;
 
-  const cntAnswers = answerList.length;
+  answerList = (
+    await Answer.find().populate({
+      path: 'question',
+      populate: {
+        path: 'course',
+        populate: {
+          path: 'parent',
+        },
+      },
+    })
+  )
+    .filter((answer) => answer.writer == email)
+    .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+
+  cntAnswers = answerList.length;
   answerList = answerList.slice((page - 1) * perPage, (page - 1) * perPage + perPage);
 
-  const answers = await Answer.find().populate('question').exec();
-
-  answerList = answerList.map((question, index) => {
+  answerList = answerList.map((answer, index) => {
     return {
-      _id: question._id,
-      writer: question.writer,
-      title: question.title,
-      content: question.content,
-      course: question.course,
-      createdAt: question.createdAt,
-      updatedAt: question.updatedAt,
+      _id: answer._id,
+      writer: answer.writer,
+      title: answer.title,
+      content: answer.content,
+      question: answer.question,
+      createdAt: answer.createdAt,
+      updatedAt: answer.updatedAt,
     };
   });
 
