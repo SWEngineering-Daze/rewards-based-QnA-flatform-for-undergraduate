@@ -177,13 +177,16 @@ export const writeAnswer = async (req, res) => {
 
 export const recommendAnswer = async (req, res) => {
   const { email } = req.decoded;
-  const { answerID } = req.params;
+  const { id } = req.params;
 
   const userID = await User.findOne({ email }).select('_id').exec();
 
+  console.log(id);
+  console.log(userID);
+
   await Answer.updateOne(
     {
-      _id: answerID,
+      _id: id,
     },
     {
       $push: {
