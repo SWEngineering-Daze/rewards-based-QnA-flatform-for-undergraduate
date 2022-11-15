@@ -2,6 +2,7 @@
 import { AxiosError } from 'axios';
 import { useToast } from 'vue-toastification';
 import { Answer, Question } from '~~/composables/useApi';
+import { useAuth } from '~~/stores/auth';
 
 definePageMeta({
   middleware: ['auth'],
@@ -9,6 +10,7 @@ definePageMeta({
 
 const route = useRoute();
 const toast = useToast();
+const auth = useAuth();
 
 const api = useApi();
 
@@ -29,9 +31,23 @@ try {
 const question = qna.value.question;
 question.answers = qna.value.answers;
 
-async function like(id: string) {
+function isAlreadyLiked(answer: Answer) {
+  return answer.recommendedBy.includes(auth.user._id);
+}
+
+function getLikeCount(answer: Answer) {
+  return answer.recommendedBy.length;
+}
+
+async function like(answer: Answer) {
+  if (isAlreadyLiked(answer)) {
+    toast.error('이미 추천했습니다!');
+  }
+
   try {
-    await api.answers.like(id);
+    await api.answers.like(answer._id);
+
+    answer.recommendedBy.push(auth.user._id);
 
     toast.success('이 답변을 추천했습니다!');
   } catch (e) {
@@ -76,8 +92,8 @@ async function like(id: string) {
         <article>
           <div class="flex items-center mb-6">
             <div class="inline-flex items-center text-slate-500">
-              <img class="w-8" src="@/assets/img/heart.svg" alt="좋아요" />
-              <span class="ml-1">0</span>
+              <img class="w-8" :src="isAlreadyLiked(answer) ? `/img/heart-filled.svg` : `/img/heart.svg`" alt="좋아요" />
+              <span class="ml-1" :class="{ 'text-red-500': isAlreadyLiked(answer) }">{{ getLikeCount(answer) }}</span>
             </div>
             <span class="rounded-full bg-slate-500 text-white text-sm py-2 px-6 ml-8">답변</span>
           </div>
@@ -85,7 +101,7 @@ async function like(id: string) {
             <MarkdownViewer :content="answer.content" />
           </div>
           <div class="flex justify-center mt-12">
-            <button class="rounded-full border-2 border-indigo-500 bg-white text-indigo-500 font-medium py-2 px-12" @click="like(answer._id)">좋아요!</button>
+            <button class="rounded-full border-2 border-indigo-500 bg-white text-indigo-500 font-medium py-2 px-12" @click="like(answer)">좋아요!</button>
           </div>
         </article>
       </div>
