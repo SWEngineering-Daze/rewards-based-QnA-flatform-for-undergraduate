@@ -52,7 +52,7 @@ export const getAnswersWithAll = async () => {
       from: 'recommendations',
       localField: '_id',
       foreignField: 'answer',
-      as: 'recommendation',
+      as: 'recommendations',
     })
     .lookup({
       from: 'questions',
@@ -137,7 +137,7 @@ export const getQuestionDetailById = async (id) => {
         from: 'recommendations',
         localField: '_id',
         foreignField: 'answer',
-        as: 'recommendation',
+        as: 'recommendations',
       })
       .sort({ createdAt: 1 })
       .exec(),
