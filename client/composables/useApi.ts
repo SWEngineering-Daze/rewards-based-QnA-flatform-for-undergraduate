@@ -119,7 +119,7 @@ const createApiRequester = (axios: AxiosInstance) => ({
       return axios.get<AnswerPaginator>(`/answers/me?page=${page}&perPage=${perPage}`).then(response => response.data);
     },
     like(id: string) {
-      return axios.post(`/answers/${id}/recommend`).then(response => response.data);
+      return axios.post<void>(`/answers/${id}/recommend`).then(response => response.data);
     },
   },
   point: {
