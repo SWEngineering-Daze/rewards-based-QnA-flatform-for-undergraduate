@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { AxiosError } from 'axios';
 import { useToast } from 'vue-toastification';
+import { QuestionPaginator } from '~~/composables/useApi';
 import { encodeUrlSlash } from '~~/utils/urlSlashEncode';
 
 definePageMeta({
@@ -8,6 +9,8 @@ definePageMeta({
 });
 
 const { type, category } = await useCategory();
+const { loading, startLoading, finishLoading } = useLoading();
+const api = useApi();
 const route = useRoute();
 const toast = useToast();
 
@@ -15,17 +18,11 @@ const page = computed(() => {
   return Number.parseInt((route.query.page as string) ?? '1');
 });
 
-const {
-  data: questionPaginator,
-  refresh,
-  pending,
-} = await useAsyncData(`question-${type}-${category.name}-${page.value}`, async () => {
-  const api = useApi();
-
+async function fetchQuestionPaginator() {
   try {
-    const paginator = await api.questions.index(type, encodeUrlSlash(category.name), page.value);
+    startLoading();
 
-    return paginator;
+    questionPaginator.value = await api.questions.index(type, encodeUrlSlash(category.name), page.value);
   } catch (e) {
     if (e instanceof AxiosError) {
       toast.error('알 수 없는 네트워크 에러가 발생했습니다.');
@@ -36,17 +33,20 @@ const {
 
       console.error(e);
     }
+  } finally {
+    finishLoading();
   }
-});
+}
+
+const questionPaginator = ref<QuestionPaginator>(null);
+await fetchQuestionPaginator();
 
 watch(
   () => route.query,
   async () => {
-    await refresh();
+    await fetchQuestionPaginator();
   }
 );
-// 임시 (TODO: useAsyncData 대신 쌩 await $axios? - 뭐가 나은지 확인하기)
-refresh();
 
 const questions = computed(() => questionPaginator.value.questionList);
 const totalQuestions = computed(() => questionPaginator.value.cntQuestions);
@@ -74,7 +74,7 @@ for (let i = page.value - 2; i <= page.value + 2; i++) {
       </template>
       <div class="flex items-center">
         <h1 class="font-bold text-4xl">{{ category.name }}</h1>
-        <button class="ml-3 transition-transform hover:rotate-45" @click="refresh()">
+        <button class="ml-3 transition-transform hover:rotate-45" @click="fetchQuestionPaginator()">
           <img class="w-6" src="@/assets/img/refresh.svg" alt="새로고침" />
         </button>
       </div>
@@ -82,7 +82,7 @@ for (let i = page.value - 2; i <= page.value + 2; i++) {
 
     <div class="text-xs text-gray-500 mb-4">총 {{ totalQuestions }}개</div>
 
-    <template v-if="pending">
+    <template v-if="loading">
       <div class="flex flex-col items-center text-center text-slate-500 tracking-wider">
         <!-- spinner -->
         <LoadingSpinner class="w-12" />
