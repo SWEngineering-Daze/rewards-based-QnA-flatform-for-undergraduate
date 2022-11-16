@@ -1,11 +1,22 @@
 <script lang="ts" setup>
+import { QuestionPaginator, AnswerPaginator } from '~~/composables/useApi';
 import { useAuth } from '~~/stores/auth';
 
 definePageMeta({
   middleware: ['auth'],
 });
 
+const api = useApi();
 const auth = useAuth();
+
+const myQuestionPaginator = ref<QuestionPaginator>();
+const myAnswerPaginator = ref<AnswerPaginator>();
+try {
+  myQuestionPaginator.value = await api.questions.me(1, 5);
+  myAnswerPaginator.value = await api.answers.me(1, 5);
+} catch (e) {
+  console.error(e);
+}
 </script>
 
 <template>
@@ -30,22 +41,57 @@ const auth = useAuth();
     <div class="mb-16">
       <div class="text-2xl font-bold mb-3">내 질문</div>
       <div class="rounded bg-50 border border-gray-200 py-4 px-6">
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
+        <div v-for="question in myQuestionPaginator.questionList" :key="question._id" class="flex items-center my-2">
+          <div class="subject-col">
+            <NuxtLink
+              class="block text-indigo-500 font-medium text-opacity-75 transition-all hover:text-opacity-100 text-sm"
+              :to="`/qna/course/${encodeURIComponent(question.course.name)}`"
+              >{{ question.course.name }}</NuxtLink
+            >
+          </div>
+          <div class="title-col">
+            <NuxtLink
+              class="block text-indigo-500 font-light text-opacity-75 transition-all hover:text-opacity-100"
+              :to="`/qna/course/${encodeURIComponent(question.course.name)}/${question._id}`"
+              >{{ question.title }} [{{ question.countAnswer ?? 'x' }}]</NuxtLink
+            >
+          </div>
+          <div class="created-col">
+            <span class="ml-auto text-gray-500 text-sm">{{ $dayjs(question.createdAt).fromNow() }}</span>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="mb-16">
       <div class="text-2xl font-bold mb-3">내 답변</div>
       <div class="rounded bg-50 border border-gray-200 py-4 px-6">
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
+        <div v-for="answer in myAnswerPaginator.answerList" :key="answer._id">
+          <!-- question -->
+          <div class="flex items-center my-2">
+            <div class="subject-col">
+              <NuxtLink
+                class="block text-indigo-500 font-medium text-opacity-75 transition-all hover:text-opacity-100 text-sm"
+                :to="`/qna/course/${encodeURIComponent(answer.question?.course?.name)}`"
+                >{{ answer.course }}</NuxtLink
+              >
+            </div>
+            <div class="title-col">
+              <NuxtLink
+                class="block text-indigo-500 font-light text-opacity-75 transition-all hover:text-opacity-100"
+                :to="`/qna/course/${encodeURIComponent(answer.question?.course?.name)}/${answer?.question?._id}`"
+                >{{ answer.title }} [{{ answer.question?.countAnswer ?? 'x' }}]</NuxtLink
+              >
+            </div>
+            <div class="created-col">
+              <span class="ml-auto text-gray-500 text-sm">{{ $dayjs(answer.question?.createdAt).fromNow() }}</span>
+            </div>
+          </div>
+          <!-- answer -->
+          <div class="p-3 rounded bg-gray-100 text-gray-600">
+            {{ answer.content }}
+          </div>
+        </div>
       </div>
     </div>
 
@@ -72,3 +118,22 @@ const auth = useAuth();
     </div>
   </div>
 </template>
+
+<style lang="postcss" scoped>
+.single-line {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.subject-col {
+  @apply w-44 flex-shrink-0 single-line;
+}
+.title-col {
+  @apply flex-grow single-line;
+}
+.created-col {
+  @apply ml-5 flex-shrink-0;
+}
+</style>
