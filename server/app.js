@@ -5,10 +5,9 @@ import cors from 'cors';
 import { config } from './config.js';
 import authRouter from './router/auth.js';
 import * as listController from './controller/listController.js';
-import { Course, Department, Question, TodayPoint } from './database/mongodb.js';
 import { isAuth } from './middleware/auth.js';
 import usersRouter from './router/users.js';
-import { getPointsOfToday } from './controller/pointController.js';
+import * as pointController from './controller/pointController.js';
 import questionsRouter from './router/questions.js';
 import answersRouter from './router/answers.js';
 
@@ -26,7 +25,7 @@ app.get('/departments', listController.getDepartments);
 app.get('/courses', listController.getCourses);
 app.use('/questions', questionsRouter);
 app.use('/answers', answersRouter);
-app.get('/points/today', getPointsOfToday);
+app.get('/points/today', pointController.getPointsOfToday);
 
 app.get('/', (req, res) => {
   res.json({ message: '프론트의 신 변찬혁..' });

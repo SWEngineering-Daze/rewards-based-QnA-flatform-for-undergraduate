@@ -68,12 +68,12 @@ const answerSchema = mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: 'questions',
     },
-    recommendedBy: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'users',
-      },
-    ],
+    // recommendedBy: [
+    //   {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'users',
+    //   },
+    // ],
   },
   {
     timestamps: true,
@@ -89,6 +89,22 @@ const todayPointSchema = mongoose.Schema(
   }
 );
 
+const recommendationSchema = mongoose.Schema(
+  {
+    from: {
+      type: Schema.Types.ObjectId,
+      ref: 'users',
+    },
+    answer: {
+      type: Schema.Types.ObjectId,
+      ref: 'answers',
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
 export const User = mongoose.model('users', UserSchema);
 export const SignupToken = mongoose.model('signupTokens', SignupTokenSchema);
 export const ResetToken = mongoose.model('resetTokens', ResetTokenSchema);
@@ -97,3 +113,4 @@ export const Course = mongoose.model('courses', courseSchema);
 export const Question = mongoose.model('questions', questionSchema);
 export const Answer = mongoose.model('answers', answerSchema);
 export const TodayPoint = mongoose.model('todayPoints', todayPointSchema);
+export const recommendation = mongoose.model('recommendations', recommendationSchema);

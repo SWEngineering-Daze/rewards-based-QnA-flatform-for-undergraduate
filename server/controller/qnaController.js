@@ -1,30 +1,28 @@
-import { ObjectId } from "mongodb";
+import { ObjectId } from 'mongodb';
+import { Answer, Course, Department, Question, User } from '../database/mongodb.js';
 import {
-  Answer,
-  Course,
-  Department,
-  Question,
-  User,
-} from "../database/mongodb.js";
+  addAnswer,
+  addQuestion,
+  addRecommendation,
+  getAnswerById,
+  getAnswersWithAll,
+  getAnswersWithQuestion,
+  getCourseByName,
+  getQuestionDetailById,
+  getQuestionsWithAll,
+  getUserByEmail,
+} from '../repository/repository.js';
 
 export const writeQuestion = async (req, res) => {
   const { email } = req.decoded;
   const { title, content, courseName } = req.body;
 
-  const course = await Course.findOne({
-    name: courseName,
-  }).exec();
-
+  const course = await getCourseByName(courseName);
   const courseID = course._id;
 
   console.log(course._id);
 
-  const question = await Question.create({
-    writer: email,
-    title,
-    content,
-    course: courseID,
-  });
+  const question = await addQuestion(title, content, courseName, courseID);
 
   res.json(question);
 };
@@ -34,51 +32,50 @@ export const viewQuestionList = async (req, res) => {
   const perPage = 10;
 
   const { type, name: encodedUrl } = req.params;
-  const name = encodedUrl.replaceAll("!", "/");
+  const name = encodedUrl.replaceAll('!', '/');
 
   const fetchQuestionPaginator = async (type, name) => {
     let queryBuilder = Question.aggregate([])
-      // 과목 join (1:1 - unwind)
       .lookup({
-        from: "courses",
-        localField: "course",
-        foreignField: "_id",
-        as: "course",
+        // 과목 join (1:1 - unwind)
+        from: 'courses',
+        localField: 'course',
+        foreignField: '_id',
+        as: 'course',
       })
-      .unwind({ path: "$course", preserveNullAndEmptyArrays: true })
-      // 과목.학과 join (1:1 - unwind)
+      .unwind({ path: '$course', preserveNullAndEmptyArrays: true })
       .lookup({
-        from: "departments",
-        localField: "course.parent",
-        foreignField: "_id",
-        as: "course.parent",
+        // 과목.학과 join (1:1 - unwind)
+        from: 'departments',
+        localField: 'course.parent',
+        foreignField: '_id',
+        as: 'course.parent',
       })
-      .unwind({ path: "$course.parent", preserveNullAndEmptyArrays: true })
-      // sort latest
-      .sort({ createdAt: -1 });
+      .unwind({ path: '$course.parent', preserveNullAndEmptyArrays: true })
+      .sort({ createdAt: -1 }); // sort latest
 
     // 학과 or 과목 match
-    if (type === "department") {
-      queryBuilder = queryBuilder.match({ "course.parent.name": name });
+    if (type === 'department') {
+      queryBuilder = queryBuilder.match({ 'course.parent.name': name });
     } else {
-      queryBuilder = queryBuilder.match({ "course.name": name });
+      queryBuilder = queryBuilder.match({ 'course.name': name });
     }
 
     return (
       queryBuilder
         // 답변 join (1:N)
         .lookup({
-          from: "answers",
-          localField: "_id",
-          foreignField: "question",
-          as: "answers",
+          from: 'answers',
+          localField: '_id',
+          foreignField: 'question',
+          as: 'answers',
         })
         // 분기
         .facet({
           questionList: [{ $skip: (page - 1) * perPage }, { $limit: perPage }],
-          total: [{ $count: "total" }],
+          total: [{ $count: 'total' }],
         })
-        .unwind({ path: "$total", preserveNullAndEmptyArrays: true })
+        .unwind({ path: '$total', preserveNullAndEmptyArrays: true })
         .exec()
         // aggregate 반환값이 배열이라 결과 mapping
         .then((r) => r[0])
@@ -97,20 +94,7 @@ export const viewQuestionDetail = async (req, res) => {
   const { email } = req.decoded;
   const { id } = req.params;
 
-  const question = await Question.findOne({
-    _id: id,
-  })
-    .populate({
-      path: "course",
-      populate: {
-        path: "parent",
-      },
-    })
-    .exec();
-
-  const answers = await Answer.find({
-    question: question._id,
-  }).sort({ createdAt: 1 });
+  const { question, answers } = await getQuestionDetailById(id);
 
   res.json({
     question,
@@ -123,11 +107,7 @@ export const writeAnswer = async (req, res) => {
   const { id } = req.params;
   const { content } = req.body;
 
-  const answer = await Answer.create({
-    writer: email,
-    content,
-    question: id,
-  });
+  const answer = await addAnswer(email, content, id);
 
   res.json(answer);
 };
@@ -136,37 +116,23 @@ export const recommendAnswer = async (req, res) => {
   const { email } = req.decoded;
   const { id } = req.params;
 
-  const userID = await User.findOne({ email }).select("_id").exec();
-
-  const answerWriter = (
-    await Answer.findOne({ _id: id }).select("writer").exec()
-  ).writer;
+  const userID = (await getUserByEmail(email)).id;
+  const answerWriter = (await getAnswerById(id)).writer;
 
   console.log(email);
   console.log(answerWriter);
 
   if (answerWriter == email) {
     res.status(400).json({
-      message: "not a valid user",
+      message: 'not a valid user',
     });
-
     return;
   }
 
-  if (answerWriter)
-    await Answer.updateOne(
-      {
-        _id: id,
-      },
-      {
-        $push: {
-          recommendedBy: userID,
-        },
-      }
-    ).exec();
+  await addRecommendation(userID, id);
 
   res.json({
-    message: "success",
+    message: 'success',
   });
 };
 
@@ -179,24 +145,14 @@ export const viewMyQuestions = async (req, res) => {
   let cntQuestions;
   let cntAnswers = [];
 
-  questionList = (
-    await Question.find().populate({
-      path: "course",
-      populate: {
-        path: "parent",
-      },
-    })
-  )
+  questionList = (await getQuestionsWithAll())
     .filter((question) => question.writer == email)
     .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
 
   cntQuestions = questionList.length;
-  questionList = questionList.slice(
-    (page - 1) * perPage,
-    (page - 1) * perPage + perPage
-  );
+  questionList = questionList.slice((page - 1) * perPage, (page - 1) * perPage + perPage);
 
-  const answers = await Answer.find().populate("question").exec();
+  const answers = await getAnswersWithQuestion();
 
   for (const question of questionList) {
     const questionID = question._id;
@@ -239,25 +195,12 @@ export const viewMyAnswers = async (req, res) => {
   let answerList;
   let cntAnswers;
 
-  answerList = (
-    await Answer.find().populate({
-      path: "question",
-      populate: {
-        path: "course",
-        populate: {
-          path: "parent",
-        },
-      },
-    })
-  )
+  answerList = (await getAnswersWithAll())
     .filter((answer) => answer.writer == email)
     .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
 
   cntAnswers = answerList.length;
-  answerList = answerList.slice(
-    (page - 1) * perPage,
-    (page - 1) * perPage + perPage
-  );
+  answerList = answerList.slice((page - 1) * perPage, (page - 1) * perPage + perPage);
 
   answerList = answerList.map((answer, index) => {
     return {
@@ -268,6 +211,7 @@ export const viewMyAnswers = async (req, res) => {
       question: answer.question,
       createdAt: answer.createdAt,
       updatedAt: answer.updatedAt,
+      recommendation: answer.recommendation,
     };
   });
 
