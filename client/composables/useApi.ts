@@ -32,7 +32,7 @@ export interface Answer {
   writer: string;
   content: string;
   createdAt: string;
-  recommendedBy: string[];
+  recommendations: { from: string; answer: string }[];
   [key: string]: any;
 }
 
