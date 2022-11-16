@@ -73,14 +73,14 @@ try {
               <NuxtLink
                 class="block text-indigo-500 font-medium text-opacity-75 transition-all hover:text-opacity-100 text-sm"
                 :to="`/qna/course/${encodeURIComponent(answer.question?.course?.name)}`"
-                >{{ answer.course }}</NuxtLink
+                >{{ answer.question.course.name }}</NuxtLink
               >
             </div>
             <div class="title-col">
               <NuxtLink
                 class="block text-indigo-500 font-light text-opacity-75 transition-all hover:text-opacity-100"
                 :to="`/qna/course/${encodeURIComponent(answer.question?.course?.name)}/${answer?.question?._id}`"
-                >{{ answer.title }} [{{ answer.question?.countAnswer ?? 'x' }}]</NuxtLink
+                >{{ answer.question.title }} [{{ answer.question?.countAnswer ?? 'x' }}]</NuxtLink
               >
             </div>
             <div class="created-col">
