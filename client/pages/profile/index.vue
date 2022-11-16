@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { QuestionPaginator, AnswerPaginator } from '~~/composables/useApi';
-import { useAuth } from '~~/stores/auth';
+import { QuestionPaginator, AnswerPaginator } from '@/composables/useApi';
+import { useAuth } from '@/stores/auth';
 
 definePageMeta({
   middleware: ['auth'],

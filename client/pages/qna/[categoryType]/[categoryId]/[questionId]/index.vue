@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { AxiosError } from 'axios';
 import { useToast } from 'vue-toastification';
-import { Answer, Question } from '~~/composables/useApi';
-import { useAuth } from '~~/stores/auth';
+import { Answer, Question } from '@/composables/useApi';
+import { useAuth } from '@/stores/auth';
 
 definePageMeta({
   middleware: ['auth'],

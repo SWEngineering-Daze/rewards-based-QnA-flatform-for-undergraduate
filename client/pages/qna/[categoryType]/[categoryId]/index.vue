@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { AxiosError } from 'axios';
 import { useToast } from 'vue-toastification';
-import { QuestionPaginator } from '~~/composables/useApi';
-import { encodeUrlSlash } from '~~/utils/urlSlashEncode';
+import { QuestionPaginator } from '@/composables/useApi';
+import { encodeUrlSlash } from '@/utils/urlSlashEncode';
 
 definePageMeta({
   middleware: ['auth'],
