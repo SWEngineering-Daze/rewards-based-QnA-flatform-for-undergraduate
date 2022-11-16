@@ -47,6 +47,16 @@ export interface User {
   [key: string]: any;
 }
 
+export interface QuestionPaginator {
+  cntQuestions: number;
+  questionList: (Question & { answers: Answer[] })[];
+}
+
+export interface AnswerPaginator {
+  cntAnswers: number;
+  answerList: (Answer & { question: Question })[];
+}
+
 const createApiRequester = (axios: AxiosInstance) => ({
   auth: {
     login(data: Credentials) {
@@ -84,12 +94,10 @@ const createApiRequester = (axios: AxiosInstance) => ({
   },
   questions: {
     index(type: 'department' | 'course', name: string, page: number = 1) {
-      return axios
-        .get<{
-          cntQuestions: number;
-          questionList: (Question & { answers: Answer[] })[];
-        }>(`/questions/${type}/${name}?page=${page}`)
-        .then(response => response.data);
+      return axios.get<QuestionPaginator>(`/questions/${type}/${name}?page=${page}`).then(response => response.data);
+    },
+    me(page: number = 1, perPage: number = 10) {
+      return axios.get<QuestionPaginator>(`/questions/me?page=${page}&perPage=${perPage}`).then(response => response.data);
     },
     write(data: { title: string; content: string; courseName: string }) {
       return axios.post<Question>('/questions', data).then(response => response.data);
@@ -106,6 +114,9 @@ const createApiRequester = (axios: AxiosInstance) => ({
   answers: {
     write(questionId: string, data: { content: string }) {
       return axios.post<Answer>(`/questions/${questionId}/answers`, data).then(response => response.data);
+    },
+    me(page: number = 1, perPage: number = 10) {
+      return axios.get<AnswerPaginator>(`/answers/me?page=${page}&perPage=${perPage}`).then(response => response.data);
     },
     like(id: string) {
       return axios.post(`/answers/${id}/recommend`).then(response => response.data);

@@ -68,7 +68,7 @@ function logout() {
           </Menu>
         </ClientOnly>
 
-        <NuxtLink class="btn btn-indigo ml-6 hidden sm:inline-block" to="/">내정보</NuxtLink>
+        <NuxtLink class="btn btn-indigo ml-6 hidden sm:inline-block" to="/profile">내정보</NuxtLink>
       </template>
       <template v-else>
         <NuxtLink class="btn btn-link hidden sm:inline-block" to="/auth/register">회원가입</NuxtLink>
