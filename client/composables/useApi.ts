@@ -17,6 +17,14 @@ export interface Course {
   [key: string]: any;
 }
 
+export interface Answer {
+  _id: string;
+  writer: string;
+  content: string;
+  createdAt: string;
+  [key: string]: any;
+}
+
 export interface Question {
   _id: string;
   course: Course;
@@ -27,13 +35,22 @@ export interface Question {
   [key: string]: any;
 }
 
-export interface Answer {
+export interface Recommendation {
   _id: string;
-  writer: string;
-  content: string;
-  createdAt: string;
-  recommendedBy: string[];
-  [key: string]: any;
+  from: string;
+  answer: string;
+}
+
+export interface WithAnswers {
+  answers: Answer[];
+}
+
+export interface WithQuestion {
+  question: Question;
+}
+
+export interface WithRecommendations {
+  recommendations: Recommendation[];
 }
 
 export interface Credentials {
@@ -49,12 +66,12 @@ export interface User {
 
 export interface QuestionPaginator {
   cntQuestions: number;
-  questionList: (Question & { answers: Answer[] })[];
+  questionList: (Question & WithAnswers)[];
 }
 
 export interface AnswerPaginator {
   cntAnswers: number;
-  answerList: (Answer & { question: Question })[];
+  answerList: (Answer & WithQuestion)[];
 }
 
 const createApiRequester = (axios: AxiosInstance) => ({
@@ -106,7 +123,7 @@ const createApiRequester = (axios: AxiosInstance) => ({
       return axios
         .get<{
           question: Question;
-          answers: Answer[];
+          answers: (Answer & WithRecommendations)[];
         }>(`/questions/${id}`)
         .then(response => response.data);
     },
