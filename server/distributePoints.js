@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { recommendation, User } from './database/mongodb.js';
+import { recommendation, TodayPoint, User } from './database/mongodb.js';
 import dayjs from 'dayjs';
 
 const yesterday = dayjs().add(-1, 'day');
@@ -50,13 +50,15 @@ for (const user of result) {
   const num_recommendation = user.count;
   const exp_to_recomm_ratio = 5;
 
+  const todayPoint = (await TodayPoint.find().sort({ createdAt: 1 }).exec())[0].value;
+
   await User.updateOne(
     {
       email: userEmail,
     },
     {
       $inc: {
-        point: num_recommendation / total_recommendation,
+        point: todayPoint * (num_recommendation / total_recommendation),
         accumulatedExp: num_recommendation * exp_to_recomm_ratio,
       },
     }
