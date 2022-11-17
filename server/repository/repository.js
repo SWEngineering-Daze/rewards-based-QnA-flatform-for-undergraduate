@@ -121,7 +121,7 @@ export const getQuestionDetailById = async (id) => {
           from: 'departments',
           localField: 'course.parent',
           foreignField: '_id',
-          as: 'parent',
+          as: 'course.parent',
         })
         .unwind({
           path: '$course.parent',
