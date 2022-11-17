@@ -2,8 +2,8 @@ import { defineStore } from 'pinia';
 import { Credentials, User } from '@/composables/useApi';
 
 export const useAuth = defineStore('auth', () => {
-  const savedToken = useCookie('auth.token');
-  const savedUser = useCookie<User>('auth.user');
+  const savedToken = useCookie('auth.token', { maxAge: 60 * 60 * 8 });
+  const savedUser = useCookie<User>('auth.user', { maxAge: 60 * 60 * 8 });
 
   const token = ref<string>(null);
   const user = ref<User>(null);
@@ -15,13 +15,7 @@ export const useAuth = defineStore('auth', () => {
   const fetch = async () => {
     const api = useApi();
 
-    try {
-      user.value = await api.auth.me();
-    } catch (e) {
-      logout();
-
-      await navigateTo('/auth/login');
-    }
+    user.value = await api.auth.me();
 
     savedUser.value = user.value;
     savedToken.value = token.value;
