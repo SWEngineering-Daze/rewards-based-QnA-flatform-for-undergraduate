@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { AxiosError } from 'axios';
 import { useToast } from 'vue-toastification';
-import { Answer, Question } from '~~/composables/useApi';
-import { useAuth } from '~~/stores/auth';
+import { Answer, Question } from '@/composables/useApi';
+import { useAuth } from '@/stores/auth';
 
 definePageMeta({
   middleware: ['auth'],
@@ -32,11 +32,11 @@ const question = qna.value.question;
 question.answers = qna.value.answers;
 
 function isAlreadyLiked(answer: Answer) {
-  return answer.recommendedBy.includes(auth.user._id);
+  return answer.recommendations.findIndex(r => r.from === auth.user._id) !== -1;
 }
 
 function getLikeCount(answer: Answer) {
-  return answer.recommendedBy.length;
+  return answer.recommendations.length;
 }
 
 function isMine(answer: Answer) {
@@ -55,7 +55,7 @@ async function like(answer: Answer) {
   try {
     await api.answers.like(answer._id);
 
-    answer.recommendedBy.push(auth.user._id);
+    answer.recommendations.push({ from: auth.user._id, answer: answer._id });
 
     toast.success('이 답변을 추천했습니다!');
   } catch (e) {

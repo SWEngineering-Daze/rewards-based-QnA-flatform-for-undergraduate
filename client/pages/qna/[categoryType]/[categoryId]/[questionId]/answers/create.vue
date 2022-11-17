@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { AxiosError } from 'axios';
 import { useToast } from 'vue-toastification';
+import { Question } from '@/composables/useApi';
 
 definePageMeta({
   middleware: ['auth'],
@@ -14,23 +15,21 @@ const { loading, startLoading, finishLoading } = useLoading();
 
 const content = ref('');
 
-const { data: question } = await useAsyncData(`answer-create-${route.params.questionId}`, async () => {
-  try {
-    const qna = await api.questions.show(route.params.questionId as string);
+const question = ref<Question>(null);
+try {
+  const qna = await api.questions.show(route.params.questionId as string);
+  question.value = qna.question;
+} catch (e) {
+  if (e instanceof AxiosError) {
+    toast.error('알 수 없는 네트워크 에러가 발생했습니다.');
 
-    return qna.question;
-  } catch (e) {
-    if (e instanceof AxiosError) {
-      toast.error('알 수 없는 네트워크 에러가 발생했습니다.');
+    await navigateTo('/');
+  } else {
+    toast.error('알 수 없는 에러가 발생했습니다.');
 
-      await navigateTo('/');
-    } else {
-      toast.error('알 수 없는 에러가 발생했습니다.');
-
-      console.error(e);
-    }
+    console.error(e);
   }
-});
+}
 
 async function submit() {
   if (content.value === '') {
