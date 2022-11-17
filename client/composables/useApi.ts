@@ -7,14 +7,17 @@ export interface Department {
   };
   _id: string;
   name: string;
-  [key: string]: any;
 }
 
 export interface Course {
   parent: Department;
   _id: string;
   name: string;
-  [key: string]: any;
+}
+
+export interface Recommendation {
+  from: string;
+  answer: string;
 }
 
 export interface Answer {
@@ -22,6 +25,7 @@ export interface Answer {
   writer: string;
   content: string;
   createdAt: string;
+  recommendations?: Recommendation[];
   [key: string]: any;
 }
 
@@ -32,17 +36,8 @@ export interface Question {
   title: string;
   content: string;
   createdAt: string;
+  answers?: Answer[];
   [key: string]: any;
-}
-
-export interface Recommendation {
-  _id: string;
-  from: string;
-  answer: string;
-}
-
-export interface WithAnswers {
-  answers: Answer[];
 }
 
 export interface WithQuestion {
@@ -66,7 +61,7 @@ export interface User {
 
 export interface QuestionPaginator {
   cntQuestions: number;
-  questionList: (Question & WithAnswers)[];
+  questionList: Question[];
 }
 
 export interface AnswerPaginator {
