@@ -108,8 +108,8 @@ const createApiRequester = (axios: AxiosInstance) => ({
     },
   },
   questions: {
-    index(type: 'department' | 'course', name: string, page: number = 1) {
-      return axios.get<QuestionPaginator>(`/questions/${type}/${name}?page=${page}`).then(response => response.data);
+    index(type: 'department' | 'course', name: string, page: number = 1, query: string = null) {
+      return axios.get<QuestionPaginator>(`/questions/${type}/${name}?page=${page}${query ? `&query=${query}` : ''}`).then(response => response.data);
     },
     me(page: number = 1, perPage: number = 10) {
       return axios.get<QuestionPaginator>(`/questions/me?page=${page}&perPage=${perPage}`).then(response => response.data);
