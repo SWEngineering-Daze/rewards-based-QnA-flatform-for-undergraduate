@@ -1,4 +1,5 @@
 import { Question } from '../database/mongodb.js';
+import { addAnswer, getAnswerById, getAnswersWithAll, getAnswersWithQuestion } from '../repository/answerRepository.js';
 import { getCourseByName } from '../repository/courseRepository.js';
 import { addQuestion, getQuestionDetailById, getQuestionsWithAll } from '../repository/questionRepository.js';
 import { addRecommendation } from '../repository/recommendationRepository.js';
