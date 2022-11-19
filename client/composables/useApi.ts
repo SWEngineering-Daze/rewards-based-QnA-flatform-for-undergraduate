@@ -56,6 +56,9 @@ export interface Credentials {
 export interface User {
   _id: string;
   email: string;
+  accumulatedExp: number;
+  point: number;
+  level: number;
   [key: string]: any;
 }
 
