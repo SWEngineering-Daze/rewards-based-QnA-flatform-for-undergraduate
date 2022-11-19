@@ -9,5 +9,6 @@ router.get('/me', isAuth, qnaController.viewMyQuestions);
 router.get('/:type/:name', isAuth, qnaController.viewQuestionList);
 router.get('/:id', isAuth, qnaController.viewQuestionDetail);
 router.post('/:id/answers', isAuth, qnaController.writeAnswer);
+router.post('/search', isAuth);
 
 export default router;

@@ -1,5 +1,4 @@
 import { Question } from '../database/mongodb.js';
-import { addAnswer, getAnswerById, getAnswersWithAll, getAnswersWithQuestion } from '../repository/AnswerRepository.js';
 import { getCourseByName } from '../repository/courseRepository.js';
 import { addQuestion, getQuestionDetailById, getQuestionsWithAll } from '../repository/questionRepository.js';
 import { addRecommendation } from '../repository/recommendationRepository.js';
@@ -212,3 +211,9 @@ export const viewMyAnswers = async (req, res) => {
     cntAnswers,
   });
 };
+
+// export const searchQuestion = async (req, res) => {
+//   const { query } = req.body;
+
+//   const results =
+// };
