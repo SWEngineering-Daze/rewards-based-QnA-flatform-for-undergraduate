@@ -1,8 +1,23 @@
 import mongoose from 'mongoose';
 import { Answer, Question } from '../database/mongodb.js';
 
-export const getQuestionsWithAll = async () => {
-  return Question.aggregate()
+export const getQuestionsWithAll = async (query) => {
+  let result = Question.aggregate();
+
+  if (query) {
+    result = result.match({
+      $or: [
+        {
+          title: { $regex: query },
+        },
+        {
+          content: { $regex: query },
+        },
+      ],
+    });
+  }
+
+  return result
     .lookup({
       from: 'answers',
       localField: '_id',

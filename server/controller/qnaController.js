@@ -21,6 +21,7 @@ export const writeQuestion = async (req, res) => {
 
 export const viewQuestionList = async (req, res) => {
   const page = parseInt(req.query.page); // 1페이지부터 시작
+  const query = req.query.query;
   const perPage = 10;
 
   const { type, name: encodedUrl } = req.params;
@@ -51,6 +52,19 @@ export const viewQuestionList = async (req, res) => {
       queryBuilder = queryBuilder.match({ 'course.parent.name': name });
     } else {
       queryBuilder = queryBuilder.match({ 'course.name': name });
+    }
+
+    if (query) {
+      queryBuilder = queryBuilder.match({
+        $or: [
+          {
+            title: { $regex: query },
+          },
+          {
+            content: { $regex: query },
+          },
+        ],
+      });
     }
 
     return (
@@ -132,12 +146,13 @@ export const viewMyQuestions = async (req, res) => {
   const { email } = req.decoded;
   const page = parseInt(req.query.page);
   const perPage = parseInt(req.query.perPage);
+  const query = req.query.query;
 
   let questionList;
   let cntQuestions;
   let cntAnswers = [];
 
-  questionList = (await getQuestionsWithAll())
+  questionList = (await getQuestionsWithAll(query))
     .filter((question) => question.writer == email)
     .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
 
@@ -211,23 +226,4 @@ export const viewMyAnswers = async (req, res) => {
     answerList,
     cntAnswers,
   });
-};
-
-export const searchQuestion = async (req, res) => {
-  const { query } = req.body;
-
-  console.log(query);
-
-  const results = await Question.find()
-    .or([
-      {
-        title: { $regex: query },
-      },
-      {
-        content: { $regex: query },
-      },
-    ])
-    .exec();
-
-  res.json(results);
 };
