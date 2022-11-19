@@ -8,6 +8,7 @@ definePageMeta({
 
 const api = useApi();
 const auth = useAuth();
+const { level, maxExp, curExp, expPercent, point } = usePointStatus();
 
 const myQuestionPaginator = ref<QuestionPaginator>();
 const myAnswerPaginator = ref<AnswerPaginator>();
@@ -29,12 +30,12 @@ try {
       <!-- placeholder -->
       <div class="rounded-full w-64 h-64 bg-gray-200 mr-10"></div>
       <div class="text-xl">
-        <div class="font-bold">LV. ??</div>
+        <div class="font-bold">LV. {{ level }} - {{ expPercent.toFixed(2) }}% ({{ curExp }}/{{ maxExp }})</div>
         <div>???????</div>
         <div>{{ auth.user.email }}</div>
       </div>
       <div class="ml-auto">
-        <span class="text-5xl font-bold text-cyan-500">???? P</span>
+        <span class="text-5xl font-bold text-cyan-500">{{ point }} P</span>
       </div>
     </div>
 

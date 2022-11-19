@@ -5,6 +5,7 @@ import { useSidebar } from '@/stores/sidebar';
 
 const sidebar = useSidebar();
 const auth = useAuth();
+const { expPercent, level, point } = usePointStatus();
 
 function logout() {
   auth.logout();
@@ -52,12 +53,12 @@ function logout() {
               >
                 <div class="p-3">
                   <div class="flex item-center mb-2">
-                    <span>Lv.13</span>
-                    <span class="ml-auto">45%</span>
+                    <span>Lv.{{ level }}</span>
+                    <span class="ml-auto">{{ Math.floor(expPercent) }}%</span>
                   </div>
                   <div class="flex items-center text-cyan-500">
                     <img class="w-6" src="@/assets/img/point.svg" />
-                    <span class="ml-auto">1,550P</span>
+                    <span class="ml-auto">{{ point }}P</span>
                   </div>
                 </div>
                 <div class="p-3">
