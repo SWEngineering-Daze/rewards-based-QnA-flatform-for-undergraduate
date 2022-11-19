@@ -31,7 +31,7 @@ async function fetchQuestionPaginator() {
   try {
     startLoading();
 
-    questionPaginator.value = await api.questions.index(type, encodeUrlSlash(category.name), page.value);
+    questionPaginator.value = await api.questions.index(type, encodeUrlSlash(category.name), page.value, query.value);
   } catch (e) {
     if (e instanceof AxiosError) {
       toast.error('알 수 없는 네트워크 에러가 발생했습니다.');
