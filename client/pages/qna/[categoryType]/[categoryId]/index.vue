@@ -50,24 +50,29 @@ async function fetchQuestionPaginator() {
 const questionPaginator = ref<QuestionPaginator>(null);
 await fetchQuestionPaginator();
 
-watch(
-  () => route.query,
-  async () => {
-    await fetchQuestionPaginator();
-  }
-);
-
 const questions = computed(() => questionPaginator.value.questionList);
 const totalQuestions = computed(() => questionPaginator.value.cntQuestions);
 
 const perPage = 10; // from server
-const totalPages = Math.ceil(totalQuestions.value / perPage);
-const pagingNumbers: number[] = [];
-for (let i = page.value - 2; i <= page.value + 2; i++) {
-  if (i >= 1 && i <= totalPages) {
-    pagingNumbers.push(i);
+const totalPages = computed(() => Math.ceil(totalQuestions.value / perPage));
+const pagingNumbers = ref<number[]>([]);
+function calcPagingNumbers() {
+  pagingNumbers.value = [];
+  for (let i = page.value - 2; i <= page.value + 2; i++) {
+    if (i >= 1 && i <= totalPages.value) {
+      pagingNumbers.value.push(i);
+    }
   }
 }
+calcPagingNumbers();
+
+watch(
+  () => route.query,
+  async () => {
+    await fetchQuestionPaginator();
+    await calcPagingNumbers();
+  }
+);
 </script>
 
 <template>
