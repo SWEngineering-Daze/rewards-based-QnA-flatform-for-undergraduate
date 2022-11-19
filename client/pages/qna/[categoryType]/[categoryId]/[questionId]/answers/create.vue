@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { AxiosError } from 'axios';
 import { useToast } from 'vue-toastification';
+import { Question } from '@/composables/useApi';
 
 definePageMeta({
   middleware: ['auth'],
@@ -14,23 +15,21 @@ const { loading, startLoading, finishLoading } = useLoading();
 
 const content = ref('');
 
-const { data: question } = await useAsyncData(`answer-create-${route.params.questionId}`, async () => {
-  try {
-    const qna = await api.questions.show(route.params.questionId as string);
+const question = ref<Question>(null);
+try {
+  const qna = await api.questions.show(route.params.questionId as string);
+  question.value = qna.question;
+} catch (e) {
+  if (e instanceof AxiosError) {
+    toast.error('알 수 없는 네트워크 에러가 발생했습니다.');
 
-    return qna.question;
-  } catch (e) {
-    if (e instanceof AxiosError) {
-      toast.error('알 수 없는 네트워크 에러가 발생했습니다.');
+    await navigateTo('/');
+  } else {
+    toast.error('알 수 없는 에러가 발생했습니다.');
 
-      await navigateTo('/');
-    } else {
-      toast.error('알 수 없는 에러가 발생했습니다.');
-
-      console.error(e);
-    }
+    console.error(e);
   }
-});
+}
 
 async function submit() {
   if (content.value === '') {
@@ -68,11 +67,13 @@ async function submit() {
       <h1 class="text-3xl text-center mb-6">{{ question.title }}</h1>
       <div class="my-6">
         <div class="text-lg font-medium mb-1">질문 내용</div>
-        <div class="py-3 px-4 rounded border">{{ question.content }}</div>
+        <div class="py-3 px-4 rounded border">
+          <MarkdownViewer :content="question.content" />
+        </div>
       </div>
       <div class="group">
         <div class="text-lg font-medium mb-1">답변</div>
-        <textarea v-model="content" name="content" rows="30"></textarea>
+        <MarkdownEditor v-model="content" name="content" />
       </div>
       <div class="flex">
         <NuxtLink class="btn btn-link flex-1" :to="`/qna/course/${encodeURIComponent(question.course.name)}/${question._id}`">취소</NuxtLink>

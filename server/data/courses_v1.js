@@ -1,4 +1,4 @@
-import { Course, Department } from './mongodb.js';
+import { Course, Department } from '../database/mongodb.js';
 
 const courses_CSE = [
   '소프트웨어공학개론',

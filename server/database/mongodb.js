@@ -14,12 +14,21 @@ mongoose.connect(uri, {
 const UserSchema = mongoose.Schema({
   email: String,
   password: String,
+  point: Number,
+  accumulatedExp: Number,
 });
 
 const SignupTokenSchema = mongoose.Schema({
   value: String,
   email: String,
   password: String,
+});
+
+const ResetTokenSchema = mongoose.Schema({
+  value: String,
+  email: String,
+  createdAt: String,
+  ttl: Number,
 });
 
 const departmentSchema = mongoose.Schema({
@@ -67,9 +76,37 @@ const answerSchema = mongoose.Schema(
   }
 );
 
+const todayPointSchema = mongoose.Schema(
+  {
+    value: Number,
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const recommendationSchema = mongoose.Schema(
+  {
+    from: {
+      type: Schema.Types.ObjectId,
+      ref: 'users',
+    },
+    answer: {
+      type: Schema.Types.ObjectId,
+      ref: 'answers',
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
 export const User = mongoose.model('users', UserSchema);
 export const SignupToken = mongoose.model('signupTokens', SignupTokenSchema);
+export const ResetToken = mongoose.model('resetTokens', ResetTokenSchema);
 export const Department = mongoose.model('departments', departmentSchema);
 export const Course = mongoose.model('courses', courseSchema);
 export const Question = mongoose.model('questions', questionSchema);
 export const Answer = mongoose.model('answers', answerSchema);
+export const TodayPoint = mongoose.model('todayPoints', todayPointSchema);
+export const recommendation = mongoose.model('recommendations', recommendationSchema);
