@@ -4,6 +4,7 @@ import { config } from '../config.js';
 import { User, SignupToken } from '../database/mongodb.js';
 import nodeMailer from 'nodemailer';
 import crypto from 'crypto';
+import { getUserByEmail, getUserWithoutPasswordByEmail } from '../repository/userRepository.js';
 
 export const signup = async (req, res) => {
   const { email, password } = req.body;
@@ -15,7 +16,9 @@ export const signup = async (req, res) => {
     res.status(400).json({ error: 'not a valid domain' });
   }
 
-  const user = await User.findOne({ email }).exec();
+  const user = await getUserByEmail(domain);
+
+  console.log(user);
 
   if (user) {
     res.status(400).json({ error: 'existing email address' });
@@ -69,7 +72,7 @@ export const verifyUser = async (req, res) => {
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email }).exec();
+  const user = await getUserByEmail(email);
 
   if (!user) {
     res.status(400).json({ error: 'wrong email address' });
@@ -100,6 +103,6 @@ export const login = async (req, res) => {
 
 export const me = async (req, res) => {
   const { email } = req.decoded;
-  const user = await User.findOne({ email }).select('-password').exec();
+  const user = await getUserWithoutPasswordByEmail(email);
   res.status(200).json(user);
 };

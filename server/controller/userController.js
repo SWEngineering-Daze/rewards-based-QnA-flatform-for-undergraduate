@@ -3,6 +3,7 @@ import nodeMailer from 'nodemailer';
 import crypto from 'crypto';
 import { config } from '../config.js';
 import { ResetToken, User } from '../database/mongodb.js';
+import { getUserByEmail, updateUserPassword } from '../repository/userRepository.js';
 
 export const changePassword = async (req, res) => {
   const { email } = req.decoded;
@@ -10,7 +11,7 @@ export const changePassword = async (req, res) => {
 
   const encrypted = await bcrypt.hash(password, config.BCRYPT_SALT_ROUNDS);
 
-  await User.updateOne({ email }, { password: encrypted }).exec();
+  await updateUserPassword(email, encrypted);
 
   res.status(200).json({
     message: 'success',
@@ -20,7 +21,7 @@ export const changePassword = async (req, res) => {
 export const findPassword = async (req, res) => {
   const { email } = req.body;
 
-  const user = await User.findOne({ email }).exec();
+  const user = await getUserByEmail(email);
 
   if (user) {
     res.status(200).json({
@@ -78,7 +79,7 @@ export const resetPassword = async (req, res) => {
   if (timeDiff <= token.ttl) {
     const encrypted = await bcrypt.hash(password, config.BCRYPT_SALT_ROUNDS);
 
-    await User.updateOne({ email: token.email }, { password: encrypted }).exec();
+    await updateUserPassword(token.email, encrypted);
 
     res.status(200).json({
       message: 'success',
