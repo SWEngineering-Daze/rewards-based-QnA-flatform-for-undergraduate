@@ -104,5 +104,23 @@ export const login = async (req, res) => {
 export const me = async (req, res) => {
   const { email } = req.decoded;
   const user = await getUserWithoutPasswordByEmail(email);
-  res.status(200).json(user);
+
+  const { accumulatedExp } = user;
+
+  // 1레벨 -> 2레벨: 10exp 필요
+  // 2레벨 -> 3레벨: 20exp 필요
+  // 3레벨 -> 4레벨: 30exp 필요
+  // an so on...
+  const level = parseInt((5 + Math.sqrt(25 + 20 * accumulatedExp)) / 10);
+  console.log(level);
+
+  const userWithLevel = {
+    _id: user._id,
+    email: user.email,
+    accumulatedExp: user.accumulatedExp,
+    point: user.point,
+    level,
+  };
+
+  res.status(200).json(userWithLevel);
 };
