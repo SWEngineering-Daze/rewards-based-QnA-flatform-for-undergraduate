@@ -1,17 +1,9 @@
-import { ObjectId } from 'mongodb';
-import { Answer, Course, Department, Question, User } from '../database/mongodb.js';
-import {
-  addAnswer,
-  addQuestion,
-  addRecommendation,
-  getAnswerById,
-  getAnswersWithAll,
-  getAnswersWithQuestion,
-  getCourseByName,
-  getQuestionDetailById,
-  getQuestionsWithAll,
-  getUserByEmail,
-} from '../repository/repository.js';
+import { Question } from '../database/mongodb.js';
+import { addAnswer, getAnswerById, getAnswersWithAll, getAnswersWithQuestion } from '../repository/AnswerRepository.js';
+import { getCourseByName } from '../repository/courseRepository.js';
+import { addQuestion, getQuestionDetailById, getQuestionsWithAll } from '../repository/questionRepository.js';
+import { addRecommendation } from '../repository/recommendationRepository.js';
+import { getUserByEmail } from '../repository/userRepository.js';
 
 export const writeQuestion = async (req, res) => {
   const { email } = req.decoded;
