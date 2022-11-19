@@ -212,8 +212,21 @@ export const viewMyAnswers = async (req, res) => {
   });
 };
 
-// export const searchQuestion = async (req, res) => {
-//   const { query } = req.body;
+export const searchQuestion = async (req, res) => {
+  const { query } = req.body;
 
-//   const results =
-// };
+  console.log(query);
+
+  const results = await Question.find()
+    .or([
+      {
+        title: { $regex: query },
+      },
+      {
+        content: { $regex: query },
+      },
+    ])
+    .exec();
+
+  res.json(results);
+};
