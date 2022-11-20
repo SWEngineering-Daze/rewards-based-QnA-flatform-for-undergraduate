@@ -4,7 +4,7 @@ import { isAuth } from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.post('/', isAuth, qnaController.writeQuestion);
+router.post('/', isAuth, qnaController.uploadFiles, qnaController.writeQuestion);
 router.get('/me', isAuth, qnaController.viewMyQuestions);
 router.get('/:type/:name', isAuth, qnaController.viewQuestionList);
 router.get('/:id', isAuth, qnaController.viewQuestionDetail);

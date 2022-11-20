@@ -56,6 +56,8 @@ const questionSchema = mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: 'courses',
     },
+    fileIds: [String],
+    fileNames: [String],
   },
   {
     timestamps: true,
@@ -70,6 +72,8 @@ const answerSchema = mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: 'questions',
     },
+    fileIds: [String],
+    fileNames: [String],
   },
   {
     timestamps: true,
@@ -101,6 +105,12 @@ const recommendationSchema = mongoose.Schema(
   }
 );
 
+const FileSchema = mongoose.Schema({
+  fileName: String,
+  originalName: String,
+  postId: String,
+});
+
 export const User = mongoose.model('users', UserSchema);
 export const SignupToken = mongoose.model('signupTokens', SignupTokenSchema);
 export const ResetToken = mongoose.model('resetTokens', ResetTokenSchema);
@@ -110,3 +120,4 @@ export const Question = mongoose.model('questions', questionSchema);
 export const Answer = mongoose.model('answers', answerSchema);
 export const TodayPoint = mongoose.model('todayPoints', todayPointSchema);
 export const recommendation = mongoose.model('recommendations', recommendationSchema);
+export const File = mongoose.model('files', FileSchema);

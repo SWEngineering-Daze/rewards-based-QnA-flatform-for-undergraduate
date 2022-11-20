@@ -10,6 +10,7 @@ import usersRouter from './router/users.js';
 import * as pointController from './controller/pointController.js';
 import questionsRouter from './router/questions.js';
 import answersRouter from './router/answers.js';
+import { downloadFileById } from './controller/fileController.js';
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.get('/courses', listController.getCourses);
 app.use('/questions', questionsRouter);
 app.use('/answers', answersRouter);
 app.get('/points/today', pointController.getPointsOfToday);
+app.get('/files/:id', isAuth, downloadFileById);
 
 app.get('/', (req, res) => {
   res.json({ message: '프론트의 신 변찬혁..' });

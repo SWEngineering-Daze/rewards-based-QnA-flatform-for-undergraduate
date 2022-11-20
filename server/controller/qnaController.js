@@ -1,20 +1,69 @@
-import { Question } from '../database/mongodb.js';
+import fs from 'fs';
+import multer from 'multer';
+import { File, Question } from '../database/mongodb.js';
 import { addAnswer, getAnswerById, getAnswersWithAll, getAnswersWithQuestion } from '../repository/answerRepository.js';
 import { getCourseByName } from '../repository/courseRepository.js';
 import { addQuestion, getQuestionDetailById, getQuestionsWithAll } from '../repository/questionRepository.js';
 import { addRecommendation } from '../repository/recommendationRepository.js';
 import { getUserByEmail } from '../repository/userRepository.js';
 
+const storage = multer.diskStorage({
+  destination(req, file, callback) {
+    // const filename = Buffer.from(file.originalname, 'latin1').toString('utf8');
+    // file.originalname = filename;
+
+    if (!fs.existsSync('./uploadedFiles')) {
+      fs.mkdirSync('./uploadedFiles');
+    }
+    callback(null, './uploadedFiles');
+  },
+});
+
+const upload = multer({ storage });
+
+export const uploadFiles = upload.array('attachment');
+
 export const writeQuestion = async (req, res) => {
   const { email } = req.decoded;
-  const { title, content, courseName } = req.body;
+  const { information } = req.body;
+  const parsedInformation = JSON.parse(information);
+  const { title, content, courseName } = parsedInformation;
 
   const course = await getCourseByName(courseName);
   const courseID = course._id;
 
   console.log(course._id);
+  console.log(title, content);
+  console.log(req.files);
 
-  const question = await addQuestion(title, content, courseName, courseID);
+  let fileNames = [];
+
+  for (const targetFile of req.files) {
+    fileNames.push(targetFile.originalname);
+  }
+
+  let question = await addQuestion(email, title, content, courseID, [], fileNames);
+
+  for (const targetFile of req.files) {
+    const splited = targetFile.originalname.split('.');
+    const extension = splited[splited.length - 1];
+
+    const file = await File.create({
+      fileName: `${targetFile.filename}.${extension}`,
+      originalName: targetFile.originalname,
+      postId: question._id,
+    });
+
+    await Question.updateOne({ _id: question._id }, { $push: { fileIds: file._id } });
+
+    question = await Question.findById(question._id);
+
+    fs.rename(
+      `./uploadedFiles/${targetFile.filename}`,
+      `./uploadedFiles/${targetFile.filename}.${extension}`,
+      () => {}
+    );
+  }
 
   res.json(question);
 };

@@ -90,11 +90,13 @@ export const getQuestionDetailById = async (id) => {
   };
 };
 
-export const addQuestion = async (email, title, content, courseID) => {
+export const addQuestion = async (email, title, content, courseID, fileIds, fileNames) => {
   return await Question.create({
     writer: email,
     title,
     content,
     course: courseID,
+    fileIds,
+    fileNames,
   });
 };
