@@ -1,6 +1,6 @@
 import fs from 'fs';
 import multer from 'multer';
-import { File, Question } from '../database/mongodb.js';
+import { Answer, File, Question } from '../database/mongodb.js';
 import { addAnswer, getAnswerById, getAnswersWithAll, getAnswersWithQuestion } from '../repository/answerRepository.js';
 import { getCourseByName } from '../repository/courseRepository.js';
 import { addQuestion, getQuestionDetailById, getQuestionsWithAll } from '../repository/questionRepository.js';
@@ -160,9 +160,41 @@ export const viewQuestionDetail = async (req, res) => {
 export const writeAnswer = async (req, res) => {
   const { email } = req.decoded;
   const { id } = req.params;
-  const { content } = req.body;
+  const { information } = req.body;
+  console.log(id);
+  console.log(information);
+  const parsedInformation = JSON.parse(information);
+  const { content } = parsedInformation;
+  console.log(req.files);
 
-  const answer = await addAnswer(email, content, id);
+  let fileNames = [];
+
+  for (const targetFile of req.files) {
+    fileNames.push(targetFile.originalname);
+  }
+
+  let answer = await addAnswer(email, content, id, [], fileNames);
+
+  for (const targetFile of req.files) {
+    const splited = targetFile.originalname.split('.');
+    const extension = splited[splited.length - 1];
+
+    const file = await File.create({
+      fileName: `${targetFile.filename}.${extension}`,
+      originalName: targetFile.originalname,
+      postId: answer._id,
+    });
+
+    await Answer.updateOne({ _id: answer._id }, { $push: { fileIds: file._id } });
+
+    answer = await Answer.findById(answer._id);
+
+    fs.rename(
+      `./uploadedFiles/${targetFile.filename}`,
+      `./uploadedFiles/${targetFile.filename}.${extension}`,
+      () => {}
+    );
+  }
 
   res.json(answer);
 };

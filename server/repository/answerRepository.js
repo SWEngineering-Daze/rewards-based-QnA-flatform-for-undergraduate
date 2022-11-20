@@ -49,10 +49,12 @@ export const getAnswersWithQuestion = async () => {
   return await Answer.find().populate('question').exec();
 };
 
-export const addAnswer = async (email, content, id) => {
+export const addAnswer = async (email, content, id, fileIds, fileNames) => {
   return await Answer.create({
     writer: email,
     content,
     question: id,
+    fileIds,
+    fileNames,
   });
 };
