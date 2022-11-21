@@ -199,30 +199,6 @@ export const writeAnswer = async (req, res) => {
   res.json(answer);
 };
 
-export const recommendAnswer = async (req, res) => {
-  const { email } = req.decoded;
-  const { id } = req.params;
-
-  const userID = (await getUserByEmail(email)).id;
-  const answerWriter = (await getAnswerById(id)).writer;
-
-  console.log(email);
-  console.log(answerWriter);
-
-  if (answerWriter == email) {
-    res.status(400).json({
-      message: 'not a valid user',
-    });
-    return;
-  }
-
-  await addRecommendation(userID, id);
-
-  res.json({
-    message: 'success',
-  });
-};
-
 export const viewMyQuestions = async (req, res) => {
   const { email } = req.decoded;
   const page = parseInt(req.query.page);
@@ -307,4 +283,58 @@ export const viewMyAnswers = async (req, res) => {
     answerList,
     cntAnswers,
   });
+};
+
+export const recommendAnswer = async (req, res) => {
+  const { email } = req.decoded;
+  const { id } = req.params;
+
+  const userID = (await getUserByEmail(email)).id;
+  const answerWriter = (await getAnswerById(id)).writer;
+
+  console.log(email);
+  console.log(answerWriter);
+
+  if (answerWriter == email) {
+    res.status(400).json({
+      message: 'not a valid user',
+    });
+    return;
+  }
+
+  await addRecommendation(userID, id);
+
+  res.json({
+    message: 'success',
+  });
+};
+
+export const deleteAnswer = async (req, res) => {
+  const { email } = req.decoded;
+  const { id } = req.params;
+
+  const answer = await Answer.findOne({
+    _id: id,
+    writer: email,
+  });
+
+  if (answer) {
+    const { fileIds } = answer;
+
+    for (const fileId of fileIds) {
+      const { fileName } = await File.findById(fileId);
+      console.log(fileName);
+
+      if (fs.existsSync(`./uploadedFiles/${fileName}`)) {
+        fs.rmSync(`./uploadedFiles/${fileName}`);
+      }
+
+      await File.deleteOne({ _id: fileId });
+    }
+    await Answer.deleteOne({ _id: id });
+
+    res.json({ message: 'success' });
+  } else {
+    res.status(400).json({ message: 'Invalid writer or the answer does not exist' });
+  }
 };
