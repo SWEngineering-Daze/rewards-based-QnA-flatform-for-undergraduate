@@ -56,7 +56,7 @@ const questionSchema = mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: 'courses',
     },
-    fileIds: [String],
+    fileIds: [Schema.Types.ObjectId],
     fileNames: [String],
   },
   {
@@ -72,7 +72,7 @@ const answerSchema = mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: 'questions',
     },
-    fileIds: [String],
+    fileIds: [Schema.Types.ObjectId],
     fileNames: [String],
   },
   {

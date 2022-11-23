@@ -1,4 +1,5 @@
 import fs from 'fs';
+import mongoose from 'mongoose';
 import multer from 'multer';
 import { Answer, File, Question } from '../database/mongodb.js';
 import { addAnswer, getAnswerById, getAnswersWithAll, getAnswersWithQuestion } from '../repository/answerRepository.js';
@@ -54,7 +55,7 @@ export const writeQuestion = async (req, res) => {
       postId: question._id,
     });
 
-    await Question.updateOne({ _id: question._id }, { $push: { fileIds: file._id } });
+    await Question.updateOne({ _id: question._id }, { $push: { fileIds: mongoose.Types.ObjectId(file._id) } });
 
     question = await Question.findById(question._id);
 
@@ -184,6 +185,8 @@ export const writeAnswer = async (req, res) => {
       originalName: targetFile.originalname,
       postId: answer._id,
     });
+
+    console.log(typeof file._id);
 
     await Answer.updateOne({ _id: answer._id }, { $push: { fileIds: file._id } });
 
@@ -341,6 +344,27 @@ export const deleteAnswer = async (req, res) => {
 
 export const updateAnswser = async (req, res) => {};
 
-export const deleteQuestion = async (req, res) => {};
+export const deleteQuestion = async (req, res) => {
+  const { email } = req.decoded;
+  const { id } = req.params;
+
+  const joined = await Question.aggregate()
+    .match({ _id: id })
+    .lookup({
+      from: 'answers',
+      as: 'answers',
+      localField: '_id',
+      foreignField: 'question',
+    })
+    .lookup({
+      from: 'files',
+      as: 'answers.files',
+      localField: 'answers.fileIds',
+      foreignField: '_id',
+    })
+    .exec();
+
+  res.json(joined);
+};
 
 export const updateQuestion = async (req, res) => {};
