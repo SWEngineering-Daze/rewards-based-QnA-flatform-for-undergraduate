@@ -348,23 +348,69 @@ export const deleteQuestion = async (req, res) => {
   const { email } = req.decoded;
   const { id } = req.params;
 
-  const joined = await Question.aggregate()
-    .match({ _id: id })
-    .lookup({
-      from: 'answers',
-      as: 'answers',
-      localField: '_id',
-      foreignField: 'question',
-    })
-    .lookup({
-      from: 'files',
-      as: 'answers.files',
-      localField: 'answers.fileIds',
-      foreignField: '_id',
-    })
-    .exec();
+  const questionWithAnswers = (
+    await Question.aggregate()
+      .match({ _id: mongoose.Types.ObjectId(id) })
+      .lookup({
+        from: 'answers',
+        as: 'answers',
+        localField: '_id',
+        foreignField: 'question',
+      })
+      .exec()
+  )[0];
 
-  res.json(joined);
+  const { answers } = questionWithAnswers;
+
+  let questionToDelete = questionWithAnswers._id;
+  let answersToDelete = [];
+  let fileIdsToDelete = [];
+
+  for (const fileId of questionWithAnswers.fileIds) {
+    fileIdsToDelete.push(fileId);
+  }
+
+  for (const answer of answers) {
+    answersToDelete.push(answer._id);
+    fileIdsToDelete = [...fileIdsToDelete, ...answer.fileIds];
+  }
+
+  const filesToDelete = (
+    await File.find({
+      $or: fileIdsToDelete.map((fileId) => {
+        return {
+          _id: fileId,
+        };
+      }),
+    })
+      .select('fileName')
+      .exec()
+  ).map((file) => file.fileName);
+
+  await Question.deleteOne({ _id: questionToDelete }).exec();
+  await Answer.deleteMany({
+    _id: {
+      $in: answersToDelete,
+    },
+  }).exec();
+  await File.deleteMany({
+    _id: {
+      $in: fileIdsToDelete,
+    },
+  });
+
+  for (const fileName of filesToDelete) {
+    if (fs.existsSync(`./uploadedFiles/${fileName}`)) {
+      fs.rmSync(`./uploadedFiles/${fileName}`);
+    }
+  }
+
+  res.json({
+    questionToDelete,
+    answersToDelete,
+    fileIdsToDelete,
+    filesToDelete,
+  });
 };
 
 export const updateQuestion = async (req, res) => {};
