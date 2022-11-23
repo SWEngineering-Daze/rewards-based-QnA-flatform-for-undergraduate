@@ -5,6 +5,8 @@ import { isAuth } from '../middleware/auth.js';
 const router = express.Router();
 
 router.post('/', isAuth, qnaController.uploadFiles, qnaController.writeQuestion);
+router.delete('/:id', isAuth, qnaController.deleteQuestion);
+router.put('/:id', isAuth, qnaController.uploadFiles, qnaController.updateQuestion);
 router.get('/me', isAuth, qnaController.viewMyQuestions);
 router.get('/:type/:name', isAuth, qnaController.viewQuestionList);
 router.get('/:id', isAuth, qnaController.viewQuestionDetail);

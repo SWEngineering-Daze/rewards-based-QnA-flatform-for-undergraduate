@@ -338,3 +338,9 @@ export const deleteAnswer = async (req, res) => {
     res.status(400).json({ message: 'Invalid writer or the answer does not exist' });
   }
 };
+
+export const updateAnswser = async (req, res) => {};
+
+export const deleteQuestion = async (req, res) => {};
+
+export const updateQuestion = async (req, res) => {};
