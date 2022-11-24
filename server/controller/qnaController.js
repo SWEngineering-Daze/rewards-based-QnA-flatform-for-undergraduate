@@ -10,8 +10,8 @@ import { getUserByEmail } from '../repository/userRepository.js';
 
 const storage = multer.diskStorage({
   destination(req, file, callback) {
-    // const filename = Buffer.from(file.originalname, 'latin1').toString('utf8');
-    // file.originalname = filename;
+    const filename = Buffer.from(file.originalname, 'latin1').toString('utf8');
+    file.originalname = filename;
 
     if (!fs.existsSync('./uploadedFiles')) {
       fs.mkdirSync('./uploadedFiles');
@@ -342,7 +342,37 @@ export const deleteAnswer = async (req, res) => {
   }
 };
 
-export const updateAnswser = async (req, res) => {};
+export const updateAnswser = async (req, res) => {
+  const { id } = req.params;
+  const { information } = req.body;
+  const parsedInformation = JSON.parse(information);
+  const { content, filesToDelete } = parsedInformation;
+
+  for (const fileId of filesToDelete) {
+    const { fileName } = await File.findById(mongoose.Types.ObjectId(fileId));
+    console.log(fileName);
+
+    if (fs.existsSync(`./uploadedFiles/${fileName}`)) {
+      fs.rmSync(`./uploadedFiles/${fileName}`);
+    }
+
+    await File.deleteOne({ _id: fileId });
+  }
+
+  filesToDelete = filesToDelete.map((fileIds) => mongoose.Types.ObjectId(fileIds));
+
+  await Answer.updateOne(
+    { _id: mongoose.Types.ObjectId(id) },
+    {
+      content,
+      $pull: {
+        $in: filesToDelete,
+      },
+    }
+  ).exec();
+
+  res.json({ message: 'success' });
+};
 
 export const deleteQuestion = async (req, res) => {
   const { email } = req.decoded;
