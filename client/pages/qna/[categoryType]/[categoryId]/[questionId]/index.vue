@@ -110,15 +110,29 @@ async function removeAnswer(id: string) {
 }
 
 async function downloadFile(id: string, name: string) {
-  const file = await api.files.download(id);
+  try {
+    const file = await api.files.download(id);
 
-  const url = window.URL.createObjectURL(new Blob([file]));
-  const link = document.createElement('a');
-  link.href = url;
-  link.setAttribute('download', name); // or any other extension
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+    const url = window.URL.createObjectURL(new Blob([file]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', name); // or any other extension
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      if (e.response?.status === 404) {
+        toast.error('파일을 찾을 수 없습니다!');
+      } else {
+        toast.error('알 수 없는 네트워크 에러가 발생했습니다.');
+      }
+    } else {
+      toast.error('알 수 없는 에러가 발생했습니다.');
+
+      console.error(e);
+    }
+  }
 }
 </script>
 
