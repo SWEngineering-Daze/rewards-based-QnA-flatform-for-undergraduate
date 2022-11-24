@@ -89,6 +89,26 @@ async function removeQuestion(id: string) {
   }
 }
 
+async function removeAnswer(id: string) {
+  if (!confirm('정말 답변을 삭제하시겠습니까?')) return;
+
+  try {
+    await api.answers.remove(id);
+
+    toast.success('답변을 삭제했습니다!');
+    const idx = question.answers.findIndex(ans => ans._id === id);
+    question.answers.splice(idx, 1);
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      toast.error('알 수 없는 네트워크 에러가 발생했습니다.');
+    } else {
+      toast.error('알 수 없는 에러가 발생했습니다.');
+
+      console.error(e);
+    }
+  }
+}
+
 async function downloadFile(id: string, name: string) {
   const file = await api.files.download(id);
 
@@ -157,6 +177,12 @@ async function downloadFile(id: string, name: string) {
             </div>
             <span class="rounded-full bg-slate-500 text-white text-sm py-2 px-6 ml-8">답변</span>
           </div>
+          <template v-if="auth.user.email === answer.writer">
+            <div class="flex justify-end mb-6">
+              <button class="btn text-red-500" @click="removeAnswer(answer._id)">삭제</button>
+              <NuxtLink class="btn text-blue-500">수정</NuxtLink>
+            </div>
+          </template>
           <template v-if="answer.fileIds.length > 0">
             <div class="flex flex-col mb-6">
               <a

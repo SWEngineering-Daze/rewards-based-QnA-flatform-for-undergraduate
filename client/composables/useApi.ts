@@ -151,6 +151,9 @@ const createApiRequester = (axios: AxiosInstance) => ({
     like(id: string) {
       return axios.post<void>(`/answers/${id}/recommend`).then(response => response.data);
     },
+    remove(id: string) {
+      return axios.delete<void>(`/answers/${id}`).then(response => response.data);
+    },
   },
   files: {
     download(id: string) {
