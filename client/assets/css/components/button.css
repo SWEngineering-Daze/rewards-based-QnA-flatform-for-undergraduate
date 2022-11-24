@@ -10,6 +10,14 @@
   @apply bg-indigo-600;
 }
 
+.btn-primary-outline {
+  @apply bg-white text-indigo-500 border border-indigo-500 rounded hover:bg-indigo-500 hover:text-white;
+}
+
+.btn-primary-outline:disabled {
+  @apply border-gray-600 text-gray-600;
+}
+
 .btn-link {
   @apply text-indigo-500 transition-all hover:bg-gray-100;
 }

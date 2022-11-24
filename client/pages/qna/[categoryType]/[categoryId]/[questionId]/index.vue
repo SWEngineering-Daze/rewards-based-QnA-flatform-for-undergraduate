@@ -88,6 +88,18 @@ async function removeQuestion(id: string) {
     }
   }
 }
+
+async function downloadFile(id: string, name: string) {
+  const file = await api.files.download(id);
+
+  const url = window.URL.createObjectURL(new Blob([file]));
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', name); // or any other extension
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
 </script>
 
 <template>
@@ -110,6 +122,20 @@ async function removeQuestion(id: string) {
           <div class="flex justify-end mb-6">
             <button class="btn text-red-500" @click="removeQuestion(question._id)">삭제</button>
             <NuxtLink class="btn text-blue-500">수정</NuxtLink>
+          </div>
+        </template>
+        <template v-if="question.fileIds.length > 0">
+          <div class="flex flex-col mb-6">
+            <a
+              v-for="(fileId, idx) in question.fileIds"
+              :key="fileId"
+              class="inline-flex items-center mb-1 last:mb-0 group"
+              href="#"
+              @click.prevent="downloadFile(fileId, question.fileNames[idx])"
+            >
+              <img class="w-8" src="@/assets/img/attach.svg" />
+              <span class="ml-1 mr-5 font-medium text-sm text-black text-opacity-75 group-hover:text-opacity-100">{{ question.fileNames[idx] }}</span>
+            </a>
           </div>
         </template>
         <div>

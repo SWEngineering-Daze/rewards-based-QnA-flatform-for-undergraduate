@@ -37,6 +37,8 @@ export interface Question {
   content: string;
   createdAt: string;
   answers?: Answer[];
+  fileIds: string[];
+  fileNames: string[];
   [key: string]: any;
 }
 
@@ -114,9 +116,10 @@ const createApiRequester = (axios: AxiosInstance) => ({
     me(page: number = 1, perPage: number = 10) {
       return axios.get<QuestionPaginator>(`/questions/me?page=${page}&perPage=${perPage}`).then(response => response.data);
     },
-    write(data: { title: string; content: string; courseName: string }) {
+    write(data: { title: string; content: string; courseName: string }, files: File[]) {
       const formData = new FormData();
       formData.set('information', JSON.stringify(data));
+      files.forEach(f => formData.append('attachment', f));
 
       return axios.post<Question>('/questions', formData).then(response => response.data);
     },
@@ -144,6 +147,11 @@ const createApiRequester = (axios: AxiosInstance) => ({
     },
     like(id: string) {
       return axios.post<void>(`/answers/${id}/recommend`).then(response => response.data);
+    },
+  },
+  files: {
+    download(id: string) {
+      return axios.get(`/files/${id}`, { responseType: 'blob' }).then(response => response.data);
     },
   },
   point: {
