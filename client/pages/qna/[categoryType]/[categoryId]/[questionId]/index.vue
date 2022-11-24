@@ -122,7 +122,7 @@ async function downloadFile(id: string, name: string) {
     document.body.removeChild(link);
   } catch (e) {
     if (e instanceof AxiosError) {
-      if (e.response.status === 404) {
+      if (e.response?.status === 404) {
         toast.error('파일을 찾을 수 없습니다!');
       } else {
         toast.error('알 수 없는 네트워크 에러가 발생했습니다.');
