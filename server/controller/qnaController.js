@@ -360,7 +360,7 @@ export const deleteQuestion = async (req, res) => {
       .exec()
   )[0];
 
-  const { answers } = questionWithAnswers;
+  const answers = questionWithAnswers.answers;
 
   let questionToDelete = questionWithAnswers._id;
   let answersToDelete = [];
@@ -375,17 +375,20 @@ export const deleteQuestion = async (req, res) => {
     fileIdsToDelete = [...fileIdsToDelete, ...answer.fileIds];
   }
 
-  const filesToDelete = (
-    await File.find({
-      $or: fileIdsToDelete.map((fileId) => {
-        return {
-          _id: fileId,
-        };
-      }),
-    })
-      .select('fileName')
-      .exec()
-  ).map((file) => file.fileName);
+  let filesToDelete = [];
+  if (fileIdsToDelete.length != 0) {
+    filesToDelete = (
+      await File.find({
+        $or: fileIdsToDelete.map((fileId) => {
+          return {
+            _id: fileId,
+          };
+        }),
+      })
+        .select('fileName')
+        .exec()
+    ).map((file) => file.fileName);
+  }
 
   await Question.deleteOne({ _id: questionToDelete }).exec();
   await Answer.deleteMany({
