@@ -346,27 +346,37 @@ export const updateAnswser = async (req, res) => {
   const { id } = req.params;
   const { information } = req.body;
   const parsedInformation = JSON.parse(information);
-  const { content, filesToDelete } = parsedInformation;
+  let { content, filesToDelete } = parsedInformation;
 
+  let originalNames = [];
   for (const fileId of filesToDelete) {
-    const { fileName } = await File.findById(mongoose.Types.ObjectId(fileId));
-    console.log(fileName);
+    console.log(fileId);
+    const { fileName, originalName } = await File.findById(mongoose.Types.ObjectId(fileId));
+    console.log(fileName, originalName);
+
+    originalNames.push(originalName);
 
     if (fs.existsSync(`./uploadedFiles/${fileName}`)) {
       fs.rmSync(`./uploadedFiles/${fileName}`);
     }
 
-    await File.deleteOne({ _id: fileId });
+    await File.deleteOne({ _id: mongoose.Types.ObjectId(fileId) });
   }
 
   filesToDelete = filesToDelete.map((fileIds) => mongoose.Types.ObjectId(fileIds));
 
+  console.log('here');
   await Answer.updateOne(
     { _id: mongoose.Types.ObjectId(id) },
     {
       content,
       $pull: {
-        $in: filesToDelete,
+        fileIds: {
+          $in: filesToDelete,
+        },
+        fileNames: {
+          $in: originalNames,
+        },
       },
     }
   ).exec();
