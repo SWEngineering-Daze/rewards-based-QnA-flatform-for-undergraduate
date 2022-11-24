@@ -115,7 +115,10 @@ const createApiRequester = (axios: AxiosInstance) => ({
       return axios.get<QuestionPaginator>(`/questions/me?page=${page}&perPage=${perPage}`).then(response => response.data);
     },
     write(data: { title: string; content: string; courseName: string }) {
-      return axios.post<Question>('/questions', data).then(response => response.data);
+      const formData = new FormData();
+      formData.set('information', JSON.stringify(data));
+
+      return axios.post<Question>('/questions', formData).then(response => response.data);
     },
     show(id: string) {
       return axios
@@ -128,7 +131,10 @@ const createApiRequester = (axios: AxiosInstance) => ({
   },
   answers: {
     write(questionId: string, data: { content: string }) {
-      return axios.post<Answer>(`/questions/${questionId}/answers`, data).then(response => response.data);
+      const formData = new FormData();
+      formData.set('information', JSON.stringify(data));
+
+      return axios.post<Answer>(`/questions/${questionId}/answers`, formData).then(response => response.data);
     },
     me(page: number = 1, perPage: number = 10) {
       return axios.get<AnswerPaginator>(`/answers/me?page=${page}&perPage=${perPage}`).then(response => response.data);
