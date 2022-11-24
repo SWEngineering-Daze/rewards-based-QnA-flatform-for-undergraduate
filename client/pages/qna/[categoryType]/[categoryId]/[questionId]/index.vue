@@ -9,6 +9,7 @@ definePageMeta({
 });
 
 const route = useRoute();
+const router = useRouter();
 const toast = useToast();
 const auth = useAuth();
 
@@ -68,6 +69,25 @@ async function like(answer: Answer) {
     }
   }
 }
+
+async function removeQuestion(id: string) {
+  if (!confirm('정말 질문을 삭제하시겠습니까?')) return;
+
+  try {
+    await api.questions.remove(id);
+
+    toast.success('질문을 삭제했습니다!');
+    router.replace(`/qna/course/${question.course.name}`);
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      toast.error('알 수 없는 네트워크 에러가 발생했습니다.');
+    } else {
+      toast.error('알 수 없는 에러가 발생했습니다.');
+
+      console.error(e);
+    }
+  }
+}
 </script>
 
 <template>
@@ -86,6 +106,12 @@ async function like(answer: Answer) {
           <h1 class="text-3xl mb-3">{{ question.title }}</h1>
         </div>
         <hr class="my-6" />
+        <template v-if="auth.user.email === question.writer">
+          <div class="flex justify-end mb-6">
+            <button class="btn text-red-500" @click="removeQuestion(question._id)">삭제</button>
+            <NuxtLink class="btn text-blue-500">수정</NuxtLink>
+          </div>
+        </template>
         <div>
           <MarkdownViewer :content="question.content" />
         </div>

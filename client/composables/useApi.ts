@@ -128,6 +128,9 @@ const createApiRequester = (axios: AxiosInstance) => ({
         }>(`/questions/${id}`)
         .then(response => response.data);
     },
+    remove(id: string) {
+      return axios.delete<void>(`/questions/${id}`).then(response => response.data);
+    },
   },
   answers: {
     write(questionId: string, data: { content: string }) {
