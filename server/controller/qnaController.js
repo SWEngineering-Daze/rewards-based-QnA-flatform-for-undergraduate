@@ -365,7 +365,6 @@ export const updateAnswser = async (req, res) => {
 
   filesToDelete = filesToDelete.map((fileIds) => mongoose.Types.ObjectId(fileIds));
 
-  console.log('here');
   await Answer.updateOne(
     { _id: mongoose.Types.ObjectId(id) },
     {
@@ -456,4 +455,73 @@ export const deleteQuestion = async (req, res) => {
   });
 };
 
-export const updateQuestion = async (req, res) => {};
+export const updateQuestion = async (req, res) => {
+  const { id } = req.params;
+  const { information } = req.body;
+  const parsedInformation = JSON.parse(information);
+  let { title, content, filesToDelete } = parsedInformation;
+
+  let originalNames = [];
+  for (const fileId of filesToDelete) {
+    console.log(fileId);
+    const { fileName, originalName } = await File.findById(mongoose.Types.ObjectId(fileId));
+    console.log(fileName, originalName);
+
+    originalNames.push(originalName);
+
+    if (fs.existsSync(`./uploadedFiles/${fileName}`)) {
+      fs.rmSync(`./uploadedFiles/${fileName}`);
+    }
+
+    await File.deleteOne({ _id: mongoose.Types.ObjectId(fileId) });
+  }
+
+  filesToDelete = filesToDelete.map((fileIds) => mongoose.Types.ObjectId(fileIds));
+
+  let fileNames = [];
+
+  for (const targetFile of req.files) {
+    fileNames.push(targetFile.originalname);
+  }
+
+  await Question.updateOne({ _id: id }, { $push: { fileNames: { $each: fileNames } } });
+
+  // let question = await addQuestion(email, title, content, courseID, [], fileNames);
+
+  for (const targetFile of req.files) {
+    const splited = targetFile.originalname.split('.');
+    const extension = splited[splited.length - 1];
+
+    const file = await File.create({
+      fileName: `${targetFile.filename}.${extension}`,
+      originalName: targetFile.originalname,
+      postId: id,
+    });
+
+    await Question.updateOne({ _id: id }, { $push: { fileIds: mongoose.Types.ObjectId(file._id) } });
+
+    fs.rename(
+      `./uploadedFiles/${targetFile.filename}`,
+      `./uploadedFiles/${targetFile.filename}.${extension}`,
+      () => {}
+    );
+  }
+
+  await Question.updateOne(
+    { _id: mongoose.Types.ObjectId(id) },
+    {
+      title,
+      content,
+      $pull: {
+        fileIds: {
+          $in: filesToDelete,
+        },
+        fileNames: {
+          $in: originalNames,
+        },
+      },
+    }
+  ).exec();
+
+  res.json({ message: 'success' });
+};
