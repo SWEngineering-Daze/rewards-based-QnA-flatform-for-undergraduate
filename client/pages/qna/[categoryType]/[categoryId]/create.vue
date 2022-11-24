@@ -34,7 +34,7 @@ async function submit() {
       courseName: category.name,
     });
 
-    toast.success(`성공적으로 질문을 작성했습니다!"`);
+    toast.success(`성공적으로 질문을 작성했습니다!`);
     router.replace(`/qna/${type}/${encodeURIComponent(category.name)}`);
   } catch (e) {
     if (e instanceof AxiosError) {

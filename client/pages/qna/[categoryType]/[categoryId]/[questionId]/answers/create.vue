@@ -41,7 +41,7 @@ async function submit() {
 
     await api.answers.write(question.value._id, { content: content.value });
 
-    toast.success(`성공적으로 답변을 작성했습니다!"`);
+    toast.success(`성공적으로 답변을 작성했습니다!`);
     router.replace(`/qna/course/${encodeURIComponent(question.value.course.name)}/${question.value._id}`);
   } catch (e) {
     if (e instanceof AxiosError) {
