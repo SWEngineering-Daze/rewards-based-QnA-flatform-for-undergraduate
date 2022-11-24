@@ -157,6 +157,20 @@ async function downloadFile(id: string, name: string) {
             </div>
             <span class="rounded-full bg-slate-500 text-white text-sm py-2 px-6 ml-8">답변</span>
           </div>
+          <template v-if="answer.fileIds.length > 0">
+            <div class="flex flex-col mb-6">
+              <a
+                v-for="(fileId, idx) in answer.fileIds"
+                :key="fileId"
+                class="inline-flex items-center mb-1 last:mb-0 group"
+                href="#"
+                @click.prevent="downloadFile(fileId, answer.fileNames[idx])"
+              >
+                <img class="w-8" src="@/assets/img/attach.svg" />
+                <span class="ml-1 mr-5 font-medium text-sm text-black text-opacity-75 group-hover:text-opacity-100">{{ answer.fileNames[idx] }}</span>
+              </a>
+            </div>
+          </template>
           <div>
             <MarkdownViewer :content="answer.content" />
           </div>

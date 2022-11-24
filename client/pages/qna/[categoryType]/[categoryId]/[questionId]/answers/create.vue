@@ -14,6 +14,7 @@ const router = useRouter();
 const { loading, startLoading, finishLoading } = useLoading();
 
 const content = ref('');
+const files = ref<File[]>([]);
 
 const question = ref<Question>(null);
 try {
@@ -39,7 +40,7 @@ async function submit() {
   try {
     startLoading();
 
-    await api.answers.write(question.value._id, { content: content.value });
+    await api.answers.write(question.value._id, { content: content.value }, files.value);
 
     toast.success(`성공적으로 답변을 작성했습니다!`);
     router.replace(`/qna/course/${encodeURIComponent(question.value.course.name)}/${question.value._id}`);
@@ -54,6 +55,14 @@ async function submit() {
   } finally {
     finishLoading();
   }
+}
+
+function addFile(file: File) {
+  files.value.push(file);
+}
+
+function deleteFile(idx: number) {
+  files.value.splice(idx, 1);
 }
 </script>
 
@@ -74,6 +83,19 @@ async function submit() {
       <div class="group">
         <div class="text-lg font-medium mb-1">답변</div>
         <MarkdownEditor v-model="content" name="content" />
+      </div>
+      <div class="group">
+        <div class="text-lg font-medium mb-3">첨부파일</div>
+        <div v-for="(file, idx) in files" :key="idx.toString() + file.name + file.type + file.size">
+          <span class="inline-flex items-center">
+            <img class="w-8" src="@/assets/img/attach.svg" />
+            <span class="ml-1 mr-5">{{ file.name }}</span>
+            <button type="button" @click="deleteFile(idx)">
+              <img class="w-8" src="@/assets/img/delete.svg" />
+            </button>
+          </span>
+        </div>
+        <BaseFileSelector @attach="addFile" />
       </div>
       <div class="flex">
         <NuxtLink class="btn btn-link flex-1" :to="`/qna/course/${encodeURIComponent(question.course.name)}/${question._id}`">취소</NuxtLink>

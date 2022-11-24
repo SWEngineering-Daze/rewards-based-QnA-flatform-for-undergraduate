@@ -25,6 +25,8 @@ export interface Answer {
   writer: string;
   content: string;
   createdAt: string;
+  fileIds: string[];
+  fileNames: string[];
   recommendations?: Recommendation[];
   [key: string]: any;
 }
@@ -136,9 +138,10 @@ const createApiRequester = (axios: AxiosInstance) => ({
     },
   },
   answers: {
-    write(questionId: string, data: { content: string }) {
+    write(questionId: string, data: { content: string }, files: File[]) {
       const formData = new FormData();
       formData.set('information', JSON.stringify(data));
+      files.forEach(f => formData.append('attachment', f));
 
       return axios.post<Answer>(`/questions/${questionId}/answers`, formData).then(response => response.data);
     },
