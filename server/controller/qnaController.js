@@ -269,8 +269,17 @@ export const viewMyAnswers = async (req, res) => {
   cntAnswers = answerList.length;
   answerList = answerList.slice((page - 1) * perPage, (page - 1) * perPage + perPage);
 
+  let cntAnswer = [];
+
+  for (const answer of answerList) {
+    const question = answer.question;
+    const questionId = question._id;
+    const answers = await Answer.find({ question: questionId }).exec();
+    cntAnswer.push(answers.length);
+  }
+
   answerList = answerList.map((answer, index) => {
-    return {
+    let obj = {
       _id: answer._id,
       writer: answer.writer,
       title: answer.title,
@@ -280,6 +289,10 @@ export const viewMyAnswers = async (req, res) => {
       updatedAt: answer.updatedAt,
       recommendation: answer.recommendation,
     };
+
+    obj.question.countAnswer = cntAnswer[index];
+
+    return obj;
   });
 
   res.json({
