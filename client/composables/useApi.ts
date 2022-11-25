@@ -125,6 +125,13 @@ const createApiRequester = (axios: AxiosInstance) => ({
 
       return axios.post<Question>('/questions', formData).then(response => response.data);
     },
+    update(id: string, data: { title: string; content: string; filesToDelete: string[] }, newFiles: File[]) {
+      const formData = new FormData();
+      formData.set('information', JSON.stringify(data));
+      newFiles.forEach(f => formData.append('attachment', f));
+
+      return axios.put<void>(`/questions/${id}`, formData).then(response => response.data);
+    },
     show(id: string) {
       return axios
         .get<{
@@ -144,6 +151,13 @@ const createApiRequester = (axios: AxiosInstance) => ({
       files.forEach(f => formData.append('attachment', f));
 
       return axios.post<Answer>(`/questions/${questionId}/answers`, formData).then(response => response.data);
+    },
+    update(id: string, data: { content: string; filesToDelete: string[] }, newFiles: File[]) {
+      const formData = new FormData();
+      formData.set('information', JSON.stringify(data));
+      newFiles.forEach(f => formData.append('attachment', f));
+
+      return axios.put<void>(`/answers/${id}`, formData).then(response => response.data);
     },
     me(page: number = 1, perPage: number = 10) {
       return axios.get<AnswerPaginator>(`/answers/me?page=${page}&perPage=${perPage}`).then(response => response.data);

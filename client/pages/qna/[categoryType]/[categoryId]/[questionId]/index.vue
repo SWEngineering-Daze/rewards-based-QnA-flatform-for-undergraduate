@@ -155,7 +155,7 @@ async function downloadFile(id: string, name: string) {
         <template v-if="auth.user.email === question.writer">
           <div class="flex justify-end mb-6">
             <button class="btn text-red-500" @click="removeQuestion(question._id)">삭제</button>
-            <NuxtLink class="btn text-blue-500">수정</NuxtLink>
+            <NuxtLink class="btn text-blue-500" :to="`/questions/${question._id}/edit`">수정</NuxtLink>
           </div>
         </template>
         <template v-if="question.fileIds.length > 0">
@@ -194,7 +194,7 @@ async function downloadFile(id: string, name: string) {
           <template v-if="auth.user.email === answer.writer">
             <div class="flex justify-end mb-6">
               <button class="btn text-red-500" @click="removeAnswer(answer._id)">삭제</button>
-              <NuxtLink class="btn text-blue-500">수정</NuxtLink>
+              <NuxtLink class="btn text-blue-500" :to="`/questions/${question._id}/answers/${answer._id}/edit`">수정</NuxtLink>
             </div>
           </template>
           <template v-if="answer.fileIds.length > 0">
