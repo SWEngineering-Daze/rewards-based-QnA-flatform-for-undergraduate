@@ -563,3 +563,24 @@ export const updateQuestion = async (req, res) => {
 
   res.json({ message: 'success' });
 };
+
+export const getNewQuestions = async (req, res) => {
+  const questions = await Question.aggregate()
+    .sort({ createdAt: -1 })
+    .limit(5)
+    .lookup({
+      from: 'courses',
+      as: 'course',
+      localField: 'course',
+      foreignField: '_id',
+    })
+    .lookup({
+      from: 'departments',
+      as: 'course.parent',
+      localField: 'course.parent',
+      foreignField: '_id',
+    })
+    .exec();
+
+  res.json(questions);
+};
