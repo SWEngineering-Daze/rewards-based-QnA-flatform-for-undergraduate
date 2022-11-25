@@ -4,9 +4,13 @@ const emits = defineEmits(['attach']);
 function onFileChange(event: Event) {
   const files = (event.target as HTMLInputElement).files;
 
-  if (files.length > 0 && files[0]) {
-    emits('attach', files[0]);
+  if (files.length > 0) {
+    for (let i = 0; i < files.length; i++) {
+      emits('attach', files[i]);
+    }
   }
+
+  (event.target as HTMLInputElement).value = '';
 }
 </script>
 
@@ -18,7 +22,7 @@ function onFileChange(event: Event) {
           <slot>파일 첨부</slot>
         </div>
       </div>
-      <input class="hidden" type="file" @change="onFileChange" />
+      <input class="hidden" type="file" multiple @change="onFileChange" />
     </label>
   </div>
 </template>
