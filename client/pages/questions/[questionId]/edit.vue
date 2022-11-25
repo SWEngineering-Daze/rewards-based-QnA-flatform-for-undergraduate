@@ -26,8 +26,6 @@ try {
   question.value = qna.question;
   title.value = question.value.title;
   content.value = question.value.content;
-
-  console.log('question: ', question.value);
 } catch (e) {
   if (e instanceof AxiosError) {
     toast.error('알 수 없는 네트워크 에러가 발생했습니다.');
