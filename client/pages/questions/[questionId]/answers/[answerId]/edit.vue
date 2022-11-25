@@ -123,7 +123,7 @@ function deleteFile(idx: number) {
       </div>
       <div class="flex">
         <NuxtLink class="btn btn-link flex-1" :to="`/qna/course/${encodeURIComponent(question.course.name)}/${question._id}`">취소</NuxtLink>
-        <BaseButton class="flex-1" type="submit" :loading="loading">작성</BaseButton>
+        <BaseButton class="flex-1" type="submit" :loading="loading">수정</BaseButton>
       </div>
     </form>
   </div>
