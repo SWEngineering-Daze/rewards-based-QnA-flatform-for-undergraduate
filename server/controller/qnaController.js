@@ -566,7 +566,79 @@ export const updateQuestion = async (req, res) => {
   res.json({ message: 'success' });
 };
 
-export const getBestQuestions = async (req, res) => {};
+export const getBestQuestions = async (req, res) => {
+  const yesterday = dayjs().add(-1, 'day');
+  const yesterday_start = yesterday.startOf('day').toDate();
+  const yesterday_end = yesterday.endOf('day').toDate();
+
+  const questions = await Question.aggregate()
+    .lookup({
+      from: 'answers',
+      as: 'answers',
+      localField: '_id',
+      foreignField: 'question',
+    })
+    .project({
+      _id: 1,
+      writer: 1,
+      title: 1,
+      content: 1,
+      course: 1,
+      createdAt: 1,
+      updatedAt: 1,
+      answers: 1,
+      cntAnswers: {
+        $size: '$answers',
+      },
+    })
+    .lookup({
+      from: 'recommendations',
+      as: 'answers.recommendations',
+      localField: 'answers._id',
+      foreignField: 'answer',
+    })
+    .match({
+      'answers.recommendations.createdAt': {
+        $gte: yesterday_start,
+        $lt: yesterday_end,
+      },
+    })
+    .project({
+      _id: 1,
+      writer: 1,
+      title: 1,
+      content: 1,
+      course: 1,
+      fileIds: 1,
+      fileNames: 1,
+      createdAt: 1,
+      updatedAt: 1,
+      answers: 1,
+      cntAnswers: 1,
+      cntRecommendation: {
+        $size: '$answers.recommendations',
+      },
+    })
+    .sort({ cntRecommendation: -1 })
+    .limit(5)
+    .lookup({
+      from: 'courses',
+      as: 'course',
+      localField: 'course',
+      foreignField: '_id',
+    })
+    .unwind({ path: '$course', preserveNullAndEmptyArrays: true })
+    .lookup({
+      from: 'departments',
+      as: 'course.parent',
+      localField: 'course.parent',
+      foreignField: '_id',
+    })
+    .unwind({ path: '$course.parent', preserveNullAndEmptyArrays: true })
+    .exec();
+
+  res.json(questions);
+};
 
 export const getNewQuestions = async (req, res) => {
   const questions = await Question.aggregate()
