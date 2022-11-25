@@ -1,6 +1,7 @@
 import fs from 'fs';
 import mongoose from 'mongoose';
 import multer from 'multer';
+import dayjs from 'dayjs';
 import { Answer, File, Question } from '../database/mongodb.js';
 import { addAnswer, getAnswerById, getAnswersWithAll, getAnswersWithQuestion } from '../repository/answerRepository.js';
 import { getCourseByName } from '../repository/courseRepository.js';
@@ -565,9 +566,44 @@ export const updateQuestion = async (req, res) => {
   res.json({ message: 'success' });
 };
 
+export const getBestQuestions = async (req, res) => {};
+
 export const getNewQuestions = async (req, res) => {
   const questions = await Question.aggregate()
     .sort({ createdAt: -1 })
+    .limit(5)
+    .lookup({
+      from: 'courses',
+      as: 'course',
+      localField: 'course',
+      foreignField: '_id',
+    })
+    .lookup({
+      from: 'departments',
+      as: 'course.parent',
+      localField: 'course.parent',
+      foreignField: '_id',
+    })
+    .exec();
+
+  res.json(questions);
+};
+
+export const getOldQuestions = async (req, res) => {
+  const dayBeforeYesterday = dayjs().add(-2, 'day');
+  const dayBeforeYesterday_start = dayBeforeYesterday.startOf('day').toDate();
+  const dayBeforeYesterday_end = dayBeforeYesterday.endOf('day').toDate();
+
+  console.log(dayBeforeYesterday_start);
+  console.log(dayBeforeYesterday_end);
+
+  const questions = await Question.aggregate()
+    .match({
+      createdAt: {
+        $gte: dayBeforeYesterday_start,
+        $lt: dayBeforeYesterday_end,
+      },
+    })
     .limit(5)
     .lookup({
       from: 'courses',
