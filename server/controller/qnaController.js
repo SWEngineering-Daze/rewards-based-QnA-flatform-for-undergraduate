@@ -570,6 +570,12 @@ export const getBestQuestions = async (req, res) => {};
 
 export const getNewQuestions = async (req, res) => {
   const questions = await Question.aggregate()
+    .lookup({
+      from: 'answers',
+      as: 'answers',
+      localField: '_id',
+      foreignField: 'question',
+    })
     .sort({ createdAt: -1 })
     .limit(5)
     .lookup({
@@ -578,15 +584,33 @@ export const getNewQuestions = async (req, res) => {
       localField: 'course',
       foreignField: '_id',
     })
+    .unwind({ path: '$course', preserveNullAndEmptyArrays: true })
     .lookup({
       from: 'departments',
       as: 'course.parent',
       localField: 'course.parent',
       foreignField: '_id',
     })
+    .unwind({ path: '$course.parent', preserveNullAndEmptyArrays: true })
     .exec();
 
-  res.json(questions);
+  const obj = questions.map((question) => {
+    return {
+      _id: question._id,
+      writer: question._writer,
+      title: question.content,
+      content: question.content,
+      course: question.course,
+      fileIds: question.fileIds,
+      fileNames: question.fileNames,
+      createdAt: question.createdAt,
+      updatedAt: question.updatedAt,
+      answers: question.answers,
+      cntAnswer: question.answers.length,
+    };
+  });
+
+  res.json(obj);
 };
 
 export const getOldQuestions = async (req, res) => {
@@ -616,13 +640,31 @@ export const getOldQuestions = async (req, res) => {
       localField: 'course',
       foreignField: '_id',
     })
+    .unwind({ path: '$course', preserveNullAndEmptyArrays: true })
     .lookup({
       from: 'departments',
       as: 'course.parent',
       localField: 'course.parent',
       foreignField: '_id',
     })
+    .unwind({ path: '$course.parent', preserveNullAndEmptyArrays: true })
     .exec();
 
-  res.json(questions);
+  const obj = questions.map((question) => {
+    return {
+      _id: question._id,
+      writer: question._writer,
+      title: question.content,
+      content: question.content,
+      course: question.course,
+      fileIds: question.fileIds,
+      fileNames: question.fileNames,
+      createdAt: question.createdAt,
+      updatedAt: question.updatedAt,
+      answers: question.answers,
+      cntAnswer: question.answers.length,
+    };
+  });
+
+  res.json(obj);
 };
