@@ -592,18 +592,23 @@ export const getNewQuestions = async (req, res) => {
 export const getOldQuestions = async (req, res) => {
   const dayBeforeYesterday = dayjs().add(-2, 'day');
   const dayBeforeYesterday_start = dayBeforeYesterday.startOf('day').toDate();
-  const dayBeforeYesterday_end = dayBeforeYesterday.endOf('day').toDate();
 
   console.log(dayBeforeYesterday_start);
-  console.log(dayBeforeYesterday_end);
 
   const questions = await Question.aggregate()
+    .lookup({
+      from: 'answers',
+      as: 'answers',
+      localField: '_id',
+      foreignField: 'question',
+    })
     .match({
       createdAt: {
         $gte: dayBeforeYesterday_start,
-        $lt: dayBeforeYesterday_end,
       },
+      answers: [],
     })
+    .sort({ createdAt: 1 })
     .limit(5)
     .lookup({
       from: 'courses',
