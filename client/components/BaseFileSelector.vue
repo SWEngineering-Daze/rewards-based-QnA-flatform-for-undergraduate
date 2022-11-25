@@ -14,7 +14,9 @@ function onFileChange(event: Event) {
   <div class="flex">
     <label>
       <div class="flex items-center">
-        <div class="btn btn-primary-outline cursor-pointer">파일 첨부</div>
+        <div class="btn btn-primary-outline cursor-pointer">
+          <slot>파일 첨부</slot>
+        </div>
       </div>
       <input class="hidden" type="file" @change="onFileChange" />
     </label>
