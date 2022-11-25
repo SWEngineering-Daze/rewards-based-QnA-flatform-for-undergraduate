@@ -502,6 +502,7 @@ export const updateQuestion = async (req, res) => {
   let { title, content, filesToDelete } = parsedInformation;
 
   let originalNames = [];
+
   for (const fileId of filesToDelete) {
     console.log(fileId);
     const { fileName, originalName } = await File.findById(mongoose.Types.ObjectId(fileId));
