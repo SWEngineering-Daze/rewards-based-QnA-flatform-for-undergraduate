@@ -159,11 +159,11 @@ async function downloadFile(id: string, name: string) {
           </div>
         </template>
         <template v-if="question.fileIds.length > 0">
-          <div class="flex flex-col mb-6">
+          <div class="flex flex-col items-start mb-6">
             <a
               v-for="(fileId, idx) in question.fileIds"
               :key="fileId"
-              class="inline-flex items-center mb-1 last:mb-0 group"
+              class="inline-flex items-center mb-1 last:mb-0 group rounded border bg-slate-50 py-2 px-3 transition-all hover:border-indigo-200"
               href="#"
               @click.prevent="downloadFile(fileId, question.fileNames[idx])"
             >
@@ -198,11 +198,11 @@ async function downloadFile(id: string, name: string) {
             </div>
           </template>
           <template v-if="answer.fileIds.length > 0">
-            <div class="flex flex-col mb-6">
+            <div class="flex flex-col items-start mb-6">
               <a
                 v-for="(fileId, idx) in answer.fileIds"
                 :key="fileId"
-                class="inline-flex items-center mb-1 last:mb-0 group"
+                class="inline-flex items-center mb-1 last:mb-0 group rounded border bg-slate-50 py-2 px-3 transition-all hover:border-indigo-200"
                 href="#"
                 @click.prevent="downloadFile(fileId, answer.fileNames[idx])"
               >
@@ -210,6 +210,7 @@ async function downloadFile(id: string, name: string) {
                 <span class="ml-1 mr-5 font-medium text-sm text-black text-opacity-75 group-hover:text-opacity-100">{{ answer.fileNames[idx] }}</span>
               </a>
             </div>
+            <!-- <hr class="mt-2 mb-5" /> -->
           </template>
           <div>
             <MarkdownViewer :content="answer.content" />

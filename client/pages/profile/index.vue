@@ -18,6 +18,10 @@ try {
 } catch (e) {
   console.error(e);
 }
+
+function format(n: number) {
+  return Intl.NumberFormat('ko-KR').format(n);
+}
 </script>
 
 <template>
@@ -28,14 +32,13 @@ try {
 
     <div class="flex items-center mb-24">
       <!-- placeholder -->
-      <div class="rounded-full w-64 h-64 bg-gray-200 mr-10"></div>
+      <img class="rounded-full w-64 h-64 mr-10" src="@/assets/img/dgu_logo.jpg" />
       <div class="text-xl">
         <div class="font-bold">LV. {{ level }} - {{ expPercent.toFixed(2) }}% ({{ curExp }}/{{ maxExp }})</div>
-        <div>???????</div>
         <div>{{ auth.user.email }}</div>
       </div>
       <div class="ml-auto">
-        <span class="text-5xl font-bold text-cyan-500">{{ point }} P</span>
+        <span class="text-5xl font-bold text-cyan-500">{{ format(point) }} P</span>
       </div>
     </div>
 
