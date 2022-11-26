@@ -4,6 +4,8 @@ import '@toast-ui/editor/dist/i18n/ko-kr';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import '@toast-ui/editor/dist/toastui-editor-viewer.css';
 
+import '@/assets/css/plugins/tuiEditor.css';
+
 export default defineNuxtPlugin(() => {
   return {
     provide: {
