@@ -597,44 +597,21 @@ export const getBestQuestions = async (req, res) => {
       localField: 'answers._id',
       foreignField: 'answer',
     })
-    .match({
-      'answers.recommendations.createdAt': {
-        $gte: yesterday_start,
-        $lt: yesterday_end,
+    .addFields({
+      yesterdayRecommendations: {
+        $filter: {
+          input: '$answers.recommendations',
+          as: 'recomm',
+          cond: {
+            $and: [{ $gte: ['$$recomm.createdAt', yesterday_start] }, { $lt: ['$$recomm.createdAt', yesterday_end] }],
+          },
+        },
       },
     })
-    .project({
-      _id: 1,
-      writer: 1,
-      title: 1,
-      content: 1,
-      course: 1,
-      fileIds: 1,
-      fileNames: 1,
-      createdAt: 1,
-      updatedAt: 1,
-      answers: 1,
-      cntAnswers: 1,
-      cntRecommendation: {
-        $size: '$answers.recommendations',
-      },
+    .addFields({
+      countYesterdayRecommendations: { $size: '$yesterdayRecommendations' },
     })
-    .sort({ cntRecommendation: -1 })
-    .limit(5)
-    .lookup({
-      from: 'courses',
-      as: 'course',
-      localField: 'course',
-      foreignField: '_id',
-    })
-    .unwind({ path: '$course', preserveNullAndEmptyArrays: true })
-    .lookup({
-      from: 'departments',
-      as: 'course.parent',
-      localField: 'course.parent',
-      foreignField: '_id',
-    })
-    .unwind({ path: '$course.parent', preserveNullAndEmptyArrays: true })
+    .sort({ countYesterdayRecommendations: -1, createdAt: -1 })
     .exec();
 
   res.json(questions);
