@@ -662,7 +662,7 @@ export const getNewQuestions = async (req, res) => {
     return {
       _id: question._id,
       writer: question._writer,
-      title: question.content,
+      title: question.title,
       content: question.content,
       course: question.course,
       fileIds: question.fileIds,
@@ -718,7 +718,7 @@ export const getOldQuestions = async (req, res) => {
     return {
       _id: question._id,
       writer: question._writer,
-      title: question.content,
+      title: question.title,
       content: question.content,
       course: question.course,
       fileIds: question.fileIds,
