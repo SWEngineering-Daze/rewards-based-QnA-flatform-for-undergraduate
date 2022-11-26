@@ -612,6 +612,7 @@ export const getBestQuestions = async (req, res) => {
       countYesterdayRecommendations: { $size: '$yesterdayRecommendations' },
     })
     .sort({ countYesterdayRecommendations: -1, createdAt: -1 })
+    .limit(5)
     .exec();
 
   res.json(questions);
