@@ -41,6 +41,7 @@ export interface Question {
   answers?: Answer[];
   fileIds: string[];
   fileNames: string[];
+  cntAnswers?: number;
   [key: string]: any;
 }
 
@@ -142,6 +143,15 @@ const createApiRequester = (axios: AxiosInstance) => ({
     },
     remove(id: string) {
       return axios.delete<void>(`/questions/${id}`).then(response => response.data);
+    },
+    best() {
+      return axios.get<Question[]>(`/questions/best`).then(response => response.data);
+    },
+    new() {
+      return axios.get<Question[]>(`/questions/new`).then(response => response.data);
+    },
+    old() {
+      return axios.get<Question[]>(`/questions/old`).then(response => response.data);
     },
   },
   answers: {
