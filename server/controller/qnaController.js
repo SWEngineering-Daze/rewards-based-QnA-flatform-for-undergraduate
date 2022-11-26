@@ -1,6 +1,7 @@
 import fs from 'fs';
 import mongoose from 'mongoose';
 import multer from 'multer';
+import dayjs from 'dayjs';
 import { Answer, File, Question } from '../database/mongodb.js';
 import { addAnswer, getAnswerById, getAnswersWithAll, getAnswersWithQuestion } from '../repository/answerRepository.js';
 import { getCourseByName } from '../repository/courseRepository.js';
@@ -269,8 +270,17 @@ export const viewMyAnswers = async (req, res) => {
   cntAnswers = answerList.length;
   answerList = answerList.slice((page - 1) * perPage, (page - 1) * perPage + perPage);
 
+  let cntAnswer = [];
+
+  for (const answer of answerList) {
+    const question = answer.question;
+    const questionId = question._id;
+    const answers = await Answer.find({ question: questionId }).exec();
+    cntAnswer.push(answers.length);
+  }
+
   answerList = answerList.map((answer, index) => {
-    return {
+    let obj = {
       _id: answer._id,
       writer: answer.writer,
       title: answer.title,
@@ -280,6 +290,10 @@ export const viewMyAnswers = async (req, res) => {
       updatedAt: answer.updatedAt,
       recommendation: answer.recommendation,
     };
+
+    obj.question.countAnswer = cntAnswer[index];
+
+    return obj;
   });
 
   res.json({
@@ -489,6 +503,7 @@ export const updateQuestion = async (req, res) => {
   let { title, content, filesToDelete } = parsedInformation;
 
   let originalNames = [];
+
   for (const fileId of filesToDelete) {
     console.log(fileId);
     const { fileName, originalName } = await File.findById(mongoose.Types.ObjectId(fileId));
@@ -549,4 +564,179 @@ export const updateQuestion = async (req, res) => {
   ).exec();
 
   res.json({ message: 'success' });
+};
+
+export const getBestQuestions = async (req, res) => {
+  const yesterday = dayjs().add(-1, 'day');
+  const yesterday_start = yesterday.startOf('day').toDate();
+  const yesterday_end = yesterday.endOf('day').toDate();
+
+  const questions = await Question.aggregate()
+    .lookup({
+      from: 'answers',
+      as: 'answers',
+      localField: '_id',
+      foreignField: 'question',
+    })
+    .project({
+      _id: 1,
+      writer: 1,
+      title: 1,
+      content: 1,
+      course: 1,
+      createdAt: 1,
+      updatedAt: 1,
+      answers: 1,
+      cntAnswers: {
+        $size: '$answers',
+      },
+    })
+    .lookup({
+      from: 'recommendations',
+      as: 'answers.recommendations',
+      localField: 'answers._id',
+      foreignField: 'answer',
+    })
+    .match({
+      'answers.recommendations.createdAt': {
+        $gte: yesterday_start,
+        $lt: yesterday_end,
+      },
+    })
+    .project({
+      _id: 1,
+      writer: 1,
+      title: 1,
+      content: 1,
+      course: 1,
+      fileIds: 1,
+      fileNames: 1,
+      createdAt: 1,
+      updatedAt: 1,
+      answers: 1,
+      cntAnswers: 1,
+      cntRecommendation: {
+        $size: '$answers.recommendations',
+      },
+    })
+    .sort({ cntRecommendation: -1 })
+    .limit(5)
+    .lookup({
+      from: 'courses',
+      as: 'course',
+      localField: 'course',
+      foreignField: '_id',
+    })
+    .unwind({ path: '$course', preserveNullAndEmptyArrays: true })
+    .lookup({
+      from: 'departments',
+      as: 'course.parent',
+      localField: 'course.parent',
+      foreignField: '_id',
+    })
+    .unwind({ path: '$course.parent', preserveNullAndEmptyArrays: true })
+    .exec();
+
+  res.json(questions);
+};
+
+export const getNewQuestions = async (req, res) => {
+  const questions = await Question.aggregate()
+    .lookup({
+      from: 'answers',
+      as: 'answers',
+      localField: '_id',
+      foreignField: 'question',
+    })
+    .sort({ createdAt: -1 })
+    .limit(5)
+    .lookup({
+      from: 'courses',
+      as: 'course',
+      localField: 'course',
+      foreignField: '_id',
+    })
+    .unwind({ path: '$course', preserveNullAndEmptyArrays: true })
+    .lookup({
+      from: 'departments',
+      as: 'course.parent',
+      localField: 'course.parent',
+      foreignField: '_id',
+    })
+    .unwind({ path: '$course.parent', preserveNullAndEmptyArrays: true })
+    .exec();
+
+  const obj = questions.map((question) => {
+    return {
+      _id: question._id,
+      writer: question._writer,
+      title: question.content,
+      content: question.content,
+      course: question.course,
+      fileIds: question.fileIds,
+      fileNames: question.fileNames,
+      createdAt: question.createdAt,
+      updatedAt: question.updatedAt,
+      answers: question.answers,
+      cntAnswer: question.answers.length,
+    };
+  });
+
+  res.json(obj);
+};
+
+export const getOldQuestions = async (req, res) => {
+  const dayBeforeYesterday = dayjs().add(-2, 'day');
+  const dayBeforeYesterday_start = dayBeforeYesterday.startOf('day').toDate();
+
+  console.log(dayBeforeYesterday_start);
+
+  const questions = await Question.aggregate()
+    .lookup({
+      from: 'answers',
+      as: 'answers',
+      localField: '_id',
+      foreignField: 'question',
+    })
+    .match({
+      createdAt: {
+        $gte: dayBeforeYesterday_start,
+      },
+      answers: [],
+    })
+    .sort({ createdAt: 1 })
+    .limit(5)
+    .lookup({
+      from: 'courses',
+      as: 'course',
+      localField: 'course',
+      foreignField: '_id',
+    })
+    .unwind({ path: '$course', preserveNullAndEmptyArrays: true })
+    .lookup({
+      from: 'departments',
+      as: 'course.parent',
+      localField: 'course.parent',
+      foreignField: '_id',
+    })
+    .unwind({ path: '$course.parent', preserveNullAndEmptyArrays: true })
+    .exec();
+
+  const obj = questions.map((question) => {
+    return {
+      _id: question._id,
+      writer: question._writer,
+      title: question.content,
+      content: question.content,
+      course: question.course,
+      fileIds: question.fileIds,
+      fileNames: question.fileNames,
+      createdAt: question.createdAt,
+      updatedAt: question.updatedAt,
+      answers: question.answers,
+      cntAnswer: question.answers.length,
+    };
+  });
+
+  res.json(obj);
 };
