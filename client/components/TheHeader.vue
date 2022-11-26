@@ -11,6 +11,10 @@ function logout() {
   auth.logout();
   location.reload();
 }
+
+function format(n: number) {
+  return Intl.NumberFormat('ko-KR').format(n);
+}
 </script>
 
 <template>
@@ -58,7 +62,7 @@ function logout() {
                   </div>
                   <div class="flex items-center text-cyan-500">
                     <img class="w-6" src="@/assets/img/point.svg" />
-                    <span class="ml-auto">{{ point }}P</span>
+                    <span class="ml-auto">{{ format(point) }}P</span>
                   </div>
                 </div>
                 <div class="p-3">
