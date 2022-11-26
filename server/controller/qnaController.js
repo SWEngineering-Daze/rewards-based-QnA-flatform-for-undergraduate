@@ -613,6 +613,20 @@ export const getBestQuestions = async (req, res) => {
     })
     .sort({ countYesterdayRecommendations: -1, createdAt: -1 })
     .limit(5)
+    .lookup({
+      from: 'courses',
+      as: 'course',
+      localField: 'course',
+      foreignField: '_id',
+    })
+    .unwind({ path: '$course', preserveNullAndEmptyArrays: true })
+    .lookup({
+      from: 'departments',
+      as: 'course.parent',
+      localField: 'course.parent',
+      foreignField: '_id',
+    })
+    .unwind({ path: '$course.parent', preserveNullAndEmptyArrays: true })
     .exec();
 
   res.json(questions);
