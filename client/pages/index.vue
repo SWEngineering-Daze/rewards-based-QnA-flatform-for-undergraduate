@@ -78,11 +78,11 @@ function format(n: number) {
               :to="`/qna/course/${encodeURIComponent(question.course.name)}/${question._id}`"
             >
               {{ question.title }} [{{ question.cntAnswers ?? 'x' }}]
-              <!-- <span class="ml-3 text-red-500 text-sm font-bold">+{{ question.cntRecommendation }}</span> -->
+              <!-- <span class="ml-3 text-red-500 text-sm font-bold">+{{ question.countYesterdayRecommendations }}</span> -->
             </NuxtLink>
           </div>
           <div class="recommendations-col">
-            <span class="ml-auto text-red-500 text-sm font-bold">+{{ question.cntRecommendation }}</span>
+            <span class="ml-auto text-red-500 text-sm font-bold">+{{ question.countYesterdayRecommendations }}</span>
           </div>
           <div class="created-col">
             <span class="ml-auto text-gray-500 text-sm">{{ $dayjs(question.createdAt).fromNow() }}</span>
