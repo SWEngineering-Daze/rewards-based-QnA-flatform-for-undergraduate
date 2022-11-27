@@ -4,7 +4,6 @@ const thumb = 'https://sw.bisue.shop/thumb2.png';
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
-  root: true,
   modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt'],
   css: ['@/assets/css/fonts.css', '@/assets/css/main.css'],
   build: {
@@ -25,5 +24,8 @@ export default defineNuxtConfig({
       ],
     },
     pageTransition: { name: 'page', mode: 'out-in' },
+  },
+  typescript: {
+    strict: false,
   },
 });
