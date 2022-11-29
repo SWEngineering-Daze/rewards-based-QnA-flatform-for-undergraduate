@@ -81,12 +81,12 @@ function format(n: number) {
 
     <div v-for="partner in dummyMenus" :key="partner.name" class="mb-12">
       <div class="flex items-center mb-8">
-        <img class="w-12 h-12 mr-4" :src="partner.url" />
+        <img class="w-12 h-12 mr-4" :src="partner.url" alt="제휴사" />
         <span class="text-2xl font-bold">{{ partner.name }}</span>
       </div>
       <div class="flex flex-wrap">
         <div v-for="item in partner.items" :key="item.name" class="mr-7 mb-5 group cursor-pointer transition-all">
-          <img class="w-44 h-44 object-contain block" :src="item.url" />
+          <img class="w-44 h-44 object-contain block" :src="item.url" alt="상품" />
           <!-- <div class="w-36 h-36 bg-gray-200"></div> -->
           <div class="w-44 p-1 break-all">
             <div class="overflow-hidden whitespace-nowrap text-ellipsis text-black text-opacity-75 transition-all group-hover:text-opacity-100">

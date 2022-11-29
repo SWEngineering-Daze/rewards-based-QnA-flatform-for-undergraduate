@@ -167,7 +167,7 @@ async function downloadFile(id: string, name: string) {
               href="#"
               @click.prevent="downloadFile(fileId, question.fileNames[idx])"
             >
-              <img class="w-8" src="@/assets/img/attach.svg" />
+              <img class="w-8" src="@/assets/img/attach.svg" alt="첨부파일" />
               <span class="ml-1 mr-5 font-medium text-sm text-black text-opacity-75 group-hover:text-opacity-100">{{ question.fileNames[idx] }}</span>
             </a>
           </div>
@@ -206,7 +206,7 @@ async function downloadFile(id: string, name: string) {
                 href="#"
                 @click.prevent="downloadFile(fileId, answer.fileNames[idx])"
               >
-                <img class="w-8" src="@/assets/img/attach.svg" />
+                <img class="w-8" src="@/assets/img/attach.svg" alt="첨부파일" />
                 <span class="ml-1 mr-5 font-medium text-sm text-black text-opacity-75 group-hover:text-opacity-100">{{ answer.fileNames[idx] }}</span>
               </a>
             </div>

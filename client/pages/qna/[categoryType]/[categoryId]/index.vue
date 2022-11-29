@@ -159,7 +159,7 @@ watch(
     </template>
     <template v-else>
       <div class="flex flex-col items-center text-center text-slate-500 tracking-wider">
-        <img class="w-12 mb-3" src="@/assets/img/sad.svg" />
+        <img class="w-12 mb-3" src="@/assets/img/sad.svg" alt="Sad" />
         아직 아무 질문이 없습니다! <br />
         첫 번째 질문을 해보세요!
       </div>
