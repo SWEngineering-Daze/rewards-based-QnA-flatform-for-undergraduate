@@ -111,6 +111,18 @@ const FileSchema = mongoose.Schema({
   postId: String,
 });
 
+const itemSchema = mongoose.Schema({
+  name: String,
+  url: String,
+  items: [
+    {
+      name: String,
+      url: String,
+      price: Number,
+    },
+  ],
+});
+
 export const User = mongoose.model('users', UserSchema);
 export const SignupToken = mongoose.model('signupTokens', SignupTokenSchema);
 export const ResetToken = mongoose.model('resetTokens', ResetTokenSchema);
@@ -121,3 +133,4 @@ export const Answer = mongoose.model('answers', answerSchema);
 export const TodayPoint = mongoose.model('todayPoints', todayPointSchema);
 export const recommendation = mongoose.model('recommendations', recommendationSchema);
 export const File = mongoose.model('files', FileSchema);
+export const Item = mongoose.model('items', itemSchema);

@@ -28,6 +28,7 @@ app.use('/questions', questionsRouter);
 app.use('/answers', answersRouter);
 app.get('/points/today', pointController.getPointsOfToday);
 app.get('/files/:id', isAuth, fileController.downloadFileById);
+app.get('/items', isAuth, pointController.getItems);
 
 app.get('/', (req, res) => {
   res.json({ message: '프론트의 신 변찬혁..' });
