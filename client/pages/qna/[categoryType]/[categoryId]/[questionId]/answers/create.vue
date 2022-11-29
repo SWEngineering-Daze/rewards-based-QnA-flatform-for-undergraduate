@@ -95,7 +95,7 @@ function deleteFile(idx: number) {
             </button>
           </span>
         </div>
-        <BaseFileSelector @attach="addFile" />
+        <BaseFileSelector class="mt-4" @attach="addFile" />
       </div>
       <div class="flex">
         <NuxtLink class="btn btn-link flex-1" :to="`/qna/course/${encodeURIComponent(question.course.name)}/${question._id}`">취소</NuxtLink>

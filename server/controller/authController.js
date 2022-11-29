@@ -63,7 +63,13 @@ export const verifyUser = async (req, res) => {
   const token = await SignupToken.findOne({ value: signupToken }).exec();
   await SignupToken.deleteOne({ value: token.value }).exec();
 
-  const newUser = new User({ email: token.email, password: token.password });
+  const newUser = new User({
+    email: token.email,
+    password: token.password,
+    point: 0,
+    accumulatedExp: 0,
+  });
+
   await newUser.save();
 
   res.status(200).json({ message: 'success' });
