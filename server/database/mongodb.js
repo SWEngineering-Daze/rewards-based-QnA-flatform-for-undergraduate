@@ -123,6 +123,16 @@ const itemSchema = mongoose.Schema({
   ],
 });
 
+const historySchema = mongoose.Schema(
+  {
+    content: String,
+    amount: Number,
+  },
+  {
+    timestamps: true,
+  }
+);
+
 export const User = mongoose.model('users', UserSchema);
 export const SignupToken = mongoose.model('signupTokens', SignupTokenSchema);
 export const ResetToken = mongoose.model('resetTokens', ResetTokenSchema);
@@ -134,3 +144,4 @@ export const TodayPoint = mongoose.model('todayPoints', todayPointSchema);
 export const recommendation = mongoose.model('recommendations', recommendationSchema);
 export const File = mongoose.model('files', FileSchema);
 export const Item = mongoose.model('items', itemSchema);
+export const History = mongoose.model('histories', historySchema);
