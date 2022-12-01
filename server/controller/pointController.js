@@ -103,7 +103,21 @@ export const getCoupons = async (req, res) => {
   const { email } = req.decoded;
   const user = await getUserByEmail(email);
 
-  const coupons = await Coupon.find({ user: user._id }).sort({ createdAt: -1 }).exec();
+  const coupons = await Coupon.aggregate()
+    .match({ user: user._id })
+    .lookup({
+      from: 'items',
+      as: 'item',
+      localField: 'item',
+      foreignField: '_id',
+    })
+    .unwind({
+      path: '$item',
+      preserveNullAndEmptyArrays: true,
+    })
+    .exec();
+
+  // const coupons = await Coupon.find({ user: user._id }).sort({ createdAt: -1 }).exec();
 
   res.json(coupons);
 };
