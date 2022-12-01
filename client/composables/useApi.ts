@@ -224,7 +224,7 @@ const createApiRequester = (axios: AxiosInstance) => ({
       return axios.get<ShopPartner[]>(`/items`).then(response => response.data);
     },
     exchange(id: string) {
-      return axios.post<void>(`/items/${id}`).then(response => response.data);
+      return axios.post<Coupon>(`/items/${id}`).then(response => response.data);
     },
   },
   histories: {
@@ -237,7 +237,7 @@ const createApiRequester = (axios: AxiosInstance) => ({
       return axios.get<Coupon[]>(`/coupons`).then(response => response.data);
     },
     show(id: string) {
-      return axios.get<Coupon>(`/coupons/${id}`).then(response => response.data);
+      return axios.get<Coupon>(`/coupons/${id}`).then(response => response.data[0]);
     },
   },
 });
