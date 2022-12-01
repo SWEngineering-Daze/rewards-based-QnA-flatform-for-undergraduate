@@ -205,7 +205,7 @@ function format(n: number) {
           <div v-for="coupon in coupons" :key="coupon._id" class="flex items-center">
             <span class="font-bold">{{ $dayjs(coupon.createdAt).format('MM-DD') }}</span>
             <span class="mx-3"></span>
-            <span>{{ coupon.item }}</span>
+            <span>{{ coupon.partnerName }} - {{ coupon.item.name }}</span>
             <span class="mx-3"></span>
             <button class="font-bold text-blue-500 ml-auto" @click="open(coupon)">{{ coupon.serialNumber }}</button>
           </div>
