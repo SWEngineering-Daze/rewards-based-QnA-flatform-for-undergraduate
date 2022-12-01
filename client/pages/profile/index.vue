@@ -225,7 +225,7 @@ function format(n: number) {
         <div class="text-2xl font-bold mb-8">상품 쿠폰</div>
         <div class="flex flex-col items-center mb-12">
           <img class="mb-2" :src="selectedCoupon.item.url" :alt="selectedCoupon.item.name" />
-          <div class="text-gray-800 mb-2">{{ selectedCoupon.item.name }}</div>
+          <div class="text-gray-800 mb-2">{{ selectedCoupon.partnerName }}</div>
           <div class="text-3xl font-bold mb-6">{{ selectedCoupon.item.name }}</div>
           <div class="text-2xl font-bold">{{ format(selectedCoupon.item.price) }}P</div>
         </div>
