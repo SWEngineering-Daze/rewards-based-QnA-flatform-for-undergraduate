@@ -37,25 +37,19 @@ app.get('/', (req, res) => {
 });
 
 app.get('/test', async (req, res) => {
-  const result = await Partner.create({
-    name: '스타벅스',
-    url: './test/starbucks.jpg',
-    items: [
-      {
-        name: '자바칩프라푸치노',
-        url: './test/javachip.jpg',
-        price: 4500,
-      },
-    ],
-  });
-
-  await Item.create({
+  const item = await Item.create({
     name: '자바칩프라푸치노',
     url: './test/javachip.jpg',
     price: 4500,
   });
 
-  res.json(result);
+  const partner = await Partner.create({
+    name: '스타벅스',
+    url: './test/starbucks.jpg',
+    items: [{ _id: item._id }],
+  });
+
+  res.json(partner);
 });
 
 app.listen(config.SERVER_PORT, () => {

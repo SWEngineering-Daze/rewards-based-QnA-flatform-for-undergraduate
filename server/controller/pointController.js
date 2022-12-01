@@ -1,4 +1,4 @@
-import { Item, TodayPoint } from '../database/mongodb.js';
+import { Item, TodayPoint, User } from '../database/mongodb.js';
 import { getUserByEmail } from '../repository/userRepository.js';
 
 export const getPointsOfToday = async (req, res) => {
@@ -16,8 +16,17 @@ export const exchangeItem = async (req, res) => {
   const { id } = req.params;
 
   const item = await Item.findById(id).exec();
-  const user = await getUserByEmail(email);
 
-  // to do
   const { price } = item;
+
+  await User.updateOne(
+    {
+      email,
+    },
+    {
+      $inc: { point: -price },
+    }
+  ).exec();
+
+  res.json({ message: 'success' });
 };

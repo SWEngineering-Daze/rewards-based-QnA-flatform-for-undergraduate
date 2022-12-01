@@ -120,7 +120,12 @@ const itemSchema = mongoose.Schema({
 const PartnerSchema = mongoose.Schema({
   name: String,
   url: String,
-  items: [itemSchema],
+  items: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: 'items',
+    },
+  ],
 });
 
 const historySchema = mongoose.Schema(
