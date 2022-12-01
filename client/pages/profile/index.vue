@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { useToast } from 'vue-toastification';
+import { AxiosError } from 'axios';
 import { QuestionPaginator, AnswerPaginator } from '@/composables/useApi';
 import { useAuth } from '@/stores/auth';
 
@@ -8,6 +10,7 @@ definePageMeta({
 
 const api = useApi();
 const auth = useAuth();
+const toast = useToast();
 const { level, maxExp, curExp, expPercent, point } = usePointStatus();
 
 const myQuestionPaginator = ref<QuestionPaginator>();
@@ -16,8 +19,49 @@ try {
   myQuestionPaginator.value = await api.questions.me(1, 5);
   myAnswerPaginator.value = await api.answers.me(1, 5);
 } catch (e) {
-  console.error(e);
+  if (e instanceof AxiosError) {
+    toast.error('알 수 없는 네트워크 에러가 발생했습니다!');
+  } else {
+    toast.error('알 수 없는 에러가 발생했습니다!');
+
+    console.error(e);
+  }
 }
+
+async function fetchHistory() {
+  try {
+    const histories = await api.histories.index();
+
+    return histories;
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      toast.error('알 수 없는 네트워크 에러가 발생했습니다!');
+    } else {
+      toast.error('알 수 없는 에러가 발생했습니다!');
+
+      console.error(e);
+    }
+  }
+}
+
+async function fetchCoupons() {
+  try {
+    const coupons = await api.coupons.index();
+
+    return coupons;
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      toast.error('알 수 없는 네트워크 에러가 발생했습니다!');
+    } else {
+      toast.error('알 수 없는 에러가 발생했습니다!');
+
+      console.error(e);
+    }
+  }
+}
+
+const histories = await fetchHistory();
+const coupons = await fetchCoupons();
 
 function format(n: number) {
   return Intl.NumberFormat('ko-KR').format(n);
@@ -102,22 +146,26 @@ function format(n: number) {
     <div class="mb-16">
       <div class="text-2xl font-bold mb-3">포인트 이력</div>
       <div class="rounded bg-50 border border-gray-200 py-4 px-6">
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
+        <div v-for="history in histories" :key="history._id" class="tracking-wider">
+          <span class="font-bold">{{ $dayjs(history.createdAt).format('MM-DD') }}</span>
+          <span class="mx-3"></span>
+          <span>{{ history.content }}</span>
+          <span class="mx-3"></span>
+          <span class="font-bold" :class="{ 'text-red-500': history.amount < 0, 'text-blue-500': history.amount > 0 }">{{ format(history.amount) }}P</span>
+        </div>
       </div>
     </div>
 
     <div class="mb-16">
       <div class="text-2xl font-bold mb-3">쿠폰 목록</div>
       <div class="rounded bg-50 border border-gray-200 py-4 px-6">
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
+        <div v-for="coupon in coupons" :key="coupon._id">
+          <span class="font-bold">{{ $dayjs(coupon.createdAt).format('MM-DD') }}</span>
+          <span class="mx-3"></span>
+          <span>{{ coupon.item }}</span>
+          <span class="mx-3"></span>
+          <span class="font-bold text-blue-500">{{ coupon.serialNumber }}</span>
+        </div>
       </div>
     </div>
   </div>
