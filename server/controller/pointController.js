@@ -103,7 +103,7 @@ export const getCoupons = async (req, res) => {
   const { email } = req.decoded;
   const user = await getUserByEmail(email);
 
-  const coupons = await Coupon.aggregate()
+  let coupons = await Coupon.aggregate()
     .match({ user: user._id })
     .lookup({
       from: 'items',
@@ -115,9 +115,49 @@ export const getCoupons = async (req, res) => {
       path: '$item',
       preserveNullAndEmptyArrays: true,
     })
+    .sort({ createdAt: -1 })
     .exec();
 
-  // const coupons = await Coupon.find({ user: user._id }).sort({ createdAt: -1 }).exec();
+  let partnerNames = [];
+
+  for (const coupon of coupons) {
+    const itemId = coupon.item._id;
+
+    const partners = await Partner.find().exec();
+
+    let partnerName;
+
+    for (const partner of partners) {
+      let found = false;
+
+      for (const targetItemId of partner.items) {
+        if (targetItemId.equals(itemId)) {
+          partnerName = partner.name;
+          found = true;
+
+          break;
+        }
+      }
+
+      if (found) {
+        break;
+      }
+    }
+
+    partnerNames.push(partnerName);
+  }
+
+  coupons = coupons.map((coupon, i) => {
+    return {
+      _id: coupon._id,
+      serialNumber: coupon.serialNumber,
+      user: coupon.user,
+      item: coupon.item,
+      createdAt: coupon.createdAt,
+      updatedAt: coupon.updatedAt,
+      partnerName: partnerNames[i],
+    };
+  });
 
   res.json(coupons);
 };
