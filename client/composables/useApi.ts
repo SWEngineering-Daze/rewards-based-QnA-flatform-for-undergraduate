@@ -77,6 +77,36 @@ export interface AnswerPaginator {
   answerList: (Answer & WithQuestion)[];
 }
 
+export interface ShopItem {
+  _id: string;
+  name: string;
+  url: string;
+  price: number;
+}
+
+export interface ShopPartner {
+  _id: string;
+  name: string;
+  url: string;
+  items: ShopItem[];
+}
+
+export interface Coupon {
+  _id: string;
+  serialNumber: string;
+  user: User;
+  item: ShopItem;
+  createdAt: string;
+}
+
+export interface History {
+  _id: string;
+  user: User;
+  content: string;
+  amount: number;
+  createdAt: string;
+}
+
 const createApiRequester = (axios: AxiosInstance) => ({
   auth: {
     login(data: Credentials) {
@@ -187,6 +217,27 @@ const createApiRequester = (axios: AxiosInstance) => ({
   point: {
     todayPoint() {
       return axios.get<{ value: number }>(`/points/today`).then(response => response.data);
+    },
+  },
+  items: {
+    index() {
+      return axios.get<ShopPartner[]>(`/items`).then(response => response.data);
+    },
+    exchange(id: string) {
+      return axios.post<void>(`/items/${id}`).then(response => response.data);
+    },
+  },
+  histories: {
+    index() {
+      return axios.get<History[]>(`/histories`).then(response => response.data);
+    },
+  },
+  coupons: {
+    index() {
+      return axios.get<Coupon[]>(`/coupons`).then(response => response.data);
+    },
+    show(id: string) {
+      return axios.get<Coupon>(`/coupons/${id}`).then(response => response.data);
     },
   },
 });

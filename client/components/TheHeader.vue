@@ -28,7 +28,7 @@ function format(n: number) {
     </NuxtLink>
     <div class="flex items-center ml-auto">
       <nav class="flex items-center">
-        <NuxtLink class="header-link" to="/">
+        <NuxtLink class="header-link" to="/store">
           <span class="hidden sm:inline-block">포인트 상점</span>
           <img class="inline-block sm:hidden w-6" src="@/assets/img/store.svg" alt="포인트 상점" />
         </NuxtLink>
