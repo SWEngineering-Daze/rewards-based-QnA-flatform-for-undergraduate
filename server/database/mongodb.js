@@ -114,7 +114,7 @@ const FileSchema = mongoose.Schema({
 const itemSchema = mongoose.Schema({
   name: String,
   url: String,
-  price: number,
+  price: Number,
 });
 
 const PartnerSchema = mongoose.Schema({
@@ -145,3 +145,4 @@ export const recommendation = mongoose.model('recommendations', recommendationSc
 export const File = mongoose.model('files', FileSchema);
 export const Item = mongoose.model('items', itemSchema);
 export const History = mongoose.model('histories', historySchema);
+export const Partner = mongoose.model('partners', PartnerSchema);
