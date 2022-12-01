@@ -87,7 +87,7 @@ export const exchangeItem = async (req, res) => {
     amount: -item.price,
   });
 
-  res.json({ message: 'success' });
+  res.json(coupon);
 };
 
 export const getHistories = async (req, res) => {
