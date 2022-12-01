@@ -1,5 +1,6 @@
-import { Item, TodayPoint, User } from '../database/mongodb.js';
+import { History, Item, TodayPoint, User } from '../database/mongodb.js';
 import { getUserByEmail } from '../repository/userRepository.js';
+import crypto from 'crypto';
 
 export const getPointsOfToday = async (req, res) => {
   const points = await TodayPoint.find().sort({ createdAt: 1 }).exec();
@@ -28,5 +29,20 @@ export const exchangeItem = async (req, res) => {
     }
   ).exec();
 
-  res.json({ message: 'success' });
+  const couponSerialNumber = (() => {
+    let str = '';
+
+    for (let i = 0; i < 4; i++) {
+      str += crypto.randomBytes(2).toString('hex');
+      str += '-';
+    }
+    str = str.substring(0, str.length - 1);
+    return str;
+  })();
+
+  // await History.create({
+  //   content:
+  // })
+
+  // res.json({ message: 'success' });
 };
