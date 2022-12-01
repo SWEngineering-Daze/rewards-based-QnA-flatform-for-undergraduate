@@ -125,5 +125,45 @@ export const getCouponDetail = async (req, res) => {
     })
     .exec();
 
-  res.json(couponWithItem);
+  const itemId = couponWithItem[0].item._id;
+
+  const partners = await Partner.find().exec();
+
+  let partnerName;
+
+  for (const partner of partners) {
+    let found = false;
+
+    for (const targetItemId of partner.items) {
+      if (targetItemId.equals(itemId)) {
+        partnerName = partner.name;
+        found = true;
+
+        break;
+      }
+    }
+
+    if (found) {
+      break;
+    }
+  }
+
+  const couponWithItemWithPartner = await Coupon.aggregate()
+    .match({ _id: mongoose.Types.ObjectId(id) })
+    .lookup({
+      from: 'items',
+      as: 'item',
+      localField: 'item',
+      foreignField: '_id',
+    })
+    .unwind({
+      path: '$item',
+      preserveNullAndEmptyArrays: true,
+    })
+    .addFields({
+      partnerName,
+    })
+    .exec();
+
+  res.json(couponWithItemWithPartner);
 };
