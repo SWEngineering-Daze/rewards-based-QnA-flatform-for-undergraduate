@@ -202,7 +202,7 @@ function format(n: number) {
       <div class="text-2xl font-bold mb-3">쿠폰 목록</div>
       <div class="rounded bg-50 border border-gray-200 py-4 px-6">
         <template v-if="coupons.length > 0">
-          <div v-for="coupon in coupons" :key="coupon._id" class="flex items-center">
+          <div v-for="coupon in coupons" :key="coupon._id" class="flex items-center tracking-wider">
             <span class="font-bold">{{ $dayjs(coupon.createdAt).format('MM-DD') }}</span>
             <span class="mx-3"></span>
             <span>{{ coupon.partnerName }} - {{ coupon.item.name }}</span>
