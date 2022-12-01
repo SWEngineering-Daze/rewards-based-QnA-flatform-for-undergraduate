@@ -33,6 +33,7 @@ app.get('/items', isAuth, pointController.getItems);
 app.post('/items/:id', isAuth, pointController.exchangeItem);
 app.get('/histories', isAuth, pointController.getHistories);
 app.get('/coupons', isAuth, pointController.getCoupons);
+app.get('/coupons/:id', isAuth, pointController.getCouponDetail);
 
 app.get('/', (req, res) => {
   res.json({ message: '프론트의 신 변찬혁..' });
