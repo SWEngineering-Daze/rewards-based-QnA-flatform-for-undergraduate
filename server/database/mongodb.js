@@ -114,13 +114,13 @@ const FileSchema = mongoose.Schema({
 const itemSchema = mongoose.Schema({
   name: String,
   url: String,
-  items: [
-    {
-      name: String,
-      url: String,
-      price: Number,
-    },
-  ],
+  price: number,
+});
+
+const PartnerSchema = mongoose.Schema({
+  name: String,
+  url: String,
+  items: [itemSchema],
 });
 
 const historySchema = mongoose.Schema(

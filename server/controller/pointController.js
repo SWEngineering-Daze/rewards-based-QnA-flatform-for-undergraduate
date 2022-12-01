@@ -19,4 +19,5 @@ export const exchangeItem = async (req, res) => {
   const user = await getUserByEmail(email);
 
   // to do
+  const { price } = item;
 };
