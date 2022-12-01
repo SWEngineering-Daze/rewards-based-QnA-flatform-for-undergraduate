@@ -20,7 +20,7 @@ function format(n: number) {
 <template>
   <header class="flex items-center shadow bg-white py-2 px-4 z-20">
     <button class="inline-block md:hidden mr-2" @click="sidebar.open()">
-      <img class="w-8" src="@/assets/img/menu.svg" />
+      <img class="w-8" src="@/assets/img/menu.svg" alt="메뉴" />
     </button>
     <NuxtLink to="/" class="inline-flex items-center">
       <img class="w-8" src="@/assets/img/graduation.svg" alt="얼렁뚱땅" />
@@ -30,7 +30,7 @@ function format(n: number) {
       <nav class="flex items-center">
         <NuxtLink class="header-link" to="/">
           <span class="hidden sm:inline-block">포인트 상점</span>
-          <img class="inline-block sm:hidden w-6" src="@/assets/img/store.svg" />
+          <img class="inline-block sm:hidden w-6" src="@/assets/img/store.svg" alt="포인트 상점" />
         </NuxtLink>
       </nav>
       <span class="divider"></span>
@@ -41,8 +41,8 @@ function format(n: number) {
           <Menu as="div" class="relative">
             <MenuButton class="inline-flex items-center">
               <span class="hidden sm:inline text-sm font-medium">{{ auth.user.email }}</span>
-              <img class="inline sm:hidden w-6" src="@/assets/img/user.svg" />
-              <img class="w-6" src="@/assets/img/dropdown.svg" />
+              <img class="inline sm:hidden w-6" src="@/assets/img/user.svg" alt="사용자" />
+              <img class="w-6" src="@/assets/img/dropdown.svg" alt="더보기" />
             </MenuButton>
             <transition
               enter-active-class="transition duration-100 ease-out"
@@ -61,7 +61,7 @@ function format(n: number) {
                     <span class="ml-auto">{{ Math.floor(expPercent) }}%</span>
                   </div>
                   <div class="flex items-center text-cyan-500">
-                    <img class="w-6" src="@/assets/img/point.svg" />
+                    <img class="w-6" src="@/assets/img/point.svg" alt="잔여 포인트" />
                     <span class="ml-auto">{{ format(point) }}P</span>
                   </div>
                 </div>

@@ -6,7 +6,7 @@
         href="https://github.com/SWEngineering-Daze/rewards-based-QnA-flatform-for-undergraduate"
         target="_blank"
       >
-        <img class="w-10 mb-1" src="@/assets/img/github.svg" />
+        <img class="w-10 mb-1" src="@/assets/img/github.svg" alt="Github" />
         <span class="text-sm text-white">Github</span>
       </a>
     </div>

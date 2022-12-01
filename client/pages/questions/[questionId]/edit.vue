@@ -108,19 +108,19 @@ function deleteFile(idx: number) {
         <div class="text-lg font-medium mb-3">첨부파일</div>
         <div v-for="(fileId, idx) in question.fileIds" :key="fileId">
           <span class="inline-flex items-center">
-            <img class="w-8" src="@/assets/img/attach.svg" />
+            <img class="w-8" src="@/assets/img/attach.svg" alt="첨부파일" />
             <span class="ml-1 mr-5">{{ question.fileNames[idx] }}</span>
             <button type="button" @click="addDeletedFile(fileId)">
-              <img class="w-8" src="@/assets/img/delete.svg" />
+              <img class="w-8" src="@/assets/img/delete.svg" alt="삭제" />
             </button>
           </span>
         </div>
         <div v-for="(file, idx) in files" :key="idx.toString() + file.name + file.type + file.size">
           <span class="inline-flex items-center">
-            <img class="w-8" src="@/assets/img/attach.svg" />
+            <img class="w-8" src="@/assets/img/attach.svg" alt="첨부파일" />
             <span class="ml-1 mr-5">{{ file.name }}</span>
             <button type="button" @click="deleteFile(idx)">
-              <img class="w-8" src="@/assets/img/delete.svg" />
+              <img class="w-8" src="@/assets/img/delete.svg" alt="삭제" />
             </button>
           </span>
         </div>

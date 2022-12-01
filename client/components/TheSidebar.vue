@@ -86,7 +86,7 @@ function flushSearchCourse() {
   <div class="relative">
     <nav class="sidebar absolute left-0 top md:static p-6 z-10" :class="{ opened: sidebar.opened }">
       <button class="absolute top-0 right-0 p-5 md:hidden" @click="sidebar.close()">
-        <img class="w-6" src="@/assets/img/close.svg" />
+        <img class="w-6" src="@/assets/img/close.svg" alt="닫기" />
       </button>
 
       <div class="mb-5 relative mt-9 md:mt-0">
@@ -118,7 +118,7 @@ function flushSearchCourse() {
               class="inline-flex items-center text-xl text-black font-bold mb-3 transition-all"
               :class="{ 'text-opacity-75 hover:text-opacity-100': !open }"
             >
-              <img class="w-6 transtiion-all" :class="{ 'rotate-180': open }" src="@/assets/img/dropdown.svg" />
+              <img class="w-6 transtiion-all" :class="{ 'rotate-180': open }" src="@/assets/img/dropdown.svg" alt="토글" />
               {{ college.name }}
             </DisclosureButton>
             <transition

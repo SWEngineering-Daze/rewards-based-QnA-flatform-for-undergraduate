@@ -32,7 +32,7 @@ function format(n: number) {
 
     <div class="flex items-center mb-24">
       <!-- placeholder -->
-      <img class="rounded-full w-64 h-64 mr-10" src="@/assets/img/dgu_logo.jpg" />
+      <img class="rounded-full w-64 h-64 mr-10" src="@/assets/img/dgu_logo.jpg" alt="동국대" />
       <div class="text-xl">
         <div class="font-bold">LV. {{ level }} - {{ expPercent.toFixed(2) }}% ({{ curExp }}/{{ maxExp }})</div>
         <div>{{ auth.user.email }}</div>

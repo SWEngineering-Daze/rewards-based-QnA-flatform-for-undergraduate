@@ -5,6 +5,9 @@ export default defineNuxtPlugin(async () => {
   const auth = useAuth();
 
   auth.loadUser();
+  if (!auth.token && auth.user) {
+    auth.logout();
+  }
   if (auth.token) {
     try {
       await auth.fetch();
