@@ -205,7 +205,7 @@ function format(n: number) {
           <div v-for="coupon in coupons" :key="coupon._id" class="flex items-center">
             <span class="font-bold">{{ $dayjs(coupon.createdAt).format('MM-DD') }}</span>
             <span class="mx-3"></span>
-            <span>{{ coupon.item }}</span>
+            <span>{{ coupon.partnerName }} - {{ coupon.item.name }}</span>
             <span class="mx-3"></span>
             <button class="font-bold text-blue-500 ml-auto" @click="open(coupon)">{{ coupon.serialNumber }}</button>
           </div>
@@ -225,7 +225,7 @@ function format(n: number) {
         <div class="text-2xl font-bold mb-8">상품 쿠폰</div>
         <div class="flex flex-col items-center mb-12">
           <img class="mb-2" :src="selectedCoupon.item.url" :alt="selectedCoupon.item.name" />
-          <div class="text-gray-800 mb-2">{{ selectedCoupon.item.name }}</div>
+          <div class="text-gray-800 mb-2">{{ selectedCoupon.partnerName }}</div>
           <div class="text-3xl font-bold mb-6">{{ selectedCoupon.item.name }}</div>
           <div class="text-2xl font-bold">{{ format(selectedCoupon.item.price) }}P</div>
         </div>

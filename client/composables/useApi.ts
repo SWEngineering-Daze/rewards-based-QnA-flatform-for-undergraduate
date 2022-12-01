@@ -97,6 +97,7 @@ export interface Coupon {
   user: User;
   item: ShopItem;
   createdAt: string;
+  partnerName?: string;
 }
 
 export interface History {
