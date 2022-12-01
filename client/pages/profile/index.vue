@@ -159,12 +159,14 @@ function format(n: number) {
     <div class="mb-16">
       <div class="text-2xl font-bold mb-3">포인트 이력</div>
       <div class="rounded bg-50 border border-gray-200 py-4 px-6">
-        <div v-for="history in histories" :key="history._id" class="tracking-wider">
+        <div v-for="history in histories" :key="history._id" class="flex items-center tracking-wider">
           <span class="font-bold">{{ $dayjs(history.createdAt).format('MM-DD') }}</span>
           <span class="mx-3"></span>
           <span>{{ history.content }}</span>
           <span class="mx-3"></span>
-          <span class="font-bold" :class="{ 'text-red-500': history.amount < 0, 'text-blue-500': history.amount > 0 }">{{ format(history.amount) }}P</span>
+          <span class="font-bold ml-auto" :class="{ 'text-red-500': history.amount < 0, 'text-blue-500': history.amount > 0 }"
+            >{{ format(history.amount) }}P</span
+          >
         </div>
       </div>
     </div>
@@ -172,12 +174,12 @@ function format(n: number) {
     <div class="mb-16">
       <div class="text-2xl font-bold mb-3">쿠폰 목록</div>
       <div class="rounded bg-50 border border-gray-200 py-4 px-6">
-        <div v-for="coupon in coupons" :key="coupon._id">
+        <div v-for="coupon in coupons" :key="coupon._id" class="flex items-center">
           <span class="font-bold">{{ $dayjs(coupon.createdAt).format('MM-DD') }}</span>
           <span class="mx-3"></span>
           <span>{{ coupon.item }}</span>
           <span class="mx-3"></span>
-          <button class="font-bold text-blue-500" @click="open(coupon)">{{ coupon.serialNumber }}</button>
+          <button class="font-bold text-blue-500 ml-auto" @click="open(coupon)">{{ coupon.serialNumber }}</button>
         </div>
       </div>
     </div>
