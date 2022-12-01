@@ -130,8 +130,29 @@ const PartnerSchema = mongoose.Schema({
 
 const historySchema = mongoose.Schema(
   {
+    user: {
+      type: mongoose.Types.ObjectId,
+      ref: 'users',
+    },
     content: String,
     amount: Number,
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const couponSchema = mongoose.Schema(
+  {
+    serialNumber: String,
+    user: {
+      type: mongoose.Types.ObjectId,
+      ref: 'users',
+    },
+    item: {
+      type: mongoose.Types.ObjectId,
+      ref: 'items',
+    },
   },
   {
     timestamps: true,
@@ -151,3 +172,4 @@ export const File = mongoose.model('files', FileSchema);
 export const Item = mongoose.model('items', itemSchema);
 export const History = mongoose.model('histories', historySchema);
 export const Partner = mongoose.model('partners', PartnerSchema);
+export const Coupon = mongoose.model('coupons', couponSchema);

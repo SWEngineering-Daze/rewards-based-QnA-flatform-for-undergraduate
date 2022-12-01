@@ -31,6 +31,8 @@ app.get('/points/today', pointController.getPointsOfToday);
 app.get('/files/:id', isAuth, fileController.downloadFileById);
 app.get('/items', isAuth, pointController.getItems);
 app.post('/items/:id', isAuth, pointController.exchangeItem);
+app.get('/histories', isAuth, pointController.getHistories);
+app.get('/coupons', isAuth, pointController.getCoupons);
 
 app.get('/', (req, res) => {
   res.json({ message: '프론트의 신 변찬혁..' });
@@ -39,15 +41,26 @@ app.get('/', (req, res) => {
 app.get('/test', async (req, res) => {
   const item = await Item.create({
     name: '자바칩프라푸치노',
-    url: './test/javachip.jpg',
+    url: '',
     price: 4500,
   });
 
   const partner = await Partner.create({
     name: '스타벅스',
-    url: './test/starbucks.jpg',
+    url: '',
     items: [{ _id: item._id }],
   });
+
+  await Partner.updateOne(
+    {
+      _id: partner._id,
+    },
+    {
+      $push: {
+        items: item._id,
+      },
+    }
+  );
 
   res.json(partner);
 });
