@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useToast } from 'vue-toastification';
 import { AxiosError } from 'axios';
-import { QuestionPaginator, AnswerPaginator } from '@/composables/useApi';
+import { QuestionPaginator, AnswerPaginator, Coupon } from '@/composables/useApi';
 import { useAuth } from '@/stores/auth';
 
 definePageMeta({
@@ -27,6 +27,9 @@ try {
     console.error(e);
   }
 }
+
+const selectedCoupon = ref<Coupon>(null);
+const opened = ref(false);
 
 async function fetchHistory() {
   try {
@@ -62,6 +65,16 @@ async function fetchCoupons() {
 
 const histories = await fetchHistory();
 const coupons = await fetchCoupons();
+
+async function open(coupon: Coupon) {
+  selectedCoupon.value = await api.coupons.show(coupon._id);
+
+  opened.value = true;
+}
+
+function close() {
+  opened.value = false;
+}
 
 function format(n: number) {
   return Intl.NumberFormat('ko-KR').format(n);
@@ -164,10 +177,28 @@ function format(n: number) {
           <span class="mx-3"></span>
           <span>{{ coupon.item }}</span>
           <span class="mx-3"></span>
-          <span class="font-bold text-blue-500">{{ coupon.serialNumber }}</span>
+          <button class="font-bold text-blue-500" @click="open(coupon)">{{ coupon.serialNumber }}</button>
         </div>
       </div>
     </div>
+
+    <ClientOnly>
+      <BaseModal :opened="opened" @close="close">
+        <div class="text-2xl font-bold mb-8">상품 쿠폰</div>
+        <div class="flex flex-col items-center mb-12">
+          <img class="mb-2" :src="selectedCoupon.item.url" :alt="selectedCoupon.item.name" />
+          <div class="text-gray-800 mb-2">{{ selectedCoupon.item.name }}</div>
+          <div class="text-3xl font-bold mb-6">{{ selectedCoupon.item.name }}</div>
+          <div class="text-2xl font-bold">{{ format(selectedCoupon.item.price) }}P</div>
+        </div>
+        <hr class="mb-8" />
+        <div class="text-center mb-8">
+          <div class="text-lg mb-2">쿠폰번호</div>
+          <div class="text-3xl font-bold text-indigo-500">{{ selectedCoupon.serialNumber }}</div>
+        </div>
+        <button class="bg-white py-2 border border-gray-500 text-gray-500 rounded-full block w-full" @click="close">닫기</button>
+      </BaseModal>
+    </ClientOnly>
   </div>
 </template>
 

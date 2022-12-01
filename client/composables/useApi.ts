@@ -237,7 +237,7 @@ const createApiRequester = (axios: AxiosInstance) => ({
       return axios.get<Coupon[]>(`/coupons`).then(response => response.data);
     },
     show(id: string) {
-      return axios.get<Coupon>(`/coupons/${id}`).then(response => response.data);
+      return axios.get<Coupon>(`/coupons/${id}`).then(response => response.data[0]);
     },
   },
 });
