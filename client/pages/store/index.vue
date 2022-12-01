@@ -15,60 +15,9 @@ definePageMeta({
   middleware: ['auth'],
 });
 
-const dummyMenus: Partner[] = [
-  {
-    name: '스타벅스',
-    url: '/img/starbucks.svg',
-    items: [
-      {
-        name: '아이스아메리카노 T',
-        url: '/img/ice.jpg',
-        price: 4500,
-      },
-      {
-        name: '아이스아메리카노 T',
-        url: '/img/ice.jpg',
-        price: 4500,
-      },
-      {
-        name: '아이스아메리카노 T',
-        url: '/img/ice.jpg',
-        price: 4500,
-      },
-      {
-        name: '아이스아메리카노 T',
-        url: '/img/ice.jpg',
-        price: 4500,
-      },
-    ],
-  },
-  {
-    name: '버거킹',
-    url: '/img/burgerking.svg',
-    items: [
-      {
-        name: '기네스콰트로치즈와퍼세트',
-        url: '/img/set.png',
-        price: 9800,
-      },
-      {
-        name: '기네스콰트로치즈와퍼세트',
-        url: '/img/set.png',
-        price: 9800,
-      },
-      {
-        name: '기네스콰트로치즈와퍼세트',
-        url: '/img/set.png',
-        price: 9800,
-      },
-      {
-        name: '기네스콰트로치즈와퍼세트',
-        url: '/img/set.png',
-        price: 9800,
-      },
-    ],
-  },
-];
+const api = useApi();
+
+const dummyMenus: Partner[] = await api.items.index();
 
 function format(n: number) {
   return Intl.NumberFormat('ko-KR').format(n);
