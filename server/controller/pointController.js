@@ -1,6 +1,7 @@
 import { Coupon, History, Item, Partner, TodayPoint, User } from '../database/mongodb.js';
 import { getUserByEmail } from '../repository/userRepository.js';
 import crypto from 'crypto';
+import mongoose from 'mongoose';
 
 export const getPointsOfToday = async (req, res) => {
   const points = await TodayPoint.find().sort({ createdAt: 1 }).exec();
@@ -105,4 +106,24 @@ export const getCoupons = async (req, res) => {
   const coupons = await Coupon.find({ user: user._id }).sort({ createdAt: -1 }).exec();
 
   res.json(coupons);
+};
+
+export const getCouponDetail = async (req, res) => {
+  const { id } = req.params;
+
+  const couponWithItem = await Coupon.aggregate()
+    .match({ _id: mongoose.Types.ObjectId(id) })
+    .lookup({
+      from: 'items',
+      as: 'item',
+      localField: 'item',
+      foreignField: '_id',
+    })
+    .unwind({
+      path: '$item',
+      preserveNullAndEmptyArrays: true,
+    })
+    .exec();
+
+  res.json(couponWithItem);
 };
