@@ -36,35 +36,10 @@ app.get('/coupons', isAuth, pointController.getCoupons);
 app.get('/coupons/:id', isAuth, pointController.getCouponDetail);
 
 app.get('/', (req, res) => {
-  res.json({ message: '프론트의 신 변찬혁..' });
+  res.json({ message: 'Server test success' });
 });
 
-app.get('/test', async (req, res) => {
-  const item = await Item.create({
-    name: '자바칩프라푸치노',
-    url: '',
-    price: 4500,
-  });
-
-  const partner = await Partner.create({
-    name: '스타벅스',
-    url: '',
-    items: [{ _id: item._id }],
-  });
-
-  await Partner.updateOne(
-    {
-      _id: partner._id,
-    },
-    {
-      $push: {
-        items: item._id,
-      },
-    }
-  );
-
-  res.json(partner);
-});
+app.get('/test', async (req, res) => {});
 
 app.listen(config.SERVER_PORT, () => {
   console.log(`server is running on port ${config.SERVER_PORT}`);

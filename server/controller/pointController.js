@@ -28,6 +28,11 @@ export const exchangeItem = async (req, res) => {
   const user = await getUserByEmail(email);
   const item = await Item.findById(id).exec();
 
+  if (user.point < item.price) {
+    res.status(400).json({ message: 'User point is less than price' });
+    return;
+  }
+
   const partners = await Partner.find().exec();
 
   let partnerName = '';
