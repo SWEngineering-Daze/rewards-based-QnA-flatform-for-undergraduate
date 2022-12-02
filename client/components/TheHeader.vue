@@ -23,8 +23,8 @@ function format(n: number) {
       <img class="w-8" src="@/assets/img/menu.svg" alt="메뉴" />
     </button>
     <NuxtLink to="/" class="inline-flex items-center">
-      <img class="w-8" src="@/assets/img/graduation.svg" alt="얼렁뚱땅" />
-      <span class="text-sm font-medium ml-2">얼렁뚱땅</span>
+      <img class="w-8" src="@/assets/img/graduation.svg" alt="쉿! 교수님 몰래 들어오세요" />
+      <span class="text-sm font-medium ml-2">쉿! 교수님 몰래 들어오세요</span>
     </NuxtLink>
     <div class="flex items-center ml-auto">
       <nav class="flex items-center">
