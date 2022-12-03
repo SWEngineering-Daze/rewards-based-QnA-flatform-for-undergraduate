@@ -64,78 +64,93 @@ function format(n: number) {
     <div class="mb-16">
       <div class="text-2xl font-bold mb-3">장학글</div>
       <div class="rounded bg-50 border border-gray-200 py-4 px-6">
-        <div v-for="question in bestQuestions" :key="question._id" class="flex items-center my-2">
-          <div class="subject-col">
-            <NuxtLink
-              class="block text-black font-medium text-opacity-75 transition-all hover:text-opacity-100 text-sm"
-              :to="`/qna/course/${encodeURIComponent(question.course.name)}`"
-              >{{ question.course.name }}</NuxtLink
-            >
+        <template v-if="bestQuestions.length > 0">
+          <div v-for="question in bestQuestions" :key="question._id" class="flex items-center my-2">
+            <div class="subject-col">
+              <NuxtLink
+                class="block text-black font-medium text-opacity-75 transition-all hover:text-opacity-100 text-sm"
+                :to="`/qna/course/${encodeURIComponent(question.course.name)}`"
+                >{{ question.course.name }}</NuxtLink
+              >
+            </div>
+            <div class="title-col">
+              <NuxtLink
+                class="flex items-center text-black font-light text-opacity-75 transition-all hover:text-opacity-100"
+                :to="`/qna/course/${encodeURIComponent(question.course.name)}/${question._id}`"
+              >
+                {{ question.title }} [{{ question.cntAnswers ?? 'x' }}]
+                <!-- <span class="ml-3 text-red-500 text-sm font-bold">+{{ question.countYesterdayRecommendations }}</span> -->
+              </NuxtLink>
+            </div>
+            <div class="recommendations-col">
+              <span class="ml-auto text-red-500 text-sm font-bold">+{{ question.countYesterdayRecommendations }}</span>
+            </div>
+            <div class="created-col">
+              <span class="ml-auto text-gray-500 text-sm">{{ $dayjs(question.createdAt).fromNow() }}</span>
+            </div>
           </div>
-          <div class="title-col">
-            <NuxtLink
-              class="flex items-center text-black font-light text-opacity-75 transition-all hover:text-opacity-100"
-              :to="`/qna/course/${encodeURIComponent(question.course.name)}/${question._id}`"
-            >
-              {{ question.title }} [{{ question.cntAnswers ?? 'x' }}]
-              <!-- <span class="ml-3 text-red-500 text-sm font-bold">+{{ question.countYesterdayRecommendations }}</span> -->
-            </NuxtLink>
-          </div>
-          <div class="recommendations-col">
-            <span class="ml-auto text-red-500 text-sm font-bold">+{{ question.countYesterdayRecommendations }}</span>
-          </div>
-          <div class="created-col">
-            <span class="ml-auto text-gray-500 text-sm">{{ $dayjs(question.createdAt).fromNow() }}</span>
-          </div>
-        </div>
+        </template>
+        <template v-else>
+          <EmptyMessage>장학글이 없습니다!</EmptyMessage>
+        </template>
       </div>
     </div>
     <div class="mb-16">
       <div class="text-2xl font-bold mb-3">입학글</div>
       <div class="rounded bg-50 border border-gray-200 py-4 px-6">
-        <div v-for="question in newQuestions" :key="question._id" class="flex items-center my-2">
-          <div class="subject-col">
-            <NuxtLink
-              class="block text-black font-medium text-opacity-75 transition-all hover:text-opacity-100 text-sm"
-              :to="`/qna/course/${encodeURIComponent(question.course.name)}`"
-              >{{ question.course.name }}</NuxtLink
-            >
+        <template v-if="newQuestions.length > 0">
+          <div v-for="question in newQuestions" :key="question._id" class="flex items-center my-2">
+            <div class="subject-col">
+              <NuxtLink
+                class="block text-black font-medium text-opacity-75 transition-all hover:text-opacity-100 text-sm"
+                :to="`/qna/course/${encodeURIComponent(question.course.name)}`"
+                >{{ question.course.name }}</NuxtLink
+              >
+            </div>
+            <div class="title-col">
+              <NuxtLink
+                class="block text-black font-light text-opacity-75 transition-all hover:text-opacity-100"
+                :to="`/qna/course/${encodeURIComponent(question.course.name)}/${question._id}`"
+                >{{ question.title }} [{{ question.answers.length ?? 'x' }}]</NuxtLink
+              >
+            </div>
+            <div class="created-col">
+              <span class="ml-auto text-gray-500 text-sm">{{ $dayjs(question.createdAt).fromNow() }}</span>
+            </div>
           </div>
-          <div class="title-col">
-            <NuxtLink
-              class="block text-black font-light text-opacity-75 transition-all hover:text-opacity-100"
-              :to="`/qna/course/${encodeURIComponent(question.course.name)}/${question._id}`"
-              >{{ question.title }} [{{ question.answers.length ?? 'x' }}]</NuxtLink
-            >
-          </div>
-          <div class="created-col">
-            <span class="ml-auto text-gray-500 text-sm">{{ $dayjs(question.createdAt).fromNow() }}</span>
-          </div>
-        </div>
+        </template>
+        <template v-else>
+          <EmptyMessage>입학글이 없습니다!</EmptyMessage>
+        </template>
       </div>
     </div>
     <div class="mb-16">
       <div class="text-2xl font-bold mb-3">휴학글</div>
       <div class="rounded bg-50 border border-gray-200 py-4 px-6">
-        <div v-for="question in oldQuestions" :key="question._id" class="flex items-center my-2">
-          <div class="subject-col">
-            <NuxtLink
-              class="block text-black font-medium text-opacity-75 transition-all hover:text-opacity-100 text-sm"
-              :to="`/qna/course/${encodeURIComponent(question.course.name)}`"
-              >{{ question.course.name }}</NuxtLink
-            >
+        <template v-if="oldQuestions.length > 0">
+          <div v-for="question in oldQuestions" :key="question._id" class="flex items-center my-2">
+            <div class="subject-col">
+              <NuxtLink
+                class="block text-black font-medium text-opacity-75 transition-all hover:text-opacity-100 text-sm"
+                :to="`/qna/course/${encodeURIComponent(question.course.name)}`"
+                >{{ question.course.name }}</NuxtLink
+              >
+            </div>
+            <div class="title-col">
+              <NuxtLink
+                class="block text-black font-light text-opacity-75 transition-all hover:text-opacity-100"
+                :to="`/qna/course/${encodeURIComponent(question.course.name)}/${question._id}`"
+                >{{ question.title }} [{{ question.answers.length ?? 'x' }}]</NuxtLink
+              >
+            </div>
+            <div class="created-col">
+              <span class="ml-auto text-gray-500 text-sm">{{ $dayjs(question.createdAt).fromNow() }}</span>
+            </div>
           </div>
-          <div class="title-col">
-            <NuxtLink
-              class="block text-black font-light text-opacity-75 transition-all hover:text-opacity-100"
-              :to="`/qna/course/${encodeURIComponent(question.course.name)}/${question._id}`"
-              >{{ question.title }} [{{ question.answers.length ?? 'x' }}]</NuxtLink
-            >
-          </div>
-          <div class="created-col">
-            <span class="ml-auto text-gray-500 text-sm">{{ $dayjs(question.createdAt).fromNow() }}</span>
-          </div>
-        </div>
+        </template>
+        <template v-else>
+          <EmptyMessage>휴학글이 없습니다!</EmptyMessage>
+        </template>
       </div>
     </div>
   </div>

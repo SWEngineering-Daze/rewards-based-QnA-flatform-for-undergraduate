@@ -124,11 +124,10 @@ function format(n: number) {
           </div>
         </template>
         <template v-else>
-          <div class="flex flex-col items-center text-center text-slate-500 tracking-wider">
-            <img class="w-12 mb-3" src="@/assets/img/sad.svg" alt="Sad" />
+          <EmptyMessage>
             아직 아무 질문이 없습니다! <br />
             첫 번째 질문을 해보세요!
-          </div>
+          </EmptyMessage>
         </template>
       </div>
     </div>
@@ -165,11 +164,10 @@ function format(n: number) {
           </div>
         </template>
         <template v-else>
-          <div class="flex flex-col items-center text-center text-slate-500 tracking-wider">
-            <img class="w-12 mb-3" src="@/assets/img/sad.svg" alt="Sad" />
+          <EmptyMessage>
             아직 아무 답변이 없습니다! <br />
             첫 번째 답변을 해보세요!
-          </div>
+          </EmptyMessage>
         </template>
       </div>
     </div>
@@ -189,11 +187,10 @@ function format(n: number) {
           </div>
         </template>
         <template v-else>
-          <div class="flex flex-col items-center text-center text-slate-500 tracking-wider">
-            <img class="w-12 mb-3" src="@/assets/img/sad.svg" alt="Sad" />
+          <EmptyMessage>
             아직 포인트 이력이 없습니다! <br />
             답변을 하고 추천을 받아 포인트를 받으세요!
-          </div>
+          </EmptyMessage>
         </template>
       </div>
     </div>
@@ -211,11 +208,10 @@ function format(n: number) {
           </div>
         </template>
         <template v-else>
-          <div class="flex flex-col items-center text-center text-slate-500 tracking-wider">
-            <img class="w-12 mb-3" src="@/assets/img/sad.svg" alt="Sad" />
+          <EmptyMessage>
             아직 아무 쿠폰이 없습니다! <br />
             포인트를 얻어 상품을 구매해보세요!
-          </div>
+          </EmptyMessage>
         </template>
       </div>
     </div>
