@@ -24,7 +24,10 @@ function format(n: number) {
     </button>
     <NuxtLink to="/" class="inline-flex items-center">
       <img class="w-8" src="@/assets/img/graduation.svg" alt="쉿! 교수님 몰래 들어오세요" />
-      <span class="text-sm font-medium ml-2">쉿! 교수님 몰래 들어오세요</span>
+      <span class="text-sm font-medium ml-2">
+        <span class="hidden sm:inline">쉿! 교수님 몰래 들어오세요</span>
+        <span class="sm:hidden">쉿!</span>
+      </span>
     </NuxtLink>
     <div class="flex items-center ml-auto">
       <nav class="flex items-center">
@@ -64,6 +67,7 @@ function format(n: number) {
                     <img class="w-6" src="@/assets/img/point.svg" alt="잔여 포인트" />
                     <span class="ml-auto">{{ format(point) }}P</span>
                   </div>
+                  <NuxtLink class="btn btn-indigo block mt-3" to="/profile">내정보</NuxtLink>
                 </div>
                 <div class="p-3">
                   <button class="text-red-500" @click="logout()">로그아웃</button>
