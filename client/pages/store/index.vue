@@ -71,7 +71,7 @@ function format(n: number) {
       </div>
       <div class="flex flex-wrap">
         <button v-for="item in partner.items" :key="item.name" class="mr-7 mb-5 group cursor-pointer transition-all" @click="open(item, partner)">
-          <img class="w-44 h-44 object-contain block" :src="item.url" alt="상품" />
+          <img class="w-44 h-44 object-contain block transition-transform duration-300 group-hover:scale-105" :src="item.url" alt="상품" />
           <!-- <div class="w-36 h-36 bg-gray-200"></div> -->
           <div class="w-44 p-1 break-all">
             <div class="overflow-hidden whitespace-nowrap text-ellipsis text-black text-opacity-75 transition-all group-hover:text-opacity-100">
