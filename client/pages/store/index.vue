@@ -107,8 +107,18 @@ function format(n: number) {
             </div>
           </template>
           <template v-else>
-            <button class="bg-indigo-500 py-2 text-white rounded-full block w-full mb-2" @click="exchange(selectedItem._id)">교환</button>
-            <button class="bg-white py-2 border border-gray-500 text-gray-500 rounded-full block w-full" @click="close">취소</button>
+            <button
+              class="bg-indigo-500 py-2 text-white rounded-full block w-full mb-2 transition-colors hover:bg-indigo-600"
+              @click="exchange(selectedItem._id)"
+            >
+              교환
+            </button>
+            <button
+              class="bg-white py-2 border border-gray-500 text-gray-500 rounded-full block w-full transition-colors hover:border-gray-700 hover:text-gray-700"
+              @click="close"
+            >
+              취소
+            </button>
           </template>
         </template>
       </BaseModal>

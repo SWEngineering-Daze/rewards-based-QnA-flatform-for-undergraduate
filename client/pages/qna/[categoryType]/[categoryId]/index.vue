@@ -118,14 +118,14 @@ watch(
         <div v-for="question in questions" :key="question._id" class="flex items-center my-2">
           <div class="subject-col">
             <NuxtLink
-              class="block text-indigo-500 text-opacity-75 transition-all hover:text-opacity-100 text-sm"
+              class="block text-indigo-500 text-opacity-80 transition-all hover:text-opacity-100 text-sm"
               :to="`/qna/course/${encodeURIComponent(question.course.name)}`"
               >{{ question.course.name }}</NuxtLink
             >
           </div>
           <div class="title-col">
             <NuxtLink
-              class="block text-indigo-500 text-opacity-75 transition-all hover:text-opacity-100"
+              class="block text-indigo-500 text-opacity-80 transition-all hover:text-opacity-100"
               :to="`/qna/${type}/${encodeURIComponent(category.name)}/${question._id}`"
               >{{ question.title }} [{{ question.answers.length ?? 'x' }}]</NuxtLink
             >
@@ -139,14 +139,14 @@ watch(
         <div v-for="question in questions" :key="question._id" class="mb-2 last:mb-0 rounded border-b last:border-none py-2 px-4">
           <div class="mb-1">
             <NuxtLink
-              class="inline-block text-indigo-500 text-opacity-75 transition-all hover:text-opacity-100 text-sm"
+              class="inline-block text-indigo-500 text-opacity-80 transition-all hover:text-opacity-100 text-sm"
               :to="`/qna/course/${encodeURIComponent(question.course.name)}`"
               >{{ question.course.name }}</NuxtLink
             >
           </div>
           <div class="title-col">
             <NuxtLink
-              class="block text-black text-opacity-75 transition-all hover:text-opacity-100"
+              class="block text-black text-opacity-80 transition-all hover:text-opacity-100"
               :to="`/qna/${type}/${encodeURIComponent(category.name)}/${question._id}`"
               >{{ question.title }}</NuxtLink
             >
