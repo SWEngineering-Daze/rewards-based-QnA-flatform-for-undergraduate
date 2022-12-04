@@ -62,7 +62,13 @@ function format(n: number) {
       <div class="text-5xl text-indigo-500 font-bold">{{ format(todayScholarship) }} P</div>
     </div>
     <div class="mb-16">
-      <div class="text-2xl font-bold mb-3">장학글</div>
+      <div class="flex items-center mb-3">
+        <div class="text-2xl font-bold mr-2">장학글</div>
+        <ToolTip>
+          어제 하루 동안 가장 많은 추천을 받은<br />
+          답변이 달린 질문들입니다.
+        </ToolTip>
+      </div>
       <div class="rounded bg-50 border border-gray-200 py-4 px-6">
         <template v-if="bestQuestions.length > 0">
           <div v-for="question in bestQuestions" :key="question._id" class="flex items-center my-2">
@@ -96,7 +102,10 @@ function format(n: number) {
       </div>
     </div>
     <div class="mb-16">
-      <div class="text-2xl font-bold mb-3">입학글</div>
+      <div class="flex items-center mb-3">
+        <div class="text-2xl font-bold mr-2">입학글</div>
+        <ToolTip> 가장 최근에 올라온 질문들입니다. </ToolTip>
+      </div>
       <div class="rounded bg-50 border border-gray-200 py-4 px-6">
         <template v-if="newQuestions.length > 0">
           <div v-for="question in newQuestions" :key="question._id" class="flex items-center my-2">
@@ -125,7 +134,13 @@ function format(n: number) {
       </div>
     </div>
     <div class="mb-16">
-      <div class="text-2xl font-bold mb-3">휴학글</div>
+      <div class="flex items-center mb-3">
+        <div class="text-2xl font-bold mr-2">휴학글</div>
+        <ToolTip>
+          최근 이틀 내에 올라온 <br />
+          아직 답변이 없는 질문들입니다.
+        </ToolTip>
+      </div>
       <div class="rounded bg-50 border border-gray-200 py-4 px-6">
         <template v-if="oldQuestions.length > 0">
           <div v-for="question in oldQuestions" :key="question._id" class="flex items-center my-2">
