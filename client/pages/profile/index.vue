@@ -158,8 +158,11 @@ function format(n: number) {
               </div>
             </div>
             <!-- answer -->
-            <div class="p-3 rounded bg-gray-100 text-gray-600">
-              {{ answer.content }}
+            <div class="flex px-5 py-2 rounded bg-gray-100">
+              <div class="mr-3">
+                <IconReply class="text-gray-500 w-8 h-8 mt-1" />
+              </div>
+              <MarkdownViewer :content="answer.content" />
             </div>
           </div>
         </template>
