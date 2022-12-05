@@ -177,7 +177,7 @@ function format(n: number) {
 
     <div class="mb-16">
       <div class="text-2xl font-bold mb-3">포인트 이력</div>
-      <div class="rounded bg-50 border border-gray-200 py-4 px-6">
+      <div class="rounded bg-50 border border-gray-200 py-4 px-6 max-w-2xl">
         <template v-if="histories.length > 0">
           <div v-for="history in histories" :key="history._id" class="flex items-center tracking-wider">
             <span class="font-bold">{{ $dayjs(history.createdAt).format('MM-DD') }}</span>
@@ -200,7 +200,7 @@ function format(n: number) {
 
     <div class="mb-16">
       <div class="text-2xl font-bold mb-3">쿠폰 목록</div>
-      <div class="rounded bg-50 border border-gray-200 py-4 px-6">
+      <div class="rounded bg-50 border border-gray-200 py-4 px-6 max-w-2xl">
         <template v-if="coupons.length > 0">
           <div v-for="coupon in coupons" :key="coupon._id" class="flex items-center tracking-wider">
             <span class="font-bold">{{ $dayjs(coupon.createdAt).format('MM-DD') }}</span>
