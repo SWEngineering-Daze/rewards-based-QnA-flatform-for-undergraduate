@@ -13,7 +13,10 @@ function logout() {
 }
 
 function format(n: number) {
-  return Intl.NumberFormat('ko-KR').format(n);
+  return Intl.NumberFormat('ko-KR', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(n);
 }
 </script>
 
