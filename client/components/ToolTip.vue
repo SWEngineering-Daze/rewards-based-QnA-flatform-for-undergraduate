@@ -13,12 +13,21 @@ function close() {
 <template>
   <div class="tooltip" @mouseenter="open" @mouseleave="close">
     <IconQuestion class="w-6 h-6" />
-    <div v-show="opened" class="tooltip-box">
-      <IconInfo class="w-6 h-6 mr-4"></IconInfo>
-      <div class="tracking-wide text-left">
-        <slot>도움말</slot>
+    <transition
+      enter-active-class="transition duration-100 ease-out"
+      enter-from-class="transform scale-95 opacity-0"
+      enter-to-class="transform scale-100 opacity-100"
+      leave-active-class="transition duration-75 ease-in"
+      leave-from-class="transform scale-100 opacity-100"
+      leave-to-class="transform scale-95 opacity-0"
+    >
+      <div v-show="opened" class="tooltip-box">
+        <IconInfo class="w-6 h-6 mr-4"></IconInfo>
+        <div class="tracking-wide text-left">
+          <slot>도움말</slot>
+        </div>
       </div>
-    </div>
+    </transition>
   </div>
 </template>
 
