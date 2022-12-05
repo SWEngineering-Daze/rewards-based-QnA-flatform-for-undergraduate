@@ -15,7 +15,7 @@ function close() {
     <IconQuestion class="w-6 h-6" />
     <div v-show="opened" class="tooltip-box">
       <IconInfo class="w-6 h-6 mr-4"></IconInfo>
-      <div class="tracking-wide">
+      <div class="tracking-wide text-left">
         <slot>도움말</slot>
       </div>
     </div>

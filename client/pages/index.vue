@@ -58,7 +58,13 @@ function format(n: number) {
 <template>
   <div class="py-12 px-8">
     <div class="text-center my-8 mb-24">
-      <div class="text-2xl font-medium mb-3">오늘의 장학금</div>
+      <div class="text-2xl font-medium mb-3 flex justify-center items-center">
+        <span class="mr-2">오늘의 장학금</span>
+        <ToolTip>
+          오늘 자신이 받은 추천수에 따라<br />
+          자정에 이 포인트를 분배받게 됩니다.
+        </ToolTip>
+      </div>
       <div class="text-5xl text-indigo-500 font-bold">{{ format(todayScholarship) }} P</div>
     </div>
     <div class="mb-16">
